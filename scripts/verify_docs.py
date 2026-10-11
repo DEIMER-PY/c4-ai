@@ -5,9 +5,18 @@ from datetime import datetime
 import json
 import re
 import xml.etree.ElementTree as ET
+import os
 
 ROOT = Path(__file__).resolve().parents[1]
 errors = []
+IGNORED_DIRS = {".git", "node_modules", ".venv", ".obsidian", "artifacts", "__pycache__"}
+
+def project_files(extension):
+    result = []
+    for directory, dirs, names in os.walk(ROOT):
+        dirs[:] = [name for name in dirs if name not in IGNORED_DIRS]
+        result.extend(Path(directory) / name for name in names if name.endswith(extension))
+    return result
 
 def require(condition, message):
     if not condition:
@@ -75,15 +84,14 @@ def validate(value, rule, path="$"):
     if isinstance(value, (int, float)) and not isinstance(value, bool) and "minimum" in rule:
         require(value >= rule["minimum"], path + ": below minimum")
 
-json_files = list(ROOT.rglob("*.json"))
-json_files = [p for p in json_files if ".git" not in p.parts and "node_modules" not in p.parts]
+json_files = project_files(".json")
 for file in json_files:
     try:
         json.loads(file.read_text(encoding="utf-8"))
     except (ValueError, UnicodeError) as error:
         errors.append(str(file.relative_to(ROOT)) + ": " + str(error))
 
-markdown = [p for p in ROOT.rglob("*.md") if ".git" not in p.parts and "node_modules" not in p.parts]
+markdown = project_files(".md")
 for file in markdown:
     text = file.read_text(encoding="utf-8")
     targets = re.findall(r"\[[^\]]*\]\(([^)]+)\)", text) + re.findall(r'<img[^>]+src="([^"]+)"', text)

@@ -8,6 +8,8 @@ C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de
 
 **Estado actual:** base documental y de colaboración preparada. La API, CLI, agentes, workers y dashboard están planificados. Los fixtures son sintéticos; no representan resultados obtenidos con Grok ni una aplicación en producción.
 
+**Acceso:** repositorio y tablero privados para Deimer y Santiago. Trabajo en equipo autorizado por la organización, confirmado por Deimer. La publicación se decidirá posteriormente.
+
 [Documentación](docs/README.md) · [Especificaciones SDD](docs/specs/README.md) · [Contratos](docs/arquitectura/API.md) · [Kanban](https://github.com/users/DEIMER-PY/projects/1/views/2) · [Tareas](https://github.com/DEIMER-PY/c4-ai/issues) · [Onboarding](docs/equipo/ONBOARDING_SANTIAGO.md)
 
 ## El problema que resolvemos
@@ -168,6 +170,8 @@ GitHub conserva tareas, PR y decisiones. Slack coordina mediante un hilo por tar
 
 [Backlog](docs/equipo/BACKLOG.md) · [Enlaces y hilos](docs/equipo/ENLACES.md) · [Reglas compartidas](AGENTS.md) · [Entrada para Claude](CLAUDE.md)
 
+[Plan de Santiago](docs/equipo/PLAN_SANTIAGO.md) · [Prompt inicial de Claude](docs/equipo/PROMPT_CLAUDE.md) · [Guía Obsidian](docs/equipo/OBSIDIAN.md)
+
 ## Flujo Git y commits
 
 La rama predeterminada es **`develop`**. Cada feature usa una rama independiente y un PR hacia `develop`.
@@ -197,6 +201,8 @@ git config --local core.hooksPath .githooks
 
 Para leer todo el contexto en Obsidian, abrir la carpeta del repositorio como bóveda permite navegar también a `AGENTS.md` y `CLAUDE.md`; `docs/` concentra la documentación.
 
+Preparar los ajustes locales: `python scripts/setup_obsidian.py`. Cada persona abre su clon como bóveda; Git comparte la documentación. La configuración privada `.obsidian/` no se publica.
+
 No hay todavía comandos de arranque de la aplicación ni servicios desplegados. [Instalación prevista y requisitos del gateway](docs/arquitectura/INSTALACION.md).
 
 ## Evaluación, seguridad y roadmap
@@ -213,4 +219,4 @@ Los hitos del reto recuperados del chat deben contrastarse con los requisitos of
 
 [Evaluaciones](docs/arquitectura/EVALUACIONES.md) · [Controles de seguridad](docs/arquitectura/SEGURIDAD.md) · [Roadmap](docs/producto/ROADMAP.md) · [Demo](docs/producto/DEMO.md) · [Estado actual](docs/equipo/ESTADO.md)
 
-Credenciales y datos privados quedan fuera del repositorio público. La licencia del código del proyecto está pendiente de decisión; los iconos conservan su licencia y atribución propias.
+Credenciales quedan fuera de Git, incluso en el repositorio privado. La licencia del código está pendiente de decisión; los iconos conservan su licencia y atribución propias.

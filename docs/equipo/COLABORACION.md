@@ -24,9 +24,10 @@ Siguiente acción y responsable:
 Claude publica la entrega en PR/issue y, si tiene acceso, en hilo Slack. Codex revisa evidencia y responde ahí durante sesiones activas.
 No hay vigilancia en segundo plano configurada.
 ## Obsidian
+Guía concreta: [Obsidian y compartir](OBSIDIAN.md). Usar la bóveda del clon; configuración con scripts/setup_obsidian.py. Drive no duplica la documentación canónica.
 Sin plugins obligatorios ni Sync de pago. .obsidian local; no versionar disposición privada de ventanas.
 Enlaces relativos y Mermaid. Raíz docs visible; reglas/código accesibles desde GitHub/editor.
 Los hilos/memoria privados no se sincronizan: CONTEXTO, decisiones y bitácora son memoria explícita del proyecto.
 ## Slack onboarding
 Santiago debe ser miembro del workspace antes de invitarlo al canal. Buscar perfil exacto antes de enviar.
-No publicar correo privado en repo/canal público. Invitación GitHub y aceptación se registran como pendientes hasta verificarlas.
+No publicar correo privado ni secretos en mensajes. Santiago tiene acceso write confirmado al repo y WRITER concedido al tablero privado; Slack sigue pendiente de incorporación.

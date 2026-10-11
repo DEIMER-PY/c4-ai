@@ -26,7 +26,7 @@ Activar hook por clon: git config --local core.hooksPath .githooks.
 Python 3 valida cada mensaje. python scripts/verify_commits.py --base origin/develop comprueba commits de la feature.
 GitHub Actions valida documentación y commits de PR hacia develop.
 El commit bootstrap original es convencional sin emoji; cambiarlo requiere decisión explícita de Deimer.
-No se ha configurado branch protection; validación CI no implica protección obligatoria.
+GitHub devolvió 403 para branch protection en el repo privado del plan actual. Validación CI y revisión mediante PR se aplican operativamente; no implican protección obligatoria del servidor.
 ## Revisión
 PR pequeño → validaciones → revisión cruzada → integración.
 No fusionar cambios de contratos sin aprobación del otro responsable.

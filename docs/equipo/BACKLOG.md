@@ -1,7 +1,8 @@
 # Backlog implementable
-Estado inicial de todas las tareas: Pendiente. Contratos documentados permiten C4-002 y C4-004 en paralelo; C4-011 revisa el acuerdo.
+La preparación documental está verificada. C4-001 depende de la clave local y habilitación del panel; C4-002 y C4-004 pueden avanzar independientemente con contratos y mocks. C4-011 confirma el onboarding de Santiago.
 El campo responsable designa un humano; colaboración secundaria no sustituye revisión cruzada.
 ## C4-001 — Verificar requisitos del reto y conexión Grok
+Estado: Bloqueado para la prueba real; URL del reto/base publicadas confirmadas. Próxima acción Deimer: guardar clave en .env y confirmar modelo del panel.
 Responsable: DEIMER-PY. Fase: S1. Prioridad: P0.
 Dependencias: ninguna.
 Archivos: docs/referencias; c4/tools.
@@ -23,6 +24,7 @@ Aceptación: Traza→diagnóstico→candidato→evidencia; baseline inmutable; C
 Validación: Un incidente reproducible y un fallo del proveedor.
 
 ## C4-004 — Preparar dashboard con contratos y mocks
+Estado: Pendiente, listo para Santiago. Spec inicial: docs/specs/006-dashboard-mocks; ver PLAN_SANTIAGO y PROMPT_CLAUDE.
 Responsable: santiagosanabria-1. Fase: S1. Prioridad: P0.
 Dependencias: ninguna.
 Archivos: apps/dashboard.
@@ -72,6 +74,7 @@ Aceptación: 1.000 jobs únicos y 12 h reales con trazabilidad/costos/fallos; re
 Validación: Log timestamps, totales conciliados y reporte de incidencias.
 
 ## C4-011 — Revisar contratos y completar onboarding del equipo
+Estado: Pendiente de confirmación de Santiago. Accesos GitHub write/Projects WRITER concedidos; apertura del clon/Obsidian y membresía Slack aún sin confirmar.
 Responsable: santiagosanabria-1. Fase: S0. Prioridad: P0.
 Dependencias: ninguna.
 Archivos: docs/equipo; examples/contracts.
