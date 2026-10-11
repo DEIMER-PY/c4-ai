@@ -1,5 +1,5 @@
 # Contratos tipados del backend
-ID: C4-BACKEND-005. Estado: Ready. Responsable: Deimer/Codex. Parte de C4-002.
+ID: C4-BACKEND-005. Estado: Verified para contratos tipados; C4-002 completa sigue En curso. Responsable: Deimer/Codex.
 ## Requisitos
 FR-001: Implementar modelos Pydantic v2 para Agent, Run, Incident, Patch, Evaluation, Job, Report y escenario sintético sin alterar contratos JSON v1.
 FR-002: Rechazar campos desconocidos, números negativos/bools como contadores, IDs vacíos y fechas sin zona.
