@@ -23,4 +23,4 @@ Slack exige pertenecer al workspace. La publicación del mensaje no implica que 
 ## Features de preparación
 [Flujo Git — PR 10](https://github.com/DEIMER-PY/c4-ai/pull/10), integrado con CI aprobada.
 [SDD — PR 14](https://github.com/DEIMER-PY/c4-ai/pull/14), integrado con CI aprobada.
-README visual: feature en preparación; registrar PR al publicarla.
+[README visual — PR 15](https://github.com/DEIMER-PY/c4-ai/pull/15), validación y revisión visual aprobadas; feature hacia develop.

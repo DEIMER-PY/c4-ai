@@ -1,5 +1,5 @@
 # README técnico y recursos SVG
-ID: C4-DOCS-003. Estado: Ready. Responsable: Deimer/Codex.
+ID: C4-DOCS-003. Estado: Verified — preparación documental y visual. Responsable: Deimer/Codex.
 Aprobación de intención: petición de Deimer el 2026-10-11; emojis únicamente en commits.
 ## Requisitos
 FR-001: README explica problema, público, MVP, estado real, arquitectura, flujo, datos, estructura, stack y roles.

@@ -5,10 +5,10 @@ Documentación, contratos sintéticos, backlog y reglas compartidas preparados.
 Repositorio público: https://github.com/DEIMER-PY/c4-ai. Rama predeterminada: develop.
 Tablero público: https://github.com/users/DEIMER-PY/projects/1/views/2; 12 tareas, cinco estados y cinco hitos.
 Flujo Git: PR 10 integrado con CI aprobada. SDD: PR 14 integrado con CI aprobada.
-README/recursos SVG: feature codex/feat-readme-architecture; verificación documental y revisión visual local aprobadas; publicación final en curso.
+README/recursos SVG: [PR 15](https://github.com/DEIMER-PY/c4-ai/pull/15), verificación de 61 Markdown/cinco JSON/15 SVG y revisión visual aprobadas; CI aprobada. Integración mediante feature hacia develop.
 [Enlaces verificables y hilos](ENLACES.md).
 ## Equipo
-Invitación GitHub de escritura enviada a santiagosanabria-1; aceptación pendiente de verificar.
+Acceso GitHub de escritura de santiagosanabria-1 confirmado por la API de permisos; invitación aceptada.
 Canal Slack #c4-ai creado; onboarding y 12 hilos publicados. Santiago aún no aparece en la búsqueda del workspace; no afirmar recepción/lectura.
 Documentación disponible para Obsidian; cada integrante abre su clon como bóveda.
 ## Producto
