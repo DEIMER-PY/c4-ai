@@ -15,6 +15,7 @@ Estado documental: preparado el 2026-10-11. El producto sigue planificado.
 - [Instalación prevista](arquitectura/INSTALACION.md)
 - [Herramientas, MCP y skills](arquitectura/HERRAMIENTAS.md)
 ## Equipo y contexto
+- [Tareas, tablero e hilos](equipo/ENLACES.md)
 - [Metodología SDD](equipo/SDD.md)
 - [Especificaciones y plantillas](specs/README.md)
 - [Estado actual](equipo/ESTADO.md)
@@ -28,4 +29,4 @@ Estado documental: preparado el 2026-10-11. El producto sigue planificado.
 - [Bitácora inicial](bitacora/2026-10-11.md)
 - [Fuentes y verificaciones pendientes](referencias/FUENTES.md)
 
-Abrir esta carpeta como bóveda Obsidian. Los enlaces Markdown son relativos; Git conserva la documentación; .obsidian queda local.
+Abrir la carpeta del repositorio como bóveda Obsidian permite navegar a las reglas raíz y a docs; los enlaces son relativos. Git conserva Markdown y .obsidian queda local. Para consultar solo documentos internos, también puede abrirse docs.

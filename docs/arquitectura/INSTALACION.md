@@ -2,7 +2,7 @@
 Esta entrega contiene documentación, estructura y fixtures. No existe todavía aplicación instalable; no hay pyproject/package.json ni docker-compose operativos.
 ## Ahora
 git clone https://github.com/DEIMER-PY/c4-ai.git
-Abrir docs como bóveda Obsidian. Revisar README y AGENTS.
+Abrir la carpeta del repositorio como bóveda Obsidian para navegar README, AGENTS, CLAUDE y docs; docs sola permite lectura de documentos internos.
 Validar con Python 3: python scripts/verify_docs.py (solo biblioteca estándar).
 ## Al implementar
 Deimer añadirá pyproject.toml + uv.lock para Python 3.12 y Santiago package.json + pnpm-lock.yaml para dashboard.

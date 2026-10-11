@@ -2,7 +2,7 @@
 ## Fuente de verdad
 GitHub: tareas, cambios, decisiones y documentación versionada.
 Slack #c4-ai: avisos, dudas y un hilo por tarea. Resumir acuerdos permanentes en issue/ADR.
-Obsidian: abrir docs como bóveda en cada clon. Usar Git pull antes y commit/push después; evitar editar el mismo archivo simultáneamente.
+Obsidian: abrir la carpeta del repositorio como bóveda en cada clon para incluir AGENTS/CLAUDE y docs. Usar Git pull antes y commit/push después; evitar editar el mismo archivo simultáneamente.
 ## Tablero
 Pendiente → En curso → En revisión → Hecho. Bloqueado requiere causa, responsable de desbloqueo y siguiente acción.
 No duplicar estado manualmente sin referencia; ESTADO es resumen, el tablero es estado por tarea.

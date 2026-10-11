@@ -2,6 +2,7 @@
 Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Marco del MVP](001-project-foundation/spec.md)
 - [Adopción SDD](002-sdd-workflow/spec.md)
+- [README técnico y recursos SVG](003-readme-architecture/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
