@@ -4,6 +4,10 @@ Feature / rama:
 Issue/ID:
 Responsable:
 ## Cambio y resultado
+## SDD
+Especificación / plan / tareas:
+Requisitos FR / aceptación AC:
+Evidencia por criterio:
 ## Contratos / compatibilidad
 ## Validación y evidencia
 ## Bloqueos / siguiente acción

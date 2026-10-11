@@ -4,6 +4,7 @@
 2. [Estado](ESTADO.md), [roles](ROLES.md) y [backlog](BACKLOG.md).
 3. [Contratos](../arquitectura/API.md), [mock API](../../examples/contracts/api-responses.json) y [dashboard](../producto/DASHBOARD.md).
 ## Primera tarea
+Aplicar [SDD](SDD.md): crear spec/plan/tasks de dashboard antes de implementar; remitir a contratos canónicos y probar escenarios AC.
 C4-004: preparar dashboard tipado con fixtures, pantalla de incidentes, detalle y comparaciones.
 Partir de develop y crear rama santiago/feat-c4-004-dashboard-mocks. PR hacia develop; commits convencionales con emoji. Deimer/Codex construye backend de forma independiente.
 No introducir auth/hosting/otro framework sin ADR.

@@ -1,5 +1,6 @@
 # Contribuir
 1. Elegir una tarea del [backlog](docs/equipo/BACKLOG.md) con dependencias resueltas.
+   Preparar spec.md, plan.md y tasks.md según [SDD](docs/equipo/SDD.md) antes de implementar; resolver dudas bloqueantes.
 2. Actualizar su estado y declarar responsable/archivos.
 3. Crear rama `codex/feat-<id>-<tema>` o `santiago/feat-<id>-<tema>`.
 4. Implementar un cambio pequeño y validar comportamiento.
