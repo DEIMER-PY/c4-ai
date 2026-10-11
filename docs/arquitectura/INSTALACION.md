@@ -1,12 +1,12 @@
 # Preparación local e instalación prevista
-Esta entrega contiene documentación, estructura y fixtures. No existe todavía aplicación instalable; no hay pyproject/package.json ni docker-compose operativos.
+Existe el paquete inicial de contratos backend con pyproject.toml y uv.lock. No existe todavía API, dashboard ni Docker Compose ejecutable.
 ## Ahora
 git clone https://github.com/DEIMER-PY/c4-ai.git
 Repositorio privado: autenticarse con cuenta colaboradora. Ejecutar python scripts/setup_obsidian.py para preparar ajustes locales; luego abrir la carpeta en Obsidian una vez.
 Abrir la carpeta del repositorio como bóveda Obsidian para navegar README, AGENTS, CLAUDE y docs; docs sola permite lectura de documentos internos.
 Validar con Python 3: python scripts/verify_docs.py (solo biblioteca estándar).
 ## Al implementar
-Deimer añadirá pyproject.toml + uv.lock para Python 3.12 y Santiago package.json + pnpm-lock.yaml para dashboard.
+Backend actual: Python 3.12 y uv; ejecutar uv sync --locked y uv run --locked python -m unittest discover -s tests/unit -p 'test_*.py' -v. Santiago añadirá package.json/pnpm-lock.yaml al dashboard.
 Docker Compose tendrá PostgreSQL, Redis, API y worker; dashboard podrá correr local con pnpm.
 .env.example describe configuración prevista. Copiar a .env y completar fuera del repo; no publicar valores reales.
 ## Gateway del reto

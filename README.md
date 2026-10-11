@@ -6,7 +6,7 @@
 
 C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de prompt o configuración y compara su comportamiento contra el baseline. El resultado es una decisión trazable: aceptar, rechazar o solicitar revisión humana.
 
-**Estado actual:** base documental y de colaboración preparada. La API, CLI, agentes, workers y dashboard están planificados. Los fixtures son sintéticos; no representan resultados obtenidos con Grok ni una aplicación en producción.
+**Estado actual:** documentación y colaboración preparadas; primera implementación de contratos Pydantic del backend disponible y probada. API, CLI, agentes, workers y dashboard siguen planificados. Los fixtures son sintéticos; no representan resultados reales obtenidos con Grok ni una aplicación en producción.
 
 **Acceso:** repositorio y tablero privados para Deimer y Santiago. Trabajo en equipo autorizado por la organización, confirmado por Deimer. La publicación se decidirá posteriormente.
 
@@ -142,7 +142,7 @@ c4-ai/
 └── .github/                    Plantillas, ownership y CI
 ```
 
-Las carpetas de aplicación describen responsabilidades y aún no contienen implementación ejecutable.
+Las carpetas apps describen responsabilidades sin aplicación ejecutable todavía; c4/schemas contiene los primeros contratos tipados del backend.
 
 ## Metodología SDD
 
@@ -204,6 +204,8 @@ Para leer todo el contexto en Obsidian, abrir la carpeta del repositorio como b�
 Preparar los ajustes locales: `python scripts/setup_obsidian.py`. Cada persona abre su clon como bóveda; Git comparte la documentación. La configuración privada `.obsidian/` no se publica.
 
 No hay todavía comandos de arranque de la aplicación ni servicios desplegados. [Instalación prevista y requisitos del gateway](docs/arquitectura/INSTALACION.md).
+
+La primera parte del backend se puede verificar con Python 3.12 y uv: `uv sync --locked`, seguido de `uv run --locked python -m unittest discover -s tests/unit -p 'test_*.py' -v`.
 
 ## Evaluación, seguridad y roadmap
 
