@@ -1,5 +1,5 @@
 # Adopción SDD
-ID: C4-SDD-002. Estado: especificación aprobada por instrucción de Deimer el 2026-10-11; implementación pendiente.
+ID: C4-SDD-002. Estado: preparación metodológica verificada; revisión de onboarding por Santiago pendiente. Aprobación de alcance: instrucción de Deimer el 2026-10-11.
 Responsable: Deimer/Codex. Revisión compartida: Santiago/Claude.
 ## Objetivo
 Que cada feature se desarrolle a partir de una especificación versionada y criterios verificables, manteniendo alineados a ambos agentes.
