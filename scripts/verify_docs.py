@@ -4,6 +4,7 @@ from urllib.parse import unquote
 from datetime import datetime
 import json
 import re
+import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 errors = []
@@ -85,13 +86,29 @@ for file in json_files:
 markdown = [p for p in ROOT.rglob("*.md") if ".git" not in p.parts and "node_modules" not in p.parts]
 for file in markdown:
     text = file.read_text(encoding="utf-8")
-    for target in re.findall(r"\[[^\]]*\]\(([^)]+)\)", text):
+    targets = re.findall(r"\[[^\]]*\]\(([^)]+)\)", text) + re.findall(r'<img[^>]+src="([^"]+)"', text)
+    for target in targets:
         target = target.strip("<>").split("#", 1)[0]
         if not target or re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", target):
             continue
         require((file.parent / unquote(target)).exists(), f"{file.relative_to(ROOT)}: broken link {target}")
 
 scenario = load("examples/contracts/scenario.json")
+svg_files = list((ROOT / "docs/assets").rglob("*.svg"))
+for svg in svg_files:
+    try:
+        raw = svg.read_text(encoding="utf-8")
+        require("<!DOCTYPE" not in raw, str(svg.relative_to(ROOT)) + ": DOCTYPE forbidden")
+        tree = ET.fromstring(raw)
+        require(tree.tag == "{http://www.w3.org/2000/svg}svg", str(svg.relative_to(ROOT)) + ": invalid SVG root")
+        for node in tree.iter():
+            require(node.tag.split("}")[-1] not in ("script", "foreignObject"), str(svg.relative_to(ROOT)) + ": unsafe SVG node")
+            for attr, value in node.attrib.items():
+                require(not attr.lower().startswith("on"), str(svg.relative_to(ROOT)) + ": SVG event handler")
+                if attr.split("}")[-1] == "href":
+                    require(value.startswith("#"), str(svg.relative_to(ROOT)) + ": external SVG resource")
+    except (ET.ParseError, UnicodeError) as error:
+        errors.append(str(svg.relative_to(ROOT)) + ": " + str(error))
 validate(scenario, schema)
 agents = {a["id"] for a in scenario["agents"]}
 require(scenario["run"]["agent_id"] in agents, "run agent missing")
@@ -153,3 +170,4 @@ if errors:
     raise SystemExit("\n".join(errors))
 print(f"OK: {len(markdown)} Markdown files, {len(json_files)} JSON files, fixture types/links/relations and 3 decision scenarios.")
 print("Validates the JSON Schema subset used here; does not execute the product or call Grok.")
+print(f"OK: {len(svg_files)} local SVG files and README image references.")
