@@ -23,6 +23,12 @@ Contratos, datasets, arquitectura y decisiones: compartidos; cualquier cambio in
 - No fusionar PR propios que cambien contratos sin revisión del otro responsable.
 - AGENTS.md es la fuente de reglas. CLAUDE.md solo remite aquí y al onboarding.
 
+## Metodología SDD
+Antes de implementar cada feature, crear y leer spec.md, plan.md y tasks.md en docs/specs/<numero>-<feature>.
+Resolver dudas bloqueantes; requisitos FR y criterios AC gobiernan implementación y validación.
+Leer docs/equipo/SDD.md. PR enlaza spec/tareas/evidencia; actualizar spec antes de cambiar alcance.
+Mantener roles, contratos compartidos y ownership al trabajar en paralelo.
+
 ## Ingeniería
 Python 3.12 + uv; TypeScript + pnpm; core propio; FastAPI; Pydantic; SQLAlchemy/Alembic; Redis/RQ.
 Separar orquestación, servicios, herramientas, esquemas y persistencia. API/CLI llaman los mismos servicios.

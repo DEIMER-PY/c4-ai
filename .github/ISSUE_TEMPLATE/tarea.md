@@ -6,6 +6,9 @@ labels: ""
 assignees: ""
 ---
 ## Objetivo
+## SDD
+Spec / plan / tasks:
+Requisitos FR / aceptación AC:
 ## Responsable / fase / prioridad
 ## Dependencias
 ## Archivos bajo responsabilidad
