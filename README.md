@@ -33,6 +33,11 @@ PostgreSQL/JSONB, Redis/RQ, Docker Compose y gateway Grok del reto configurable.
 `python scripts/verify_docs.py` verifica enlaces locales, JSON, relaciones entre fixtures y reglas de aceptación. No inicia servicios ni llama al proveedor.
 Consulta [instalación prevista](docs/arquitectura/INSTALACION.md): los comandos de la aplicación se definirán cuando exista implementación.
 
+## Flujo Git
+Rama predeterminada **develop**. Cada feature tiene rama y PR hacia develop.
+Commits convencionales con emoji: `docs(workflow): 📝 definir reglas`.
+[Reglas y validación](docs/equipo/GIT_WORKFLOW.md).
+
 ## Colaboración
 GitHub mantiene tareas/PR/decisiones; Slack coordina; Obsidian abre los mismos Markdown de `docs/` compartidos con Git.
 [Protocolo del equipo](docs/equipo/COLABORACION.md) · [Contribuir](CONTRIBUTING.md) · [Seguridad](SECURITY.md)

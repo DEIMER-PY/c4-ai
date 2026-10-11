@@ -5,7 +5,7 @@
 3. [Contratos](../arquitectura/API.md), [mock API](../../examples/contracts/api-responses.json) y [dashboard](../producto/DASHBOARD.md).
 ## Primera tarea
 C4-004: preparar dashboard tipado con fixtures, pantalla de incidentes, detalle y comparaciones.
-Crear rama santiago/c4-004-dashboard-mocks. Deimer/Codex construye backend de forma independiente.
+Partir de develop y crear rama santiago/feat-c4-004-dashboard-mocks. PR hacia develop; commits convencionales con emoji. Deimer/Codex construye backend de forma independiente.
 No introducir auth/hosting/otro framework sin ADR.
 ## Checklist
 - Clonar repo y aceptar invitación de GitHub si se requiere escribir.

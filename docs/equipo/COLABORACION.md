@@ -6,6 +6,9 @@ Obsidian: abrir docs como bóveda en cada clon. Usar Git pull antes y commit/pus
 ## Tablero
 Pendiente → En curso → En revisión → Hecho. Bloqueado requiere causa, responsable de desbloqueo y siguiente acción.
 No duplicar estado manualmente sin referencia; ESTADO es resumen, el tablero es estado por tarea.
+## Flujo Git
+Develop es predeterminada. Features en ramas independientes, PR hacia develop y commits convencionales con emojis.
+[Reglas y validación](GIT_WORKFLOW.md).
 ## Tarea
 ID, objetivo, persona responsable, fase, prioridad, dependencias, archivos, aceptación y validación.
 Avisar antes de ampliar alcance o editar contratos comunes.

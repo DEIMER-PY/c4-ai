@@ -1,4 +1,6 @@
 ## Tarea
+Base: develop
+Feature / rama:
 Issue/ID:
 Responsable:
 ## Cambio y resultado
@@ -8,4 +10,5 @@ Responsable:
 - [ ] Sin secretos/PII
 - [ ] Docs/estado actualizados si corresponde
 - [ ] Revisión cruzada solicitada
+- [ ] Commits convencionales con emojis y validación aprobada
 - [ ] Mocks/resultados sintéticos etiquetados

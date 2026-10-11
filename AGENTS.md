@@ -13,7 +13,10 @@ Santiago/Claude: apps/dashboard, experiencia e integración frontend.
 Contratos, datasets, arquitectura y decisiones: compartidos; cualquier cambio incompatible requiere revisión de ambos.
 
 ## Trabajo paralelo
-- Una tarea con responsable por rama; prefijo codex/ para Codex y santiago/ para Santiago.
+- Rama predeterminada e integración: develop. Cada feature nace de develop y abre PR hacia develop.
+- Ramas: codex/feat-<id>-<tema> o santiago/feat-<id>-<tema>; usar fix/docs cuando corresponda.
+- Commits obligatorios: type(scope): emoji descripción; consultar docs/equipo/GIT_WORKFLOW.md.
+- No hacer push de features directamente a develop o main.
 - No editar el mismo archivo simultáneamente; declarar los archivos a tocar en la tarea.
 - Compartir referencias a commits/PR, nunca asumir que otro agente conoce el chat.
 - Frontend usa examples/contracts mientras el backend se implementa.

@@ -17,6 +17,7 @@ Estado documental: preparado el 2026-10-11. El producto sigue planificado.
 ## Equipo y contexto
 - [Estado actual](equipo/ESTADO.md)
 - [Roles](equipo/ROLES.md)
+- [Flujo Git y commits](equipo/GIT_WORKFLOW.md)
 - [Backlog](equipo/BACKLOG.md)
 - [Colaboración GitHub/Slack/Obsidian](equipo/COLABORACION.md)
 - [Onboarding Santiago/Claude](equipo/ONBOARDING_SANTIAGO.md)
