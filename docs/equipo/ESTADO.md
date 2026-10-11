@@ -12,10 +12,11 @@ Acceso GitHub de escritura de santiagosanabria-1 confirmado por la API de permis
 Canal Slack #c4-ai creado; onboarding y 12 hilos publicados. Santiago aún no aparece en la búsqueda del workspace; no afirmar recepción/lectura.
 Documentación disponible para Obsidian; [configuración local](OBSIDIAN.md) y [plan/prompt de Santiago](PLAN_SANTIAGO.md) preparados. Cada integrante debe abrir su clon como bóveda; la interfaz no se ha abierto automáticamente.
 ## Producto
+Contratos Pydantic: implementados y probados; primera parte de C4-002. Persistencia/FastAPI y el resto de C4-002 siguen En curso.
 API, CLI, runtime, DB, workers, gateway y dashboard: **planificados**.
 Fixtures/latencias/tokens del ejemplo son sintéticos, no evidencia de funcionamiento ni costos reales.
 ## Próximo trabajo
-Deimer: completar configuración del gateway y comenzar los contratos tipados de C4-002; persistencia/API quedan después.
+Deimer: completar clave/modelo de gateway y continuar C4-002 con persistencia/API después de los contratos tipados.
 Santiago: C4-011 y [spec inicial del dashboard](../specs/006-dashboard-mocks/spec.md); fixtures permiten frontend paralelo.
 ## Pendientes externos
 Gateway: base publicada confirmada; clave local y modelos del panel pendientes. Equipo autorizado, confirmado por Deimer. Mantener privado hasta nueva instrucción.
