@@ -15,6 +15,10 @@ Estado documental: preparado el 2026-10-11. El producto sigue planificado.
 - [Instalación prevista](arquitectura/INSTALACION.md)
 - [Herramientas, MCP y skills](arquitectura/HERRAMIENTAS.md)
 ## Equipo y contexto
+- [Plan de Santiago](equipo/PLAN_SANTIAGO.md)
+- [Prompt de Claude](equipo/PROMPT_CLAUDE.md)
+- [Obsidian y compartir documentación](equipo/OBSIDIAN.md)
+- [Auditoría de planificación](equipo/AUDITORIA_PLANIFICACION.md)
 - [Tareas, tablero e hilos](equipo/ENLACES.md)
 - [Metodología SDD](equipo/SDD.md)
 - [Especificaciones y plantillas](specs/README.md)

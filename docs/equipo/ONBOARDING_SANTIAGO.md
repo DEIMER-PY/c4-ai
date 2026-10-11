@@ -10,10 +10,12 @@ Partir de develop y crear rama santiago/feat-c4-004-dashboard-mocks. PR hacia de
 No introducir auth/hosting/otro framework sin ADR.
 ## Checklist
 - Clonar repo y aceptar invitación de GitHub si se requiere escribir.
-- Abrir docs en Obsidian y seguir enlaces.
+- Acceso write ya confirmado: clonar con tu propia cuenta GitHub; no usar credenciales de Deimer.
+- Ejecutar python scripts/setup_obsidian.py y abrir la carpeta raíz como bóveda en Obsidian.
 - Claude lee AGENTS + CLAUDE; no necesita chat/memoria de Codex.
 - Confirmar task, archivos y dependencias en GitHub.
 - Construir interfaz con etiqueta Demo; costos null visibles como desconocidos.
 - Enviar PR con screenshots de interfaz futura, validación y bloqueos.
 - Para Slack, unirse al workspace y canal; configurar conexión propia de Claude si desea enviar directamente.
 No hay comandos de arranque del dashboard todavía; los añadirá esta tarea con su lockfile.
+Leer [plan detallado](PLAN_SANTIAGO.md), [prompt para Claude](PROMPT_CLAUDE.md) y [guía Obsidian](OBSIDIAN.md). La [spec inicial](../specs/006-dashboard-mocks/spec.md) ya tiene requisitos/aceptación para revisar e implementar.

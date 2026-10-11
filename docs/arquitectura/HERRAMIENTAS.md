@@ -3,6 +3,7 @@
 Codex con Deimer y Claude con Santiago consumen AGENTS/contratos/tareas.
 GitHub CLI o conector: issues, PR y estado. Slack conectado: coordinación en canal autorizado.
 Obsidian: lector/editor de Markdown local. No se encontró plugin Obsidian en el catálogo consultado; Git comparte los archivos sin MCP.
+Configuración práctica: scripts/setup_obsidian.py; Codex y Claude leen directamente los mismos Markdown desde sus respectivos clones. CLI oficial opcional, sin necesidad de instalar plugins ni compartir memorias privadas.
 Herdr puede multiplexar sesiones; Antigravity/OpenCode son opcionales, sin dependencia runtime.
 ## Runtime C4 AI
 Tres herramientas propias iniciales:

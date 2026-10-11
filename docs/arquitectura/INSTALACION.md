@@ -2,6 +2,7 @@
 Esta entrega contiene documentación, estructura y fixtures. No existe todavía aplicación instalable; no hay pyproject/package.json ni docker-compose operativos.
 ## Ahora
 git clone https://github.com/DEIMER-PY/c4-ai.git
+Repositorio privado: autenticarse con cuenta colaboradora. Ejecutar python scripts/setup_obsidian.py para preparar ajustes locales; luego abrir la carpeta en Obsidian una vez.
 Abrir la carpeta del repositorio como bóveda Obsidian para navegar README, AGENTS, CLAUDE y docs; docs sola permite lectura de documentos internos.
 Validar con Python 3: python scripts/verify_docs.py (solo biblioteca estándar).
 ## Al implementar

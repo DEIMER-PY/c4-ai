@@ -5,7 +5,8 @@ Fecha: 2026-10-11. Resumen selectivo de acuerdos humanos; no exporta conversaci�
 - Backend Python/core propio y frontend Next.js confirmados.
 - Deimer backend; Santiago frontend; dataset/contratos compartidos.
 - Presupuesto inicial sin infraestructura paga; gateway del reto según acceso suministrado.
-- GitHub público DEIMER-PY/c4-ai; Slack para coordinación; Obsidian para Markdown.
+- GitHub privado DEIMER-PY/c4-ai y tablero privado, por decisión de Deimer; Slack coordina y Obsidian abre los Markdown del clon.
+- Deimer confirmó autorización de la organización para trabajar en equipo con Santiago. Mantener privado por ahora; publicación posterior solo por instrucción explícita.
 - Primera preparación documental; aplicación vendrá por fases.
 - Soporte/reembolsos es caso inicial predeterminado del plan aprobado.
 - Hitos S1–S4 del chat pendientes de validación oficial.
