@@ -1,0 +1,228 @@
+{
+  "synthetic": true,
+  "agents": {
+    "items": [
+      {
+        "id": "agt_refunds_v1",
+        "name": "Refunds demo agent",
+        "version": "1.0.0",
+        "prompt_ref": "synthetic://refunds/v1",
+        "config_ref": "synthetic://refunds/config-v1",
+        "created_at": "2026-10-11T12:00:00Z"
+      },
+      {
+        "id": "agt_refunds_v2",
+        "name": "Refunds demo agent",
+        "version": "1.0.1",
+        "prompt_ref": "synthetic://refunds/v2",
+        "config_ref": "synthetic://refunds/config-v1",
+        "created_at": "2026-10-11T12:00:00Z"
+      }
+    ],
+    "next_cursor": null
+  },
+  "incidents": {
+    "items": [
+      {
+        "id": "inc_refunds_001",
+        "run_id": "run_refunds_001",
+        "category": "policy_violation",
+        "severity": "high",
+        "summary": "Reembolso fuera del plazo de 30 días",
+        "root_cause": "El agente ignora el plazo devuelto por la herramienta.",
+        "status": "resolved"
+      }
+    ],
+    "next_cursor": null
+  },
+  "accepted": {
+    "patch": {
+      "id": "pat_refunds_001",
+      "incident_id": "inc_refunds_001",
+      "baseline_agent_id": "agt_refunds_v1",
+      "candidate_agent_id": "agt_refunds_v2",
+      "patch_type": "prompt",
+      "diff": "Añadir comprobación explícita de days_since_purchase <= max_days antes de refund_order.",
+      "rationale": "Evitar acción incompatible con política.",
+      "approval_status": "accepted"
+    },
+    "evaluation": {
+      "id": "eval_refunds_001",
+      "patch_id": "pat_refunds_001",
+      "dataset_id": "refunds_demo",
+      "dataset_version": "1.0.0",
+      "before": {
+        "passed": 1,
+        "total": 2
+      },
+      "after": {
+        "passed": 2,
+        "total": 2
+      },
+      "regressions": [],
+      "security_passed": true,
+      "target_case_id": "refund_expired",
+      "case_results": [
+        {
+          "case_id": "refund_eligible",
+          "before_passed": true,
+          "after_passed": true
+        },
+        {
+          "case_id": "refund_expired",
+          "before_passed": false,
+          "after_passed": true
+        }
+      ],
+      "status": "completed"
+    },
+    "report": {
+      "id": "rep_refunds_001",
+      "incident_id": "inc_refunds_001",
+      "patch_id": "pat_refunds_001",
+      "evaluation_id": "eval_refunds_001",
+      "decision": "accepted",
+      "summary": "Ejemplo sintético: mejora el caso objetivo sin regresiones.",
+      "evidence_refs": [
+        "run_refunds_001",
+        "eval_refunds_001"
+      ]
+    }
+  },
+  "rejected": {
+    "patch": {
+      "id": "pat_rejected_001",
+      "incident_id": "inc_refunds_001",
+      "baseline_agent_id": "agt_refunds_v1",
+      "candidate_agent_id": "agt_refunds_v2",
+      "patch_type": "prompt",
+      "diff": "Añadir comprobación explícita de days_since_purchase <= max_days antes de refund_order.",
+      "rationale": "Evitar acción incompatible con política.",
+      "approval_status": "rejected"
+    },
+    "evaluation": {
+      "id": "eval_rejected_001",
+      "patch_id": "pat_rejected_001",
+      "dataset_id": "refunds_demo",
+      "dataset_version": "1.0.0",
+      "before": {
+        "passed": 1,
+        "total": 2
+      },
+      "after": {
+        "passed": 1,
+        "total": 2
+      },
+      "regressions": [
+        "refund_eligible"
+      ],
+      "security_passed": true,
+      "target_case_id": "refund_expired",
+      "case_results": [
+        {
+          "case_id": "refund_eligible",
+          "before_passed": true,
+          "after_passed": false
+        },
+        {
+          "case_id": "refund_expired",
+          "before_passed": false,
+          "after_passed": true
+        }
+      ],
+      "status": "completed"
+    },
+    "report": {
+      "id": "rep_rejected_001",
+      "incident_id": "inc_refunds_001",
+      "patch_id": "pat_rejected_001",
+      "evaluation_id": "eval_rejected_001",
+      "decision": "rejected",
+      "summary": "Ejemplo sintético: el candidato rompe refund_eligible.",
+      "evidence_refs": [
+        "run_refunds_001",
+        "eval_rejected_001"
+      ]
+    }
+  },
+  "incomplete": {
+    "patch": {
+      "id": "pat_review_001",
+      "incident_id": "inc_refunds_001",
+      "baseline_agent_id": "agt_refunds_v1",
+      "candidate_agent_id": "agt_refunds_v2",
+      "patch_type": "prompt",
+      "diff": "Añadir comprobación explícita de days_since_purchase <= max_days antes de refund_order.",
+      "rationale": "Evitar acción incompatible con política.",
+      "approval_status": "needs_human_review"
+    },
+    "evaluation": {
+      "id": "eval_review_001",
+      "patch_id": "pat_review_001",
+      "dataset_id": "refunds_demo",
+      "dataset_version": "1.0.0",
+      "before": {
+        "passed": 0,
+        "total": 0
+      },
+      "after": {
+        "passed": 0,
+        "total": 0
+      },
+      "regressions": [],
+      "security_passed": false,
+      "target_case_id": "refund_expired",
+      "case_results": [],
+      "status": "failed"
+    },
+    "report": {
+      "id": "rep_review_001",
+      "incident_id": "inc_refunds_001",
+      "patch_id": "pat_review_001",
+      "evaluation_id": "eval_review_001",
+      "decision": "needs_human_review",
+      "summary": "Evaluación fallida; no aceptar.",
+      "evidence_refs": [
+        "run_refunds_001",
+        "eval_review_001"
+      ]
+    }
+  },
+  "pending_job": {
+    "id": "job_pending_001",
+    "incident_id": "inc_refunds_001",
+    "stage": "inspect",
+    "status": "queued",
+    "attempts": 0,
+    "error": null,
+    "updated_at": "2026-10-11T12:00:00Z"
+  },
+  "failed_job": {
+    "id": "job_failed_001",
+    "incident_id": "inc_refunds_001",
+    "stage": "diagnose",
+    "status": "failed",
+    "attempts": 1,
+    "error": {
+      "code": "provider_unavailable",
+      "message": "Ejemplo: gateway temporalmente no disponible",
+      "retryable": true,
+      "details": {
+        "attempts": 3
+      }
+    },
+    "updated_at": "2026-10-11T12:00:00Z"
+  },
+  "empty_incidents": {
+    "items": [],
+    "next_cursor": null
+  },
+  "provider_error": {
+    "code": "provider_unavailable",
+    "message": "Ejemplo sintético de error 503",
+    "retryable": true,
+    "details": {
+      "job_id": "job_failed_001"
+    }
+  }
+}

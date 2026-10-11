@@ -1,0 +1,6 @@
+# Entrada para Claude
+Lee y sigue [AGENTS.md](AGENTS.md), fuente única de reglas compartidas.
+Tu responsable humano es Santiago (`santiagosanabria-1`).
+Empieza por [onboarding](docs/equipo/ONBOARDING_SANTIAGO.md), [estado](docs/equipo/ESTADO.md), [backlog](docs/equipo/BACKLOG.md), [contratos](docs/arquitectura/API.md) y [dashboard](docs/producto/DASHBOARD.md).
+Antes de editar: confirmar tarea/archivos, revisar cambios locales y usar rama independiente.
+Entrega a Codex/Deimer el enlace al PR, tarea, pruebas, contrato consumido y bloqueos. No necesitas acceso a la memoria privada de Codex.

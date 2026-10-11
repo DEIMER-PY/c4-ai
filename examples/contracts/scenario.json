@@ -1,0 +1,130 @@
+{
+  "synthetic": true,
+  "agents": [
+    {
+      "id": "agt_refunds_v1",
+      "name": "Refunds demo agent",
+      "version": "1.0.0",
+      "prompt_ref": "synthetic://refunds/v1",
+      "config_ref": "synthetic://refunds/config-v1",
+      "created_at": "2026-10-11T12:00:00Z"
+    },
+    {
+      "id": "agt_refunds_v2",
+      "name": "Refunds demo agent",
+      "version": "1.0.1",
+      "prompt_ref": "synthetic://refunds/v2",
+      "config_ref": "synthetic://refunds/config-v1",
+      "created_at": "2026-10-11T12:00:00Z"
+    }
+  ],
+  "run": {
+    "id": "run_refunds_001",
+    "agent_id": "agt_refunds_v1",
+    "status": "failed",
+    "input_payload": {
+      "order_id": "synthetic_order_001",
+      "days_since_purchase": 31
+    },
+    "output_payload": {
+      "action": "refund",
+      "allowed": true
+    },
+    "trace": [
+      {
+        "step": 1,
+        "tool": "check_refund_policy",
+        "output": {
+          "max_days": 30
+        }
+      },
+      {
+        "step": 2,
+        "tool": "refund_order",
+        "arguments": {
+          "order_id": "synthetic_order_001"
+        },
+        "output": {
+          "simulated": true
+        }
+      }
+    ],
+    "latency_ms": 1200,
+    "usage": {
+      "input_tokens": 120,
+      "output_tokens": 60,
+      "cost_usd": null
+    },
+    "created_at": "2026-10-11T12:00:00Z"
+  },
+  "incident": {
+    "id": "inc_refunds_001",
+    "run_id": "run_refunds_001",
+    "category": "policy_violation",
+    "severity": "high",
+    "summary": "Reembolso fuera del plazo de 30 días",
+    "root_cause": "El agente ignora el plazo devuelto por la herramienta.",
+    "status": "resolved"
+  },
+  "patch": {
+    "id": "pat_refunds_001",
+    "incident_id": "inc_refunds_001",
+    "baseline_agent_id": "agt_refunds_v1",
+    "candidate_agent_id": "agt_refunds_v2",
+    "patch_type": "prompt",
+    "diff": "Añadir comprobación explícita de days_since_purchase <= max_days antes de refund_order.",
+    "rationale": "Evitar acción incompatible con política.",
+    "approval_status": "accepted"
+  },
+  "evaluation": {
+    "id": "eval_refunds_001",
+    "patch_id": "pat_refunds_001",
+    "dataset_id": "refunds_demo",
+    "dataset_version": "1.0.0",
+    "before": {
+      "passed": 1,
+      "total": 2
+    },
+    "after": {
+      "passed": 2,
+      "total": 2
+    },
+    "regressions": [],
+    "security_passed": true,
+    "target_case_id": "refund_expired",
+    "case_results": [
+      {
+        "case_id": "refund_eligible",
+        "before_passed": true,
+        "after_passed": true
+      },
+      {
+        "case_id": "refund_expired",
+        "before_passed": false,
+        "after_passed": true
+      }
+    ],
+    "status": "completed"
+  },
+  "job": {
+    "id": "job_refunds_001",
+    "incident_id": "inc_refunds_001",
+    "stage": "report",
+    "status": "succeeded",
+    "attempts": 1,
+    "error": null,
+    "updated_at": "2026-10-11T12:00:00Z"
+  },
+  "report": {
+    "id": "rep_refunds_001",
+    "incident_id": "inc_refunds_001",
+    "patch_id": "pat_refunds_001",
+    "evaluation_id": "eval_refunds_001",
+    "decision": "accepted",
+    "summary": "Ejemplo sintético: mejora el caso objetivo sin regresiones.",
+    "evidence_refs": [
+      "run_refunds_001",
+      "eval_refunds_001"
+    ]
+  }
+}

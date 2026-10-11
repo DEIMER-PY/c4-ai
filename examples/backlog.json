@@ -1,0 +1,156 @@
+[
+  {
+    "id": "C4-001",
+    "title": "Verificar requisitos del reto y conexión Grok",
+    "owner": "DEIMER-PY",
+    "phase": "S1",
+    "priority": "P0",
+    "dependencies": [],
+    "paths": "docs/referencias; c4/tools",
+    "acceptance": "Documentar fuente oficial, fechas, URL/modelo admitidos y solicitud mínima sin exponer clave; guardar usage/error verificados.",
+    "validation": "Solicitud real limitada y registro saneado."
+  },
+  {
+    "id": "C4-002",
+    "title": "Implementar modelos, persistencia y contratos API",
+    "owner": "DEIMER-PY",
+    "phase": "S1",
+    "priority": "P0",
+    "dependencies": [],
+    "paths": "c4/schemas; c4/db; apps/api",
+    "acceptance": "Pydantic coincide con ejemplos; migraciones crean entidades/relaciones; API devuelve 201/202/errores previstos.",
+    "validation": "Pruebas de contratos, DB y errores 404/409/422."
+  },
+  {
+    "id": "C4-003",
+    "title": "Construir primer loop y CLI de incidentes",
+    "owner": "DEIMER-PY",
+    "phase": "S1",
+    "priority": "P0",
+    "dependencies": [
+      "C4-001",
+      "C4-002"
+    ],
+    "paths": "c4/agents; c4/workflows; c4/services; apps/cli",
+    "acceptance": "Traza→diagnóstico→candidato→evidencia; baseline inmutable; CLI/API usan mismos servicios; fallos preservan estado.",
+    "validation": "Un incidente reproducible y un fallo del proveedor."
+  },
+  {
+    "id": "C4-004",
+    "title": "Preparar dashboard con contratos y mocks",
+    "owner": "santiagosanabria-1",
+    "phase": "S1",
+    "priority": "P0",
+    "dependencies": [],
+    "paths": "apps/dashboard",
+    "acceptance": "Next.js tipado, pnpm lockfile, incidentes/detalle/comparación; etiqueta Demo, costos null y estados vacíos/errores; ninguna clave en navegador.",
+    "validation": "Build/typecheck y revisión visual/teclado con fixtures."
+  },
+  {
+    "id": "C4-005",
+    "title": "Implementar herramientas y gate de evaluación",
+    "owner": "DEIMER-PY",
+    "phase": "S2",
+    "priority": "P0",
+    "dependencies": [
+      "C4-003"
+    ],
+    "paths": "c4/tools; c4/services; tests/evals",
+    "acceptance": "trace_reader, patch_writer y eval_runner reales; accepted exige mismo dataset, mejora objetivo y cero regresiones; incompletos escalan.",
+    "validation": "Aceptación, rechazo por regresión y evaluación fallida."
+  },
+  {
+    "id": "C4-006",
+    "title": "Integrar dashboard con API y evidencia real",
+    "owner": "santiagosanabria-1",
+    "phase": "S2",
+    "priority": "P1",
+    "dependencies": [
+      "C4-002",
+      "C4-004"
+    ],
+    "paths": "apps/dashboard",
+    "acceptance": "Consumir API documentada; distinguir pendiente/fallido/éxito; navegar evidencia/candidatos/evals; mocks explícitos solo modo demo.",
+    "validation": "Flujo UI→API y escenarios 404/503/costo desconocido."
+  },
+  {
+    "id": "C4-007",
+    "title": "Ampliar dataset a 30+ casos y medir métricas",
+    "owner": "DEIMER-PY",
+    "phase": "S3",
+    "priority": "P0",
+    "dependencies": [
+      "C4-005"
+    ],
+    "paths": "datasets; tests/evals; docs/arquitectura",
+    "acceptance": "30+ casos versionados/procedencia; baseline/candidato por caso; costo con fuente/cobertura; distinguir sintéticos de reales.",
+    "validation": "Reporte reproducible con IDs/regresiones y checksum dataset."
+  },
+  {
+    "id": "C4-008",
+    "title": "Preparar visualización, pitch y video de demo",
+    "owner": "santiagosanabria-1",
+    "phase": "S3",
+    "priority": "P1",
+    "dependencies": [
+      "C4-005",
+      "C4-006"
+    ],
+    "paths": "apps/dashboard; docs/producto",
+    "acceptance": "Mostrar loop, mejora y rechazo verificables; video objetivo 2 min; sin métricas inventadas.",
+    "validation": "Deimer valida evidencias; ensayo completo de demo."
+  },
+  {
+    "id": "C4-009",
+    "title": "Implementar workers, idempotencia y recuperación",
+    "owner": "DEIMER-PY",
+    "phase": "S4",
+    "priority": "P0",
+    "dependencies": [
+      "C4-005"
+    ],
+    "paths": "c4/workflows; c4/services; infraestructura futura",
+    "acceptance": "Redis/RQ, etapas persistidas, timeouts/budget; duplicados no repiten efectos; recuperación conserva historial.",
+    "validation": "Reinicio de worker, duplicado y proveedor transitorio."
+  },
+  {
+    "id": "C4-010",
+    "title": "Ejecutar escala y prueba de 12 horas",
+    "owner": "DEIMER-PY",
+    "phase": "S4",
+    "priority": "P1",
+    "dependencies": [
+      "C4-007",
+      "C4-009"
+    ],
+    "paths": "tests/integration; evidencia saneada; docs/bitacora",
+    "acceptance": "1.000 jobs únicos y 12 h reales con trazabilidad/costos/fallos; resultados no simulados.",
+    "validation": "Log timestamps, totales conciliados y reporte de incidencias."
+  },
+  {
+    "id": "C4-011",
+    "title": "Revisar contratos y completar onboarding del equipo",
+    "owner": "santiagosanabria-1",
+    "phase": "S0",
+    "priority": "P0",
+    "dependencies": [],
+    "paths": "docs/equipo; examples/contracts",
+    "acceptance": "Revisar AGENTS/CLAUDE y API; aceptar invitación GitHub si corresponde; entrar a Slack; confirmar acceso de Claude y comenzar C4-004.",
+    "validation": "Comentario en issue con comprensión de contratos/acceso/bloqueos."
+  },
+  {
+    "id": "C4-012",
+    "title": "Validar seguridad y aceptación final cruzada",
+    "owner": "DEIMER-PY",
+    "phase": "S4",
+    "priority": "P0",
+    "dependencies": [
+      "C4-006",
+      "C4-008",
+      "C4-010"
+    ],
+    "paths": "tests; docs/producto; docs/arquitectura",
+    "acceptance": "Revisión conjunta de política/inyección/PII, gate, demo, costo y estados; evidencias finales saneadas.",
+    "validation": "Checklist conjunto y versión etiquetada tras revisión."
+  }
+]
