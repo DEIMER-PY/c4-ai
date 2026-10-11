@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/DEIMER-PY/c4-ai/blob/main/examples/contracts/schemas.json",
+  "$id": "https://github.com/DEIMER-PY/c4-ai/blob/develop/examples/contracts/schemas.json",
   "title": "C4 AI v1 contracts",
   "$defs": {
     "Agent": {

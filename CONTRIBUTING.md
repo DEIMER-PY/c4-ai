@@ -1,9 +1,9 @@
 # Contribuir
 1. Elegir una tarea del [backlog](docs/equipo/BACKLOG.md) con dependencias resueltas.
 2. Actualizar su estado y declarar responsable/archivos.
-3. Crear rama `codex/<id>-<tema>` o `santiago/<id>-<tema>`.
+3. Crear rama `codex/feat-<id>-<tema>` o `santiago/feat-<id>-<tema>`.
 4. Implementar un cambio pequeño y validar comportamiento.
-5. Abrir PR hacia main con tarea, evidencia y bloqueos; solicitar revisión cruzada.
+5. Crear commits convencionales con emoji y abrir PR hacia develop con tarea, evidencia y bloqueos; solicitar revisión cruzada.
 6. Incorporar feedback, fusionar tras aprobación y actualizar estado.
 
 No existen scripts de app todavía. La revisión documental disponible es `python scripts/verify_docs.py`.
