@@ -13,6 +13,7 @@ Canal Slack #c4-ai creado; onboarding y 12 hilos publicados. Santiago aún no ap
 Documentación disponible para Obsidian; [configuración local](OBSIDIAN.md) y [plan/prompt de Santiago](PLAN_SANTIAGO.md) preparados. Cada integrante debe abrir su clon como bóveda; la interfaz no se ha abierto automáticamente.
 ## Producto
 Contratos Pydantic: implementados y probados; primera parte de C4-002. Persistencia/FastAPI y el resto de C4-002 siguen En curso.
+Evidencia: 15 pruebas y [PR 17](https://github.com/DEIMER-PY/c4-ai/pull/17) con CI aprobada. La aceptación de la feature se registra en su PR; #2 no se cierra por esta primera parte.
 API, CLI, runtime, DB, workers, gateway y dashboard: **planificados**.
 Fixtures/latencias/tokens del ejemplo son sintéticos, no evidencia de funcionamiento ni costos reales.
 ## Próximo trabajo
