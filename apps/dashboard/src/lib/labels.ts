@@ -1,5 +1,6 @@
 // Etiquetas en español y tono visual de cada estado del contrato v1.
 // El tono nunca es la única señal: los badges siempre muestran el texto (DASHBOARD.md, Diseño).
+import type { CaseChange, CheckState } from "@/lib/comparison";
 import type {
   ApprovalStatus,
   Decision,
@@ -94,4 +95,22 @@ export const CATEGORY: Record<IncidentCategory, string> = {
 export const PATCH_TYPE: Record<PatchType, string> = {
   prompt: "Prompt",
   config: "Configuración",
+};
+
+export const CASE_CHANGE: Record<CaseChange, Label> = {
+  improved: { label: "Mejora", tone: "success" },
+  regressed: { label: "Regresión", tone: "danger" },
+  kept_passing: { label: "Sigue pasando", tone: "neutral" },
+  kept_failing: { label: "Sigue fallando", tone: "warning" },
+};
+
+export const CHECK_STATE: Record<CheckState, Label> = {
+  met: { label: "Cumple", tone: "success" },
+  failed: { label: "No cumple", tone: "danger" },
+  unknown: { label: "Sin evidencia", tone: "warning" },
+};
+
+export const PASSED: Record<"true" | "false", Label> = {
+  true: { label: "Pasa", tone: "success" },
+  false: { label: "Falla", tone: "danger" },
 };

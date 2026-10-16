@@ -9,8 +9,18 @@ import { StatusBadge } from "@/components/status-badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { dataSource } from "@/lib/data";
 import { formatCostUsd } from "@/lib/format";
-import { APPROVAL_STATUS, CATEGORY, DECISION, INCIDENT_STATUS, PATCH_TYPE, RUN_STATUS, SEVERITY } from "@/lib/labels";
-import type { Agent, Report, Run } from "@/types/contracts";
+import {
+  APPROVAL_STATUS,
+  CATEGORY,
+  DECISION,
+  INCIDENT_STATUS,
+  JOB_STAGE,
+  JOB_STATUS,
+  PATCH_TYPE,
+  RUN_STATUS,
+  SEVERITY,
+} from "@/lib/labels";
+import type { Agent, Job, Report, Run } from "@/types/contracts";
 
 export async function generateStaticParams() {
   const result = await dataSource.listIncidents();
@@ -79,6 +89,35 @@ function RunCard({ run, agent }: { run: Run; agent: Agent | undefined }) {
   );
 }
 
+/** Trabajos del incidente. queued/running nunca se presentan como éxito; un fallo muestra su error. */
+function JobList({ jobs }: { jobs: Job[] }) {
+  if (jobs.length === 0) return <p className="text-sm text-muted-foreground">Sin trabajos registrados.</p>;
+  return (
+    <ul className="flex flex-col gap-2">
+      {jobs.map((job) => (
+        <li key={job.id} className="flex flex-col gap-1 rounded-md border p-3 text-sm">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-mono text-xs">{job.id}</span>
+            <StatusBadge {...JOB_STATUS[job.status]} />
+            <span className="text-muted-foreground">
+              Etapa: {JOB_STAGE[job.stage]} · {job.attempts} {job.attempts === 1 ? "intento" : "intentos"}
+            </span>
+          </div>
+          {job.error ? (
+            <p className="text-destructive">
+              {job.error.message} (<code className="font-mono">{job.error.code}</code>
+              {job.error.retryable ? ", reintentable" : ", no reintentable"})
+            </p>
+          ) : null}
+          <p className="text-xs text-muted-foreground">
+            Actualizado <time dateTime={job.updated_at}>{new Date(job.updated_at).toLocaleString("es", { timeZone: "UTC" })} UTC</time>
+          </p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 async function IncidentDetail({ params }: { params: PageProps<"/incidents/[id]">["params"] }) {
   const { id } = await params;
   const incidentResult = await dataSource.getIncident(id);
@@ -87,11 +126,12 @@ async function IncidentDetail({ params }: { params: PageProps<"/incidents/[id]">
     return <ErrorState status={incidentResult.status} error={incidentResult.error} />;
   }
   const incident = incidentResult.data;
-  const [runResult, patchesResult, reportsResult, agentsResult] = await Promise.all([
+  const [runResult, patchesResult, reportsResult, agentsResult, jobsResult] = await Promise.all([
     dataSource.getRun(incident.run_id),
     dataSource.listPatchesForIncident(incident.id),
     dataSource.listReportsForIncident(incident.id),
     dataSource.listAgents(),
+    dataSource.listJobs(),
   ]);
   const agents = agentsResult.ok ? agentsResult.data.items : [];
   const reportByPatch = new Map<string, Report>(
@@ -124,6 +164,17 @@ async function IncidentDetail({ params }: { params: PageProps<"/incidents/[id]">
           {incident.root_cause ?? <span className="text-muted-foreground">Sin diagnóstico todavía.</span>}
         </CardContent>
       </Card>
+
+      <section aria-labelledby="trabajos" className="flex flex-col gap-3">
+        <h2 id="trabajos" className="text-lg font-semibold">
+          Trabajos
+        </h2>
+        {jobsResult.ok ? (
+          <JobList jobs={jobsResult.data.filter((job) => job.incident_id === incident.id)} />
+        ) : (
+          <ErrorState status={jobsResult.status} error={jobsResult.error} />
+        )}
+      </section>
 
       <section aria-labelledby="candidatos" className="flex flex-col gap-3">
         <h2 id="candidatos" className="text-lg font-semibold">
