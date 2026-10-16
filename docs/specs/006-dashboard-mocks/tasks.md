@@ -1,6 +1,6 @@
 # Tareas del dashboard
 - [ ] UI-T01: Santiago — revisar spec/plan, confirmar dudas y registrar inicio en #4.
-- [ ] UI-T02: Santiago — bootstrap apps/dashboard, pnpm lockfile y comandos; FR-001.
+- [x] UI-T02: Santiago — bootstrap apps/dashboard, pnpm lockfile y comandos; FR-001.
 - [ ] UI-T03: Santiago — tipos/adaptador de fixtures; depende T02, FR-003.
 - [ ] UI-T04: Santiago — overview/lista/detalle y navegación; depende T03, FR-002.
 - [ ] UI-T05: Santiago — comparación, regresiones y estados alternativos; depende T03, FR-004/005.
