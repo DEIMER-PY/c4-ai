@@ -1,5 +1,5 @@
 # Dashboard inicial de Santiago
-ID: C4-UI-006. Issue: C4-004 / #4. Estado: Ready para revisión técnica de Santiago; implementación pendiente.
+ID: C4-UI-006. Issue: C4-004 / #4. Estado: Implementing; UI-T02–T06 hechas, pendiente respuesta a CL-001/CL-002 y revisión de Deimer.
 Responsable: Santiago/Claude; revisión de integración: Deimer.
 ## Requisitos
 FR-001: Preparar Next.js App Router/TypeScript/pnpm en apps/dashboard con lockfile y comandos reproducibles.
