@@ -81,3 +81,20 @@ Diseño de referencia, adaptación y validación: [spec012](../specs/012-neuron-
 
 ## Actividad junto a la neurona
 En la consola interactiva, /demo, /start, /analyze, /patch y /eval mantienen la neurona junto a una vista Live con etapas, respuestas guardadas, llamadas, tokens reportados y latencia acumulada de solicitudes registradas. El tiempo de comando se mide aparte; no es una promesa de rendimiento del modelo. Al finalizar se muestra la decisión guardada. Los subcomandos normales y JSON conservan su salida anterior. [Spec013](../specs/013-live-harness/spec.md).
+
+## Conversación con el agente
+Texto normal conversa con Grok; no requiere prefijo y consume solicitudes. Los slash siguen disponibles. Abrir consola no consume red. Ejemplo:
+
+```text
+Hola, ¿qué puedes hacer?
+/use last
+Consulta la evidencia y explícame por qué se rechazó el candidato.
+¿En qué caso introdujo una regresión?
+/new
+```
+
+/use ID o last selecciona evidencia sin llamadas. El agente puede usar list_runs/read_session, herramientas de solo lectura; no tiene shell, escritura, ejecución de evaluaciones ni aprobación de parches. Para generar una evaluación usa /demo o las etapas explícitas. Grok conversa; el target Groq/Grok seleccionado no cambia el modelo del chat.
+
+Historial de chat limitado a ocho mensajes en RAM, sin persistir conversaciones. /new borra historial, selección y presupuesto. Máximo 16 llamadas por conversación y dos por turno (hasta una consulta local y una explicación), sujetos a límites menores del entorno. Gateway sin reintentos automáticos; tiempo/tokens se limitan por turno. Costo monetario desconocido. La salida muestra llamadas, tokens con cobertura y latencia reportados, no estimaciones inventadas.
+
+No se adjuntan prompts, entradas/trazas completas, .env ni respuestas crudas del proveedor al contexto. Solo resumen acotado de estado/evaluación; las claves configuradas y patrones conocidos se bloquean o redactan. No pegar secretos ni datos privados en el prompt. El historial de entrada también evita conservar claves detectadas. La respuesta es explicación del modelo: la evidencia y el gate siguen siendo la autoridad para decisiones. Fallos y cancelación devuelven al prompt y pueden haber consumido la solicitud enviada. /clear solo redibuja, no borra conversación. [Spec015](../specs/015-conversational-cli/spec.md).
