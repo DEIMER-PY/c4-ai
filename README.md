@@ -8,11 +8,26 @@ C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de
 
 **Estado actual (2026-10-17):** CLI end to end con Grok verificada sobre seis casos sintéticos: baseline 5/6 → candidato 6/6, cero regresiones y controles obligatorios aprobados. Contratos Pydantic disponibles y dashboard de Santiago con mocks integrado por PR18. API, PostgreSQL y workers siguen planificados; el dashboard todavía no muestra esta evidencia real.
 
-[Ejecutar el CLI](docs/arquitectura/CLI.md) · [Evidencia y rúbrica pendiente](docs/producto/ENTREGA_S1.md) · [Dashboard local](apps/dashboard/README.md)
+[Abrir consola interactiva](docs/arquitectura/CLI.md) · [Evidencia y rúbrica pendiente](docs/producto/ENTREGA_S1.md) · [Dashboard local](apps/dashboard/README.md)
 
 **Acceso:** repositorio y tablero privados para Deimer y Santiago. Trabajo en equipo autorizado por la organización, confirmado por Deimer. La publicación se decidirá posteriormente.
 
 [Documentación](docs/README.md) · [Especificaciones SDD](docs/specs/README.md) · [Contratos](docs/arquitectura/API.md) · [Kanban](https://github.com/users/DEIMER-PY/projects/1/views/2) · [Tareas](https://github.com/DEIMER-PY/c4-ai/issues) · [Onboarding](docs/equipo/ONBOARDING_SANTIAGO.md)
+
+## Consola de C4 AI
+
+```powershell
+uv sync --locked
+uv run --locked c4 tui
+# Para evaluar Qwen con Groq:
+uv run --locked c4 --target-provider groq tui
+```
+
+La consola muestra neurona ASCII violeta/cian, proveedor/modelo, comandos con Tab, historial en memoria y evidencia real. Abrirla no consume solicitudes. Usa `/help`, `/doctor`, `/runs`, `/report last` y `/demo`; solo los comandos de ejecución o --probe llaman a los proveedores. En una terminal interactiva, `c4` sin argumentos también abre la consola.
+
+Grok diagnostica y propone candidatos; el target puede ser Grok o Groq/Qwen. Cada comparación mantiene el mismo modelo, esquema y dataset. La prueba real Qwen se rechazó por una regresión: un ciclo terminado no implica candidato aceptado. [Configuración y evidencia Groq](docs/referencias/GROQ.md). [Rúbricas del equipo](docs/equipo/RUBRICAS.md).
+
+Jev de TypeSafe queda como experimento de triage probabilístico; todavía no está integrado ni hay rapidez verificada en C4. [Propuesta, acceso y aceptación](docs/producto/JEV.md).
 
 ## El problema que resolvemos
 

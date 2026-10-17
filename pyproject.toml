@@ -9,6 +9,7 @@ description = "CLI and typed contracts for the C4 AI reliability workflow"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "httpx>=0.28.1",
+    "prompt-toolkit==3.0.53",
     "pydantic==2.13.5",
     "python-dotenv>=1.2.4",
     "rich>=15.0.0",

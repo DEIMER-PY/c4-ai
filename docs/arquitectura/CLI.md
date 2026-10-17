@@ -60,3 +60,17 @@ C4 diagnostica/proporciona candidatos con Grok. Para evaluar Qwen en Groq, confi
 Los límites se comparten entre proveedores. doctor --probe consume una solicitud por gateway distinto (dos al seleccionar Groq). JSON/evidencia registran target_provider y proveedor/modelo por llamada. Qwen usa el mismo esquema estricto de acciones en ambas versiones; modelos Groq no documentados con strict usan JSON object con validación local. Una respuesta inválida sigue siendo fallo, nunca aprobación.
 
 [Fuente, configuración y validación Groq](../referencias/GROQ.md).
+
+## Consola interactiva
+Ejecutar `uv run --locked c4 tui` o `uv run --locked c4 --target-provider groq tui`. En una terminal interactiva `c4` sin argumentos abre la misma consola; en una redirección muestra ayuda. --json requiere un subcomando y nunca abre la UI.
+
+La cabecera usa arte ASCII original de neurona violeta/cian y versión/modelos reales. En terminales anchas, composición lateral; en estrechas, apilada. Colores dependen del soporte del terminal y sus preferencias. Prompt con Tab para comandos e historial privado en memoria, sin persistencia en Git.
+
+- /help: comandos y límites; /clear: redibujar; /quit o Ctrl+D: salir.
+- /target grok o /target groq: elegir target del próximo comando, sin alterar sesiones guardadas.
+- /doctor: configuración; con --probe consulta realmente ambos gateways distintos.
+- /demo: ciclo completo; /start, /patch ID y /eval ID permiten etapas. /analyze ID también usa el servicio existente.
+- /runs: hasta ocho sesiones locales recientes, con estado/decisión y llamadas; running sin bloqueo se señala sin afirmar actividad.
+- /report ID o /compare ID: lectura; last selecciona la sesión más reciente. Estas lecturas no requieren credenciales ni generan nuevas solicitudes.
+
+Los comandos de la consola se enrutan a la misma app Typer, sin shell ni evaluación de código. Rechazo, error o cancelación devuelve control al prompt. Una sesión es de trabajo local; un resultado de modelo solo se considera real si tiene evidencia de proveedor. Jev se muestra como planificado, no como servicio conectado. [Spec010](../specs/010-interactive-console/spec.md).

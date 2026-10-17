@@ -1,28 +1,20 @@
-# Plan de trabajo de Santiago
-Responsable: santiagosanabria-1. Agente: Claude. Propiedad: apps/dashboard; contratos y decisiones globales compartidos.
-## Orden y entregables
-| Tarea | Cuándo | Entrega verificable |
-|---|---|---|
-| [C4-011 / #12](https://github.com/DEIMER-PY/c4-ai/issues/12) | Primero | Clon/bóveda abiertos, reglas leídas, comentario de onboarding y conexión Slack pendiente o confirmada |
-| [C4-004 / #4](https://github.com/DEIMER-PY/c4-ai/issues/4) | En paralelo con backend | Dashboard con mocks tipados, incidentes, detalle, comparación y errores |
-| [C4-006 / #6](https://github.com/DEIMER-PY/c4-ai/issues/6) | Tras API y #4 | Mismas pantallas conectadas a API, sin secretos en navegador |
-| [C4-008 / #8](https://github.com/DEIMER-PY/c4-ai/issues/8) | Tras flujo real/evals | Demo y presentación con evidencia real validada por Deimer |
+# Plan actual de Santiago
+Responsable: santiagosanabria-1 + Claude. Actualizado: 2026-10-17. Ownership: apps/dashboard; contratos/decisiones compartidos.
 
-No esperar al gateway para empezar #4. No marcar En curso hasta que Santiago o Claude comience realmente.
-## Primer arranque con Claude
-Seguir [onboarding](ONBOARDING_SANTIAGO.md) y copiar [prompt inicial](PROMPT_CLAUDE.md).
-La especificación inicial es [dashboard con mocks](../specs/006-dashboard-mocks/spec.md); Santiago revisa Ready antes de implementar.
-Rama: santiago/feat-c4-004-dashboard-mocks. Un PR hacia develop para esta feature; merge tras checks y revisión de Deimer.
-## Límites de edición
-Puede editar apps/dashboard y archivos de la propia spec. Cambios a examples/contracts, schemas, dependencias raíz Python o backend requieren coordinación previa.
-No copiar claves ni hacer llamadas Grok desde frontend. No añadir login/hosting/otra plataforma al primer dashboard.
-## Calidad
-Fixture synthetic siempre muestra Demo. Costos null = Desconocido; queued/running no = éxito.
-Probar lista vacía, loading, error, aceptación, rechazo y evidencia incompleta.
-Build y typecheck; navegación por teclado; capturas de desktop/móvil. Registrar evidencia en PR.
-## Handoff
-Issue, spec, rama/PR, archivos, comandos/resultados de validación, bloqueos y siguiente acción.
-Claude no necesita el historial privado de Codex. Leer estado/contratos/specs al inicio de cada sesión.
-## Revisión de estados
-Pendiente: preparado. En curso: agente trabajando. En revisión: PR/evidencia listos. Bloqueado: causa/siguiente acción. Hecho: criterios verificados y merge a develop.
-GitHub Projects es el tablero operativo; el resumen Markdown no cambia ese estado automáticamente.
+C4-004 está terminada: PR18 integrado y revisado con 32 pruebas, build/typecheck/lint, desktop/móvil/teclado y estados alternativos. No repetir el bootstrap. [Rúbricas del equipo](RUBRICAS.md).
+
+## Próxima feature: C4-006 / issue #6
+1. Actualizar develop, revisar cambios locales y leer AGENTS/CLAUDE, ESTADO, API y las clarificaciones resueltas de spec006.
+2. Preparar spec/plan/tasks para integración. Coordinar con Deimer listados de candidatos/evaluaciones y métricas/jobs antes de cambiar contratos; no existen esos endpoints aún. Backend/API es la dependencia de C4-002.
+3. Implementar un adaptador HTTP detrás de C4DataSource, manteniendo las vistas y un modo Demo explícito. No leer archivos locales desde el navegador ni usar claves de modelos en frontend.
+4. Validar navegación con IDs reales, trabajos pendientes/fallidos, evidencia incompleta, 404/503 y costo desconocido; polling con límite/limpieza al salir. Mostrar proveedor/modelo real solo si el contrato lo ofrece.
+5. Build, typecheck, lint, pruebas y capturas desktop/móvil. PR pequeño hacia develop y revisión Deimer; no marcar integrado hasta probar UI→API→evidencia.
+
+## Después: C4-008 / issue #8
+Guion/pitch/video de unos dos minutos sobre una ejecución aceptada, una rechazada y una incompleta. Usar evidencia real con procedencia; no copiar métricas de la imagen de referencia ni generar una demo simulada. Deimer valida los resultados antes de grabar.
+
+## Onboarding C4-011 / issue #12
+La entrega GitHub/Claude y acceso al repositorio están verificados. Confirmar personalmente Slack, apertura del clon como bóveda Obsidian y lectura/acceso de las reglas en #12. No inferir esos pasos de un commit.
+
+## Entrega y límites
+Ramas santiago/feat-<id>-<tema>, Conventional Commits con emoji y PR→develop. Declarar archivos, criterio, validación y bloqueo. No editar backend/root Python ni contratos sin coordinación; Groq/Grok/Jev son integraciones del backend. Claude recibe el contexto desde Git, no del chat privado de Codex. [Prompt actualizado](PROMPT_CLAUDE.md).
