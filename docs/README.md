@@ -1,5 +1,5 @@
 # Centro de documentación C4 AI
-Actualizado el 2026-10-17. CLI end to end verificada; dashboard con mocks y contratos implementados. API/DB/workers pendientes.
+Actualizado el 2026-10-17. CLI end to end verificada; dashboard con mocks y contratos implementados. API local de consulta disponible; escritura/DB/workers pendientes.
 ## Producto
 - [Visión y PRD](producto/PRD.md)
 - [Roadmap](producto/ROADMAP.md)

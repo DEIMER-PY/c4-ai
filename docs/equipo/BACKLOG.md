@@ -10,7 +10,7 @@ Aceptación: Documentar fuente oficial, fechas, URL/modelo admitidos y solicitud
 Validación: Solicitud real limitada y registro saneado.
 
 ## C4-002 — Implementar modelos, persistencia y contratos API
-Estado: En curso. Primera feature de contratos Pydantic implementada; migraciones y API pendientes. No cerrar la tarea por esta entrega parcial.
+Estado: En curso. Primera feature de contratos Pydantic implementada; API local de consulta implementada en spec014; migraciones, DB y escritura HTTP pendientes. No cerrar la tarea por esta entrega parcial.
 Responsable: DEIMER-PY. Fase: S1. Prioridad: P0.
 Dependencias: ninguna.
 Archivos: c4/schemas; c4/db; apps/api.
@@ -18,7 +18,7 @@ Aceptación: Pydantic coincide con ejemplos; migraciones crean entidades/relacio
 Validación: Pruebas de contratos, DB y errores 404/409/422.
 
 ## C4-003 — Construir primer loop y CLI de incidentes
-Estado: En curso. Ciclo CLI, progreso, target Groq y consola interactiva implementados en specs007–010; falta adaptador API sobre el mismo servicio para cerrar toda la aceptación.
+Estado: En curso. Ciclo CLI, progreso, target Groq y consola interactiva implementados en specs007–010; API de consulta disponible; falta adaptador HTTP de ejecución para cerrar toda la aceptación.
 Responsable: DEIMER-PY. Fase: S1. Prioridad: P0.
 Dependencias: C4-001, C4-002.
 Archivos: c4/agents; c4/workflows; c4/services; apps/cli.
