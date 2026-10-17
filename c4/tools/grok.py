@@ -1,7 +1,7 @@
 """Bounded JSON-only gateway. Provider content is untrusted data."""
 import json
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from time import monotonic
 from typing import Any
 from urllib.parse import urlparse
@@ -20,20 +20,24 @@ class WorkflowError(Exception):
 class Settings:
     base_url: str
     model: str
-    api_key: str
+    api_key: str = field(repr=False)
     timeout: float = 60
     max_calls: int = 16
     max_tokens: int = 1024
     max_seconds: float = 600
+    provider: str = 'grok'
 
     @classmethod
-    def from_env(cls, env_file: str = '.env') -> 'Settings':
+    def from_env(cls, env_file: str = '.env', provider: str = 'grok') -> 'Settings':
         load_dotenv(env_file, override=False)
+        if provider not in {'grok', 'groq'}:
+            raise WorkflowError('invalid_provider', 'Proveedor permitido: grok o groq.')
+        base = os.environ.get('C4_GROK_BASE_URL', '') if provider == 'grok' else os.environ.get('C4_GROQ_BASE_URL', 'https://api.groq.com/openai/v1')
+        key = os.environ.get('C4_GROK_API_KEY', '') if provider == 'grok' else os.environ.get('GROQ_API_KEY', '')
+        model = os.environ.get('C4_GROK_MODEL' if provider == 'grok' else 'C4_GROQ_MODEL', '')
         try:
             settings = cls(
-                base_url=os.environ.get('C4_GROK_BASE_URL', '').rstrip('/'),
-                model=os.environ.get('C4_GROK_MODEL', ''),
-                api_key=os.environ.get('C4_GROK_API_KEY', ''),
+                base_url=base.rstrip('/'), model=model, api_key=key, provider=provider,
                 timeout=float(os.environ.get('C4_MODEL_TIMEOUT_SECONDS', '60')),
                 max_calls=int(os.environ.get('C4_MAX_MODEL_CALLS', '16')),
                 max_tokens=int(os.environ.get('C4_MAX_OUTPUT_TOKENS', '1024')),
@@ -45,6 +49,8 @@ class Settings:
         return settings
 
     def validate(self) -> None:
+        if self.provider not in {'grok', 'groq'}:
+            raise WorkflowError('invalid_provider', 'Proveedor permitido: grok o groq.')
         parsed = urlparse(self.base_url)
         if (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password
                 or parsed.query or parsed.fragment):
@@ -56,36 +62,82 @@ class Settings:
             raise WorkflowError('invalid_config', 'Límites fuera de rango: timeout≤120, job≤3600, llamadas≤100, tokens 64..4096.')
 
 
+@dataclass
+class CallBudget:
+    max_calls: int
+    max_seconds: float
+    started: float = field(default_factory=monotonic)
+    calls: int = 0
+    records: list[dict[str, Any]] = field(default_factory=list)
+
+
 class Gateway:
     def __init__(self, settings: Settings, client: httpx.Client | None = None):
         settings.validate()
         self.settings = settings
         self.client = client or httpx.Client(follow_redirects=False)
-        self.started = monotonic()
-        self.calls = 0
-        self.records: list[dict[str, Any]] = []
+        self.budget = CallBudget(settings.max_calls, settings.max_seconds)
+
+    @property
+    def started(self):
+        return self.budget.started
+
+    @started.setter
+    def started(self, value):
+        self.budget.started = value
+
+    @property
+    def calls(self):
+        return self.budget.calls
+
+    @calls.setter
+    def calls(self, value):
+        self.budget.calls = value
+
+    @property
+    def records(self):
+        return self.budget.records
+
+    def share_budget(self, other: 'Gateway'):
+        self.budget = other.budget
+        self.budget.max_calls = min(self.budget.max_calls, self.settings.max_calls)
+        self.budget.max_seconds = min(self.budget.max_seconds, self.settings.max_seconds)
 
     def close(self) -> None:
         self.client.close()
 
-    def complete(self, system: str, payload: dict, purpose: str) -> dict:
-        remaining = self.settings.max_seconds - (monotonic() - self.started)
-        if self.calls >= self.settings.max_calls or remaining <= 0:
+    def output_mode(self, schema: bool = False) -> str:
+        # Official Groq supported-model list verified 2026-10-17; unknown models retain local validation.
+        strict_models = {'qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'meta-models/muse-spark-open'}
+        if self.settings.provider == 'groq':
+            return 'json_schema' if schema and self.settings.model in strict_models else 'json_object'
+        return 'prompt_json'
+
+    def complete(self, system: str, payload: dict, purpose: str, schema: dict | None = None) -> dict:
+        remaining = self.budget.max_seconds - (monotonic() - self.started)
+        if self.calls >= self.budget.max_calls or remaining <= 0:
             raise WorkflowError('budget_exceeded', 'Se alcanzó el límite de llamadas o tiempo; revisar evidencia.')
         self.calls += 1
         start = monotonic()
-        record = {'call': self.calls, 'purpose': purpose, 'model': self.settings.model,
+        record = {'call': self.calls, 'purpose': purpose, 'model': self.settings.model, 'provider': self.settings.provider,
+                  'output_mode': self.output_mode(schema is not None),
                   'status': 'failed', 'input_tokens': None, 'output_tokens': None,
                   'cost_usd': None}
         self.records.append(record)
         try:
+            request_body = {'model': self.settings.model, 'messages': [
+                {'role': 'system', 'content': system + '\nReturn exactly one JSON object. No Markdown.'},
+                {'role': 'user', 'content': json.dumps(payload, ensure_ascii=False)}],
+                'max_tokens': self.settings.max_tokens}
+            if record['output_mode'] == 'json_schema':
+                request_body['response_format'] = {'type':'json_schema', 'json_schema': {
+                    'name':'c4_test_action', 'strict':True, 'schema':schema}}
+            elif record['output_mode'] == 'json_object':
+                request_body['response_format'] = {'type':'json_object'}
             response = self.client.post(
                 self.settings.base_url + '/chat/completions',
                 headers={'Authorization': 'Bearer ' + self.settings.api_key},
-                json={'model': self.settings.model, 'messages': [
-                    {'role': 'system', 'content': system + '\nReturn exactly one JSON object. No Markdown.'},
-                    {'role': 'user', 'content': json.dumps(payload, ensure_ascii=False)}],
-                    'max_tokens': self.settings.max_tokens},
+                json=request_body,
                 timeout=min(self.settings.timeout, remaining),
             )
             record['http_status'] = response.status_code
@@ -93,7 +145,7 @@ class Gateway:
                 code = 'provider_auth' if response.status_code in (401, 403) else 'provider_http'
                 raise WorkflowError(code, f'El gateway devolvió HTTP {response.status_code}.',
                                     response.status_code == 429 or response.status_code >= 500)
-            if monotonic() - self.started > self.settings.max_seconds:
+            if monotonic() - self.started > self.budget.max_seconds:
                 raise WorkflowError('budget_exceeded', 'El proveedor excedió el tiempo total de la sesión.')
             body = response.json()
             usage = body.get('usage') or {}

@@ -53,3 +53,10 @@ Baseline y candidato se evalúan sobre el mismo snapshot. El gate exige objetivo
 
 ## Fronteras pendientes
 PostgreSQL/Alembic, FastAPI, Redis/RQ, API de evidencia para Santiago, TUI interactiva, instaladores y aplicación de escritorio se desarrollan en features posteriores. La CLI se instala desde el clon privado; no hay paquete público de instalación todavía.
+
+## Modelo evaluado independiente
+C4 diagnostica/proporciona candidatos con Grok. Para evaluar Qwen en Groq, configurar GROQ_API_KEY y C4_GROQ_MODEL en .env; ejecutar `uv run --locked c4 --target-provider groq doctor` y `uv run --locked c4 --target-provider groq demo`. El proveedor elegido se aplica por igual al baseline y al candidato. --target-provider va antes del comando. Sin opción se conserva Grok; C4_TARGET_PROVIDER permite elegir el valor local por defecto.
+
+Los límites se comparten entre proveedores. doctor --probe consume una solicitud por gateway distinto (dos al seleccionar Groq). JSON/evidencia registran target_provider y proveedor/modelo por llamada. Qwen usa el mismo esquema estricto de acciones en ambas versiones; modelos Groq no documentados con strict usan JSON object con validación local. Una respuesta inválida sigue siendo fallo, nunca aprobación.
+
+[Fuente, configuración y validación Groq](../referencias/GROQ.md).

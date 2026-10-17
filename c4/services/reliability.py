@@ -21,9 +21,17 @@ def dump(model):
 
 
 class ReliabilityService:
-    def __init__(self, store: Store, gateway: Gateway, on_checkpoint: Callable[[dict], None] | None = None):
+    def __init__(self, store: Store, gateway: Gateway, on_checkpoint: Callable[[dict], None] | None = None,
+                 target_gateway: Gateway | None = None):
         self.store, self.gateway = store, gateway
         self.on_checkpoint = on_checkpoint
+        self.target_gateway = target_gateway or gateway
+        if self.target_gateway is not gateway:
+            self.target_gateway.share_budget(gateway)
+
+    def target_identity(self):
+        settings = self.target_gateway.settings
+        return {'provider': settings.provider, 'base_url': settings.base_url, 'model': settings.model}
 
     def notify(self, state: dict):
         if self.on_checkpoint:
@@ -35,16 +43,18 @@ class ReliabilityService:
             raise WorkflowError('invalid_target', 'El caso objetivo no pertenece al dataset.')
         sid = 'c4_' + uuid4().hex
         state = {
-            'id': sid, 'schema_version': 'cli-evidence-1', 'provenance': 'synthetic_cases_real_provider',
+            'id': sid, 'schema_version': 'cli-evidence-2', 'provenance': 'synthetic_cases_real_provider',
             'created_at': now().isoformat(), 'dataset': dataset, 'target_case_id': target,
             'provider': {'base_url': self.gateway.settings.base_url, 'model': self.gateway.settings.model},
-            'limits': {'max_calls': self.gateway.settings.max_calls, 'max_tokens': self.gateway.settings.max_tokens,
-                       'max_seconds': self.gateway.settings.max_seconds},
+            'target_provider': self.target_identity(),
+            'target_output_mode': self.target_gateway.output_mode(schema=True),
+            'limits': {'max_calls': self.gateway.budget.max_calls, 'max_tokens': self.gateway.settings.max_tokens,
+                       'max_seconds': self.gateway.budget.max_seconds},
             'baseline_prompt': BASELINE_PROMPT, 'baseline_sha256': hashlib.sha256(BASELINE_PROMPT.encode()).hexdigest(),
             'calls': [], 'evaluation_outputs': [],
         }
         state['baseline_agent'] = dump(Agent(id=sid + '_baseline', name='Refunds test agent', version='1.0.0',
-            prompt_ref='evidence:baseline_prompt', config_ref='evidence:provider', created_at=now()))
+            prompt_ref='evidence:baseline_prompt', config_ref='evidence:target_provider', created_at=now()))
         state['incident'] = dump(Incident(id=sid + '_incident', run_id=sid + '_run',
             category='policy_violation', severity='high', summary='Incidente de prueba pendiente de inspección',
             root_cause=None, status='detected'))
@@ -67,13 +77,11 @@ class ReliabilityService:
             if state['job']['status'] == 'failed':
                 raise WorkflowError('failed_session', 'Sesión fallida conservada; inicia una demo nueva. Consulta report para evidencia.')
             self.previous_calls = list(state['calls'])
+            self.gateway.budget.max_calls = min(self.gateway.budget.max_calls, state['limits']['max_calls'])
+            self.gateway.budget.max_seconds = min(self.gateway.budget.max_seconds, state['limits']['max_seconds'])
             self.gateway.calls = len(self.previous_calls)
             elapsed = (now() - datetime.fromisoformat(state['created_at'])).total_seconds()
-            remaining = state['limits']['max_seconds'] - elapsed
-            if remaining <= 0:
-                self.gateway.started = monotonic() - self.gateway.settings.max_seconds
-            else:
-                self.gateway.started = monotonic() - max(0, self.gateway.settings.max_seconds - remaining)
+            self.gateway.started = monotonic() - max(0, elapsed)
             # Limits cannot be enlarged when resuming with a new environment.
             from dataclasses import replace
             self.gateway.settings = replace(self.gateway.settings,
@@ -81,6 +89,13 @@ class ReliabilityService:
                 max_tokens=min(self.gateway.settings.max_tokens, state['limits']['max_tokens']))
             if state['provider'] != {'base_url': self.gateway.settings.base_url, 'model': self.gateway.settings.model}:
                 raise WorkflowError('provider_changed', 'No se puede cambiar proveedor/modelo dentro de una comparación.')
+            legacy_target = {'provider': 'grok', **state['provider']}
+            if state.get('target_provider', legacy_target) != self.target_identity():
+                raise WorkflowError('provider_changed', 'No se puede cambiar el modelo/proveedor evaluado dentro de una sesión.')
+            if state.get('target_output_mode', 'prompt_json') != self.target_gateway.output_mode(schema=True):
+                raise WorkflowError('provider_changed', 'No se puede cambiar el modo de salida del target dentro de una sesión.')
+            self.target_gateway.settings = replace(self.target_gateway.settings,
+                max_tokens=min(self.target_gateway.settings.max_tokens, state['limits']['max_tokens']))
             self.gateway.records.clear()
             state['job']['attempts'] += 1
             try:
@@ -116,7 +131,7 @@ class ReliabilityService:
         self.checkpoint(state, 'inspect')
         case = next(c for c in state['dataset']['data']['cases'] if c['id'] == state['target_case_id'])
         if 'run' not in state:
-            output = run_agent(self.gateway, state['baseline_prompt'], case, 'initial_baseline')
+            output = run_agent(self.target_gateway, state['baseline_prompt'], case, 'initial_baseline')
             record = self.gateway.records[-1]
             state['run'] = dump(Run(id=state['incident']['run_id'], agent_id=state['baseline_agent']['id'],
                 status='succeeded', input_payload=case['input'], output_payload=output,
@@ -141,7 +156,7 @@ class ReliabilityService:
         proposal = state['proposal']
         state['candidate_prompt'] = proposal['candidate_prompt']
         state['candidate_agent'] = dump(Agent(id=state['id'] + '_candidate', name='Refunds candidate', version='1.0.1',
-            prompt_ref='evidence:candidate_prompt', config_ref='evidence:provider', created_at=now()))
+            prompt_ref='evidence:candidate_prompt', config_ref='evidence:target_provider', created_at=now()))
         diff = '\n'.join(difflib.unified_diff(state['baseline_prompt'].splitlines(), state['candidate_prompt'].splitlines(),
                                             fromfile='baseline', tofile='candidate', lineterm=''))
         if not diff:
@@ -172,7 +187,7 @@ class ReliabilityService:
         for case in data['cases']:
             passed = {}
             for stage in ('before', 'after'):
-                output = run_agent(self.gateway, state['baseline_prompt' if stage == 'before' else 'candidate_prompt'],
+                output = run_agent(self.target_gateway, state['baseline_prompt' if stage == 'before' else 'candidate_prompt'],
                                    case, f'evaluate:{stage}:{case["id"]}')
                 passed[stage] = output == case['expected']
                 state['evaluation_outputs'].append({'case_id': case['id'], 'stage': stage, 'output': output,
