@@ -7,6 +7,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Contratos tipados del backend](005-backend-contracts/spec.md)
 - [Dashboard inicial de Santiago](006-dashboard-mocks/spec.md)
 - [CLI end to end con Grok](007-cli-end-to-end/spec.md)
+- [Progreso visible e interrupción del CLI](008-cli-progress/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
