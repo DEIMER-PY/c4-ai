@@ -1,8 +1,8 @@
 # Backlog implementable
-La preparación documental está verificada. C4-001 depende de la clave local y habilitación del panel; C4-002 y C4-004 pueden avanzar independientemente con contratos y mocks. C4-011 confirma el onboarding de Santiago.
+Actualizado 2026-10-17: gateway y primer ciclo CLI verificados; C4-002 continúa con DB/API pendientes. C4-004 revisado como demo e integrado por PR18; C4-006 espera API real. C4-011 mantiene confirmaciones humanas pendientes. Ver docs/producto/ENTREGA_S1.md.
 El campo responsable designa un humano; colaboración secundaria no sustituye revisión cruzada.
 ## C4-001 — Verificar requisitos del reto y conexión Grok
-Estado: Bloqueado para la prueba real; URL del reto/base publicadas confirmadas. Próxima acción Deimer: guardar clave en .env y confirmar modelo del panel.
+Estado: En revisión. HTTP200 y ciclo real con grok-4.7 verificados el 2026-10-17. Requisitos vigentes contrastados; falta decidir publicación/licencia sin alterar privacidad actual y rotar la clave que estuvo en historial.
 Responsable: DEIMER-PY. Fase: S1. Prioridad: P0.
 Dependencias: ninguna.
 Archivos: docs/referencias; c4/tools.
@@ -18,6 +18,7 @@ Aceptación: Pydantic coincide con ejemplos; migraciones crean entidades/relacio
 Validación: Pruebas de contratos, DB y errores 404/409/422.
 
 ## C4-003 — Construir primer loop y CLI de incidentes
+Estado: En curso. Ciclo CLI real y evidencia local implementados en spec007; falta adaptador API sobre el mismo servicio para cerrar toda la aceptación.
 Responsable: DEIMER-PY. Fase: S1. Prioridad: P0.
 Dependencias: C4-001, C4-002.
 Archivos: c4/agents; c4/workflows; c4/services; apps/cli.
@@ -25,7 +26,7 @@ Aceptación: Traza→diagnóstico→candidato→evidencia; baseline inmutable; C
 Validación: Un incidente reproducible y un fallo del proveedor.
 
 ## C4-004 — Preparar dashboard con contratos y mocks
-Estado: Pendiente, listo para Santiago. Spec inicial: docs/specs/006-dashboard-mocks; ver PLAN_SANTIAGO y PROMPT_CLAUDE.
+Estado: Verificada (demo). PR18 integrado, 32 pruebas/build/typecheck/lint aprobados; navegación, móvil, teclado y estados alternativos revisados el 2026-10-17. Clarificaciones respondidas en ENTREGA_S1. C4-006 continúa pendiente de API real.
 Responsable: santiagosanabria-1. Fase: S1. Prioridad: P0.
 Dependencias: ninguna.
 Archivos: apps/dashboard.
@@ -33,6 +34,7 @@ Aceptación: Next.js tipado, pnpm lockfile, incidentes/detalle/comparación; eti
 Validación: Build/typecheck y revisión visual/teclado con fixtures.
 
 ## C4-005 — Implementar herramientas y gate de evaluación
+Estado: En curso parcial. Inspector, propuesta y evaluación/gate implementados para el escenario local de reembolsos; rechazo/fallos probados con transporte controlado. Ampliar integración y evidencia real según spec.
 Responsable: DEIMER-PY. Fase: S2. Prioridad: P0.
 Dependencias: C4-003.
 Archivos: c4/tools; c4/services; tests/evals.

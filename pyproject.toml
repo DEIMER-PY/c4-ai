@@ -5,9 +5,18 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "c4-ai"
 version = "0.1.0"
-description = "Typed contracts for the C4 AI reliability workflow"
+description = "CLI and typed contracts for the C4 AI reliability workflow"
 requires-python = ">=3.12,<3.13"
-dependencies = ["pydantic==2.13.5"]
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic==2.13.5",
+    "python-dotenv>=1.2.4",
+    "rich>=15.0.0",
+    "typer>=0.27.3",
+]
 
 [tool.setuptools.packages.find]
 include = ["c4*"]
+
+[project.scripts]
+c4 = "c4.cli:app"

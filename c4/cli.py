@@ -1,0 +1,176 @@
+"""C4 AI command-line adapter; business logic lives in the service."""
+import json
+import sys
+from pathlib import Path
+from typing import Annotated
+
+import typer
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
+
+from c4.services.reliability import ReliabilityService
+from c4.services.storage import Store
+from c4.tools.grok import Gateway, Settings, WorkflowError
+from c4.tools.refunds import read_dataset
+
+app = typer.Typer(name='c4', no_args_is_help=True, pretty_exceptions_show_locals=False,
+                  help='Confiabilidad de agentes: detectar, corregir y evaluar con evidencia.')
+console = Console()
+
+
+@app.callback()
+def configure(ctx: typer.Context,
+              store: Annotated[Path, typer.Option(help='Directorio local de evidencia privada.')] = Path('artifacts/runs'),
+              env_file: Annotated[str, typer.Option(help='Archivo de entorno local.')] = '.env',
+              json_output: Annotated[bool, typer.Option('--json', help='JSON sin decoración.')] = False):
+    # Windows redirected streams may use cp1252; model text can contain any Unicode.
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(errors='backslashreplace')
+    ctx.obj = {'store': Store(store), 'env_file': env_file, 'json': json_output}
+
+
+def emit(ctx: typer.Context, result: dict):
+    if ctx.obj['json']:
+        typer.echo(json.dumps(result, ensure_ascii=True, allow_nan=False))
+        return
+    title = Text('C4 ', style='bold magenta') + Text('AI', style='bold cyan')
+    console.print(Panel(Text('Confiabilidad de agentes · CLI 0.1.0\nCasos sintéticos · llamadas reales al proveedor · sin acciones de producción'), title=title, border_style='magenta'))
+    if 'job' not in result:
+        console.print_json(data=result)
+        return
+    console.print(Text('Sesión: ' + result['id'], style='cyan'))
+    console.print(Text('Trabajo: ' + result['job']['status'] + ' · ' + result['job']['stage']))
+    for section, field in [('incident', 'root_cause'), ('report', 'summary')]:
+        if result.get(section, {}).get(field):
+            console.print(Text(result[section][field]))
+    if 'evaluation' in result:
+        evaluation = result['evaluation']
+        table = Table('Caso', 'Baseline', 'Candidato', border_style='cyan')
+        for row in evaluation['case_results']:
+            table.add_row(row['case_id'], 'PASS' if row['before_passed'] else 'FAIL', 'PASS' if row['after_passed'] else 'FAIL')
+        console.print(table)
+    calls = result['calls']
+    tokens = sum(c['input_tokens'] + c['output_tokens'] for c in calls
+                 if c['input_tokens'] is not None and c['output_tokens'] is not None)
+    coverage = sum(c['input_tokens'] is not None and c['output_tokens'] is not None for c in calls)
+    console.print(Text(f'Llamadas: {len(calls)} · tokens reportados: {tokens} (cobertura {coverage}/{len(calls)}) · costo: desconocido'))
+    console.print(Text('Evidencia: ' + str(ctx.obj['store'].path(result['id']).resolve()), style='dim'))
+
+
+def fail(ctx: typer.Context, error: WorkflowError):
+    payload = {'error': {'code': error.code, 'message': str(error), 'retryable': error.retryable}}
+    if ctx.obj['json']:
+        typer.echo(json.dumps(payload, ensure_ascii=True))
+    else:
+        console.print(Text(f'{error.code}: {error}', style='red'))
+    raise typer.Exit(1)
+
+
+def status_code(state: dict) -> int:
+    if state['job']['status'] == 'failed':
+        return 1
+    return {'rejected': 2, 'needs_human_review': 3}.get(state.get('report', {}).get('decision'), 0)
+
+
+def execute(ctx: typer.Context, session_id: str | None, operation: str, dataset: Path | None = None, target: str = 'refund_expired'):
+    gateway = None
+    try:
+        gateway = Gateway(Settings.from_env(ctx.obj['env_file']))
+        service = ReliabilityService(ctx.obj['store'], gateway)
+        if session_id is None:
+            state = service.create(read_dataset(dataset), target)
+            session_id = state['id']
+        state = service.execute(session_id, operation)
+        emit(ctx, state)
+        raise typer.Exit(status_code(state))
+    except WorkflowError as error:
+        fail(ctx, error)
+    except (OSError, ValueError):
+        fail(ctx, WorkflowError('local_io_or_validation', 'No se pudo completar la validación o escritura local; revisar permisos y evidencia.'))
+    finally:
+        if gateway:
+            gateway.close()
+
+
+@app.command()
+def doctor(ctx: typer.Context, probe: Annotated[bool, typer.Option(help='Realiza una llamada mínima al gateway.')] = False):
+    """Validar configuración sin mostrar la clave. --probe consume una llamada."""
+    gateway = None
+    try:
+        settings = Settings.from_env(ctx.obj['env_file'])
+        result = {'configured': True, 'model': settings.model, 'https': True, 'credential': 'present',
+                  'max_calls': settings.max_calls, 'max_output_tokens': settings.max_tokens,
+                  'max_job_seconds': settings.max_seconds, 'probe': 'not_requested', 'cost_usd': None}
+        if probe:
+            gateway = Gateway(settings)
+            response = gateway.complete('Return {"connected":true}.', {}, 'doctor')
+            if response != {'connected': True}:
+                raise WorkflowError('invalid_probe', 'Respuesta inesperada del gateway.')
+            result.update(probe='succeeded', calls=gateway.records)
+        emit(ctx, result)
+    except WorkflowError as error:
+        fail(ctx, error)
+    finally:
+        if gateway:
+            gateway.close()
+
+
+@app.command()
+def demo(ctx: typer.Context,
+         dataset: Annotated[Path, typer.Option(help='Dataset versionado sintético.')] = Path('datasets/sample/refunds.json'),
+         target: Annotated[str, typer.Option()] = 'refund_expired'):
+    """Ejecutar ciclo completo con Grok; guardar cada fase por ID."""
+    execute(ctx, None, 'demo', dataset, target)
+
+
+@app.command()
+def start(ctx: typer.Context, dataset: Path = Path('datasets/sample/refunds.json'), target: str = 'refund_expired'):
+    """Crear sesión, ejecutar baseline e investigar incidente; continuar con patch/eval."""
+    execute(ctx, None, 'analyze', dataset, target)
+
+
+@app.command()
+def analyze(ctx: typer.Context, session_id: str):
+    """Inspeccionar e investigar una sesión existente."""
+    execute(ctx, session_id, 'analyze')
+
+
+@app.command()
+def patch(ctx: typer.Context, session_id: str):
+    """Materializar candidato declarativo, sin aceptarlo."""
+    execute(ctx, session_id, 'patch')
+
+
+@app.command('eval')
+def evaluate(ctx: typer.Context, session_id: str):
+    """Evaluar baseline y candidato sobre el mismo dataset y decidir."""
+    execute(ctx, session_id, 'eval')
+
+
+def read(ctx: typer.Context, session_id: str, require_evaluation: bool = False):
+    try:
+        state = ctx.obj['store'].load(session_id)
+        if require_evaluation and 'evaluation' not in state:
+            raise WorkflowError('missing_evaluation', 'No existe evaluación en esta sesión.')
+        emit(ctx, state)
+        raise typer.Exit(status_code(state))
+    except WorkflowError as error:
+        fail(ctx, error)
+
+
+@app.command()
+def compare(ctx: typer.Context, session_id: str):
+    """Consultar comparación persistida sin llamadas al proveedor."""
+    read(ctx, session_id, True)
+
+
+@app.command()
+def report(ctx: typer.Context, session_id: str):
+    """Consultar evidencia y reporte local, incluso de un trabajo fallido."""
+    read(ctx, session_id)
+
+
+if __name__ == '__main__':
+    app()

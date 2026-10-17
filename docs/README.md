@@ -1,15 +1,17 @@
 # Centro de documentación C4 AI
-Estado documental: preparado el 2026-10-11. El producto sigue planificado.
+Actualizado el 2026-10-17. CLI end to end verificada; dashboard con mocks y contratos implementados. API/DB/workers pendientes.
 ## Producto
 - [Visión y PRD](producto/PRD.md)
 - [Roadmap](producto/ROADMAP.md)
 - [Dashboard y UX](producto/DASHBOARD.md)
 - [Demo y aceptación](producto/DEMO.md)
+- [Entrega S1, evidencia y rúbrica](producto/ENTREGA_S1.md)
 ## Arquitectura
 - [Sistema y diagramas](arquitectura/ARQUITECTURA.md)
 - [Stack](arquitectura/STACK.md)
 - [Modelo de datos](arquitectura/DATOS.md)
 - [API/CLI y contratos](arquitectura/API.md)
+- [CLI ejecutable: instalación y comandos](arquitectura/CLI.md)
 - [Evaluaciones](arquitectura/EVALUACIONES.md)
 - [Seguridad](arquitectura/SEGURIDAD.md)
 - [Instalación prevista](arquitectura/INSTALACION.md)
@@ -30,6 +32,7 @@ Estado documental: preparado el 2026-10-11. El producto sigue planificado.
 - [Onboarding Santiago/Claude](equipo/ONBOARDING_SANTIAGO.md)
 - [Resumen de acuerdos](equipo/CONTEXTO.md)
 - [Decisión de arquitectura](decisiones/ADR-001.md)
+- [Evaluación Tauri/Hermes y escritorio](decisiones/ADR-002-desktop.md)
 - [Bitácora inicial](bitacora/2026-10-11.md)
 - [Fuentes y verificaciones pendientes](referencias/FUENTES.md)
 
