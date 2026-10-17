@@ -3,7 +3,7 @@ Actualizado: 2026-10-17.
 
 ## Producto y evidencia
 - **Verificada:** CLI end to end con Grok, sobre seis casos sintéticos. Baseline 5/6, candidato 6/6, cero regresiones, tres casos de seguridad aprobados; 14 llamadas, 20.730 tokens reportados. [Evidencia y rúbricas](../producto/ENTREGA_S1.md).
-- **Verificados:** contratos Pydantic v1, 15 pruebas originales. Las 75 pruebas actuales verifican contratos, servicio, gate, fallos, límites, CLI, Unicode de Windows y lectura entre procesos; ver spec007.
+- **Verificados:** contratos Pydantic v1, 15 pruebas originales. Las 80 pruebas actuales verifican contratos, servicio, gate, fallos, límites, CLI, Unicode de Windows y lectura entre procesos; ver spec007.
 - **Verificada como demo:** C4-004 dashboard de Santiago, integrado por [PR18](https://github.com/DEIMER-PY/c4-ai/pull/18), con fixtures sintéticos. Build y 32 pruebas aprobados; typecheck/lint aprobados. Revisión de navegador y cierre de criterios registrados en entrega S1.
 - **Verificados:** proveedor target Groq/Qwen separado de Grok (PR21), con prueba real rechazada por regresión; [fuente/evidencia](../referencias/GROQ.md). Consola interactiva con comandos, autocompletado e historial en memoria; spec010.
 - **Planificados:** operaciones HTTP de escritura, PostgreSQL/Alembic, Redis/RQ, API real para dashboard, instaladores/escritorio y prueba de carga. El almacén del CLI es local con checkpoints, no una DB distribuida.
@@ -42,3 +42,5 @@ Chat CLI (spec015): texto natural con Grok, list_runs/read_session de solo lectu
 ## Integración S1 actualizada
 Spec016: dashboard conectado a GET v1 existentes, sin fallback Demo; 37 pruebas frontend, build/typecheck/lint y checklist React. Vista escritorio/tablet/móvil y comparación aceptada/rechazada revisadas. Nuevo ciclo Grok c4_63fb290ce5244c248f0b929120f14df2: accepted 5/6→6/6, cero regresiones, 14 llamadas, 20.720 tokens; [evidencia saneada](../evidencia/2026-10-17-s1-revalidated.json). API probada con 48 consultas concurrentes; c4-api usa SelectorEventLoop tras reproducir WinError64 en Proactor Windows.
 C4-006 dispone de lectura end-to-end; listados globales jobs/métricas y candidatos sin reporte siguen pendientes, sin inventar contratos.
+
+Spec017: chat SSE con panel de consumo, Markdown y entrada multilínea; una solicitud por turno con contexto local precargado. /chat selecciona conversación; Groq es predeterminado si hay clave. /run, /inspect y /status disponibles. Benchmark de una muestra por proveedor registrado, sin extrapolar ni alterar el gate.

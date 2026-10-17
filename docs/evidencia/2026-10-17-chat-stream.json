@@ -1,0 +1,33 @@
+{
+  "samples_per_provider": 1,
+  "same_question": true,
+  "results": [
+    {
+      "provider": "groq",
+      "success": true,
+      "calls": 1,
+      "total_calls": 1,
+      "tokens": 1244,
+      "coverage": 1,
+      "latency_ms": 906,
+      "ttft_ms": 625,
+      "model": "qwen/qwen3.8-27b",
+      "reply_characters": 426,
+      "mentions_regression": true
+    },
+    {
+      "provider": "grok",
+      "success": true,
+      "calls": 1,
+      "total_calls": 1,
+      "tokens": 0,
+      "coverage": 0,
+      "latency_ms": 6391,
+      "ttft_ms": 5797,
+      "model": "grok-4.7",
+      "reply_characters": 251,
+      "mentions_regression": true
+    }
+  ],
+  "cost_usd": null
+}

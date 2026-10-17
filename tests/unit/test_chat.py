@@ -93,7 +93,7 @@ class ChatTests(unittest.TestCase):
 
     def test_normal_text_routes_to_chat_but_slash_typo_stays_local(self):
         harness=Harness(Console(file=io.StringIO()),self.store,str(self.env),'groq',Mock())
-        with patch.object(harness.chat,'ask',return_value='Hola') as ask:
+        with patch.object(harness.chat,'stream',return_value='Hola') as ask:
             harness.handle('Hola, ¿qué puedes hacer?')
             harness.handle('/unknown')
             self.assertEqual(ask.call_count,1)
