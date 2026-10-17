@@ -1,5 +1,5 @@
 # API local de consulta de evidencia
-Estado: Verified localmente; pendiente CI. Responsable: Deimer/Codex. C4-002/003, entrega parcial. Fecha: 2026-10-17.
+Estado: Verified; CI aprobada en PR27. Responsable: Deimer/Codex. C4-002/003, entrega parcial. Fecha: 2026-10-17.
 
 FR-001 / AC-001: implementar GET /api/v1/agents, /incidents, /incidents/{id}, /runs/{id}, /jobs/{id}, /patches/{id}, /evaluations/{id} y /incidents/{id}/report usando los contratos v1 existentes y el almacén CLI; sin acceso al proveedor ni modificación de evidencia.
 FR-002 / AC-002: listas paginadas con items/next_cursor; IDs no son rutas, datos inválidos responden 422, ausentes 404, evidencia corrupta/incoherente 503 sin filtrar contenido ni rutas. No ocultar corrupción como lista vacía. Un reporte accepted requiere evaluación completa y gate coherente.
