@@ -17,6 +17,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Chat operativo en el CLI](015-conversational-cli/spec.md)
 - [Dashboard conectado y responsive](016-live-dashboard/spec.md)
 - [Chat rápido y experiencia de terminal](017-streaming-chat/spec.md)
+- [Herramientas MCP para Hermes](018-hermes-mcp/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
