@@ -4,8 +4,8 @@ Revisión: 2026-10-17. Se leyeron las doce issues originales y sus criterios. Un
 | Tarea / responsable | Estado de aceptación | Evidencia y pendiente concreto |
 |---|---|---|
 | C4-001 / Deimer | Hecho: conexión/requisitos | Fuentes oficiales, modelo/base y usage reales; PR19/21. Publicación/licencia son pendientes del hito S1; rotación sigue en C4-012 |
-| C4-002 / Deimer | En curso | Pydantic/fixtures probados; faltan PostgreSQL, Alembic, API y pruebas 404/409/422 |
-| C4-003 / Deimer | En curso | CLI end to end, progreso y consola interactiva; falta adaptador API que reutilice el mismo servicio |
+| C4-002 / Deimer | En curso | Contratos y API de consulta probados (404/422/503); faltan PostgreSQL, Alembic y escritura/409 |
+| C4-003 / Deimer | En curso | CLI end to end, progreso y consola interactiva; API de lectura disponible; falta adaptador HTTP de ejecución del mismo servicio |
 | C4-004 / Santiago | Hecho: dashboard demo | PR18 integrado; 32 pruebas, build/typecheck/lint y revisión desktop/móvil/teclado. No equivale a integración real |
 | C4-005 / Deimer | Hecho: gate local | trace_reader, patch_writer y eval_runner ejecutados; aceptación Grok, rechazo por regresión Qwen y fallo por contrato reales, más pruebas de seguridad/incompletos |
 | C4-006 / Santiago | Pendiente | Integrar API real, distinguir modo demo, polling/errores/ID y evidencia; depende de C4-002 |

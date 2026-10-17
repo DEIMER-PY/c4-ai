@@ -6,7 +6,7 @@
 
 C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de prompt o configuración y compara su comportamiento contra el baseline. El resultado es una decisión trazable: aceptar, rechazar o solicitar revisión humana.
 
-**Estado actual (2026-10-17):** CLI end to end con Grok verificada sobre seis casos sintéticos: baseline 5/6 → candidato 6/6, cero regresiones y controles obligatorios aprobados. Contratos Pydantic disponibles y dashboard de Santiago con mocks integrado por PR18. API, PostgreSQL y workers siguen planificados; el dashboard todavía no muestra esta evidencia real.
+**Estado actual (2026-10-17):** CLI end to end con Grok verificada sobre seis casos sintéticos: baseline 5/6 → candidato 6/6, cero regresiones y controles obligatorios aprobados. Contratos Pydantic disponibles y dashboard de Santiago con mocks integrado por PR18. API local de consulta disponible; escritura, PostgreSQL y workers siguen planificados; el dashboard todavía no muestra esta evidencia real.
 
 [Abrir consola interactiva](docs/arquitectura/CLI.md) · [Evidencia y rúbrica pendiente](docs/producto/ENTREGA_S1.md) · [Dashboard local](apps/dashboard/README.md)
 
@@ -30,6 +30,14 @@ La consola muestra neurona Unicode ramificada magenta/cian, con núcleo luminoso
 Grok diagnostica y propone candidatos; el target puede ser Grok o Groq/Qwen. Cada comparación mantiene el mismo modelo, esquema y dataset. La prueba real Qwen se rechazó por una regresión: un ciclo terminado no implica candidato aceptado. [Configuración y evidencia Groq](docs/referencias/GROQ.md). [Rúbricas del equipo](docs/equipo/RUBRICAS.md).
 
 Jev de TypeSafe queda como experimento de triage probabilístico; todavía no está integrado ni hay rapidez verificada en C4. [Propuesta, acceso y aceptación](docs/producto/JEV.md).
+
+## Consultar evidencia por HTTP
+
+```powershell
+uv run --locked uvicorn c4.api:app --host 127.0.0.1 --port 8000
+```
+
+OpenAPI en http://127.0.0.1:8000/docs. Lee los mismos checkpoints del CLI, sin llamadas a modelos. [Cobertura y límites](apps/api/README.md).
 
 ## El problema que resolvemos
 

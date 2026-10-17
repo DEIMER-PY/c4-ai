@@ -18,3 +18,6 @@ La entrega GitHub/Claude y acceso al repositorio están verificados. Confirmar p
 
 ## Entrega y límites
 Ramas santiago/feat-<id>-<tema>, Conventional Commits con emoji y PR→develop. Declarar archivos, criterio, validación y bloqueo. No editar backend/root Python ni contratos sin coordinación; Groq/Grok/Jev son integraciones del backend. Claude recibe el contexto desde Git, no del chat privado de Codex. [Prompt actualizado](PROMPT_CLAUDE.md).
+
+## API disponible para integración parcial
+[Arranque local y rutas de spec014](../../apps/api/README.md). Actualizar develop, uv sync --locked y ejecutar Uvicorn en 127.0.0.1. Conectar inicialmente lista/detalle de incidentes y recursos individuales. No asumir listados de patches/jobs ni métricas: siguen pendientes de acuerdo compartido. Consultar desde servidor Next.js; no habilitar CORS universal ni introducir claves de modelos. Cada clon conserva su propia evidencia: Git no descarga artifacts privados. Distinguir predicciones reales sobre casos sintéticos de fixtures del modo Demo.

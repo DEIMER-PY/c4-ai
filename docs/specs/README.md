@@ -13,6 +13,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Validación ordenada de integraciones](011-integration-validation/spec.md)
 - [Consola con neurona de alta densidad](012-neuron-console/spec.md)
 - [Harness con actividad persistente](013-live-harness/spec.md)
+- [API local de consulta de evidencia](014-evidence-api/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)

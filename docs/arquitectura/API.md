@@ -1,5 +1,5 @@
 # Contratos v1 — API y CLI
-Estado: **especificación**, endpoints no implementados. Fuente legible de tipos: [JSON Schema](../../examples/contracts/schemas.json); [fixture completo](../../examples/contracts/scenario.json).
+Estado: **consulta local implementada parcialmente** (spec014): GET de agents/incidents paginados y recursos individuales run/job/patch/evaluation/report desde checkpoints CLI. POST, métricas, DB y workers siguen planificados. Fuente legible de tipos: [JSON Schema](../../examples/contracts/schemas.json); [fixture completo](../../examples/contracts/scenario.json).
 Versionar cambios incompatibles; ambos responsables deben aprobarlos.
 ## Convenciones
 Base /api/v1. JSON UTF-8, fechas UTC, id de correlación en cada trabajo. Listados devuelven items y next_cursor nullable.
@@ -43,3 +43,6 @@ La CLI comparte servicios; no duplica lógica de aprobación.
 ## Mock frontend
 [Ejemplos de API](../../examples/contracts/api-responses.json) incluyen listas, trabajo pendiente, rechazo, evidencia incompleta y error del proveedor.
 No llamar al gateway desde navegador; clave solo en backend. Mocks deben mostrar etiqueta Demo / datos sintéticos.
+
+## Ejecución local y cobertura
+[Instalar API, rutas y límites](../../apps/api/README.md). OpenAPI en /docs. Esquemas v1 sin cambios. Listas: limit 1–100, cursor devuelto en next_cursor y orden por ID; sin snapshot estable entre solicitudes concurrentes. Un reporte no creado responde 404. 503 invalid_evidence requiere revisar archivos, no reintentar generaciones. Solo localhost, sin CORS ni autenticación de producción. GET /metrics y listados adicionales pendientes de revisión compartida.
