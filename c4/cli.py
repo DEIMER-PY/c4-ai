@@ -75,6 +75,11 @@ def emit(ctx: typer.Context, result: dict):
     if ctx.obj['json']:
         typer.echo(json.dumps(result, ensure_ascii=True, allow_nan=False))
         return
+    from c4.terminal_screen import ACTIVE_SCREEN
+    screen = ACTIVE_SCREEN.get()
+    if screen is not None and 'job' in result:
+        screen.finish(result)
+        return
     title = Text('C4 ', style='bold magenta') + Text('AI', style='bold cyan')
     console.print(Panel(Text('Confiabilidad de agentes · CLI 0.1.0\nCasos sintéticos · llamadas reales al proveedor · sin acciones de producción'), title=title, border_style='magenta'))
     if 'job' not in result:
@@ -123,6 +128,12 @@ def execution_progress(ctx: typer.Context):
     """Human progress comes from saved checkpoints; JSON stays a single document."""
     if ctx.obj['json']:
         yield None
+        return
+    from c4.terminal_screen import ACTIVE_SCREEN
+    screen = ACTIVE_SCREEN.get()
+    if screen is not None:
+        with screen.progress() as checkpoint:
+            yield checkpoint
         return
     started = monotonic()
     previous = None

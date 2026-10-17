@@ -12,6 +12,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Consola interactiva y aceptación del equipo](010-interactive-console/spec.md)
 - [Validación ordenada de integraciones](011-integration-validation/spec.md)
 - [Consola con neurona de alta densidad](012-neuron-console/spec.md)
+- [Harness con actividad persistente](013-live-harness/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
