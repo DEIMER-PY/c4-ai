@@ -78,3 +78,6 @@ Los comandos de la consola se enrutan a la misma app Typer, sin shell ni evaluac
 [Orden de pruebas Groq/Grok y límites actuales](../equipo/PRUEBAS_INTEGRACIONES.md).
 
 Diseño de referencia, adaptación y validación: [spec012](../specs/012-neuron-console/spec.md). Para mayor semejanza usar Windows Terminal con UTF-8, fuente que soporte Braille, fondo oscuro y ventana de al menos 116 columnas; el tema de fondo lo controla el terminal.
+
+## Actividad junto a la neurona
+En la consola interactiva, /demo, /start, /analyze, /patch y /eval mantienen la neurona junto a una vista Live con etapas, respuestas guardadas, llamadas, tokens reportados y latencia acumulada de solicitudes registradas. El tiempo de comando se mide aparte; no es una promesa de rendimiento del modelo. Al finalizar se muestra la decisión guardada. Los subcomandos normales y JSON conservan su salida anterior. [Spec013](../specs/013-live-harness/spec.md).

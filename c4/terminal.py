@@ -173,7 +173,12 @@ class Harness:
                     self.console.print('No hay una sesión guardada para consultar.')
                     return True
                 args=[rows[0]['id']]
-            code=self.dispatch([command,*args],self.provider)
+            if command in {'demo','start','analyze','patch','eval'}:
+                from c4.terminal_screen import ExecutionScreen, bind_screen
+                with bind_screen(ExecutionScreen(self.console)):
+                    code=self.dispatch([command,*args],self.provider)
+            else:
+                code=self.dispatch([command,*args],self.provider)
             if code:
                 self.console.print(Text(f'Código {code}: consulta la evidencia y /help. Puedes continuar en esta consola.',style='yellow'))
         else:
