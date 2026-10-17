@@ -1,5 +1,5 @@
 # Chat operativo en el CLI
-Estado: Verified localmente; pendiente CI. Responsable: Deimer/Codex. C4-003. Fecha: 2026-10-17.
+Estado: Verified; 73 pruebas y CI aprobadas en PR28. Responsable: Deimer/Codex. C4-003. Fecha: 2026-10-17.
 
 FR-001 / AC-001: texto normal conversa con Grok; comandos slash conservan atajos. No interpretar respuestas del modelo como shell, comandos mutables o aprobación de candidatos. Groq sigue siendo target de evaluación.
 FR-002 / AC-002: herramientas de solo lectura list_runs/read_session y foco /use ID|last. Resumir evidencia sin enviar prompts, entradas/trazas completas ni credenciales. Mensajes y respuestas se tratan como datos no confiables.
