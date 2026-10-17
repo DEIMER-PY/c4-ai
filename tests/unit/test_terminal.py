@@ -12,6 +12,7 @@ from typer.testing import CliRunner
 from c4.cli import app, interactive
 from c4.services.storage import Store
 from c4.terminal import Harness, header, summaries, show_runs
+from c4.terminal_art import neuron
 
 
 class TerminalTests(unittest.TestCase):
@@ -48,6 +49,30 @@ class TerminalTests(unittest.TestCase):
         self.harness.handle('/demo')
         self.dispatch.assert_called_once_with(['demo'],'groq')
         self.assertFalse(self.harness.handle('/quit'))
+
+    def test_header_layout_stays_inside_terminal_and_preserves_roles(self):
+        with patch.dict('os.environ',{},clear=True):
+            for width in (40,60,115,116,132,160):
+                with self.subTest(width=width):
+                    output=io.StringIO()
+                    header(Console(file=output,width=width,legacy_windows=False),self.store,str(self.env),'groq')
+                    lines=output.getvalue().splitlines()
+                    self.assertLessEqual(max(map(len,lines)),width)
+                    self.assertIn('grok-test',output.getvalue())
+                    self.assertIn('qwen-test',output.getvalue())
+                    self.assertIn('/doctor --probe',output.getvalue())
+                    self.assertNotIn('CONNECTED',output.getvalue())
+
+    def test_neuron_falls_back_for_ascii_only_terminal(self):
+        class AsciiOutput(io.StringIO):
+            @property
+            def encoding(self):return 'ascii'
+        output=AsciiOutput()
+        with patch.dict('os.environ',{},clear=True):
+            header(Console(file=output,width=132,legacy_windows=False),self.store,str(self.env),'groq')
+        self.assertFalse(any(0x2800<=ord(c)<=0x28ff for c in output.getvalue()))
+        self.assertIn('( C4 )',output.getvalue())
+        neuron(unicode=False).plain.encode('ascii')
 
     def test_invalid_target_and_shell_input_do_not_dispatch(self):
         self.harness.handle('/target unknown')

@@ -18,25 +18,8 @@ from rich.table import Table
 from rich.text import Text
 
 from c4.services.storage import Store
+from c4.terminal_art import neuron
 from c4.tools.grok import WorkflowError
-
-NEURON = r'''
-             .   |   .
-        \ .  :   |   :  . /
-    .    \:   \  |  /   :/    .
-     `---.\    \ | /    /.---'
-  .---.... \ .--\|/--. / ....---.
-      `----. /   *   \ .----'
-   --==----(   C4 AI   )----==--
-      .----' \   *   / `----.
-  `---.... / `--/|\--' \ ....---'
-     .---'/    / | \    \`---.
-    '    /:   /  |  \   :\    '
-        / '  :   |   :  ' \
-             '   |   '
-                 `===.____
-                          `====>
-'''.strip('\n')
 
 COMMANDS = {
     '/help': 'Mostrar comandos y límites',
@@ -71,45 +54,52 @@ def summaries(store: Store, limit: int = 8) -> list[dict]:
     return rows
 
 
-def neuron() -> Text:
-    art = Text()
-    colors = ['#d946ef','#c026d3','#a855f7','#818cf8','#38bdf8','#22d3ee']
-    for line in NEURON.splitlines():
-        for x, char in enumerate(line):
-            art.append(char, style=colors[min(len(colors)-1,x*len(colors)//40)])
-        art.append('\n')
-    return art
-
-
 def header(console: Console, store: Store, env_file: str, provider: str):
     env = {**dotenv_values(env_file), **os.environ}
     target_model = env.get('C4_GROQ_MODEL' if provider=='groq' else 'C4_GROK_MODEL') or 'sin configurar'
     status = Table.grid(padding=(0,1))
-    status.add_column(style='dim')
+    status.add_column(style='#94a3b8')
     status.add_column()
-    status.add_row('C4 AI HARNESS', Text('v'+version('c4-ai'),style='bold cyan'))
+    status.add_row(Text('C4 AI HARNESS CLI', style='bold #e879c9'), Text('v'+version('c4-ai'),style='bold cyan'))
     status.add_row('Modo', 'Confiabilidad / agente de prueba')
     status.add_row('Razonamiento', Text('Grok · '+str(env.get('C4_GROK_MODEL') or 'sin configurar')))
     status.add_row('Target', Text(provider+' · '+str(target_model)))
-    status.add_row('Cambios', 'Prompts y configuración de prueba')
-    status.add_row('Seguridad', 'Evaluación completa y cero regresiones')
-    status.add_row('Jev', 'Planificado · integración pendiente')
-    status.add_row('Datos', 'Casos sintéticos · resultados del proveedor')
-    status.add_row('Red', 'Sin solicitudes al abrir esta consola')
+    status.add_row('Entorno', 'Local / soporte y reembolsos')
+    activity = Text('\n'+'─'*min(64, max(12, console.width-62))+'\n', style='#64748b')
+    activity.append('[*] HARNESS LISTO PARA RECIBIR COMANDOS\n\n', style='bold #c4b5fd')
+    activity.append('[*] Configuración de proveedores: /doctor\n', style='#a5b4fc')
+    activity.append('    Conexión: /doctor --probe\n\n', style='#94a3b8')
+    activity.append('[*] Ciclo de confiabilidad\n', style='#a5b4fc')
+    activity.append('    detectar > diagnosticar > proponer\n', style='#cbd5e1')
+    activity.append('    evaluar > aceptar / rechazar / escalar\n\n', style='#cbd5e1')
+    activity.append('[*] Gate: evaluación completa, cero regresiones\n', style='#67e8f9')
+    activity.append('    Acciones simuladas; sin cambios en producción\n', style='#94a3b8')
     rows = summaries(store,1)
     if rows:
-        status.add_row('Última sesión',Text(rows[0]['id']))
-        status.add_row('Último resultado',Text(rows[0]['status']+' / '+rows[0]['decision']))
+        activity.append('\n[LOCAL] Última evidencia guardada\n', style='bold #a5b4fc')
+        activity.append(rows[0]['id']+'\n', style='#67e8f9')
+        activity.append(rows[0]['status']+' / '+rows[0]['decision']+'\n', style='#f0abfc')
+        activity.append('Resultado anterior; /report ID para consultar\n', style='#94a3b8')
+    else:
+        activity.append('\n[LOCAL] Sin ejecuciones guardadas\n', style='#94a3b8')
+    activity.append('\n/help comandos   /runs evidencia   /demo ejecutar', style='#c4b5fd')
+    context = Group(status, activity)
+    try:
+        '⠿'.encode(console.encoding)
+        unicode_art = not console.options.legacy_windows
+    except (LookupError, UnicodeEncodeError):
+        unicode_art = False
     body = Table.grid(expand=True,padding=(0,2))
-    if console.width >= 110:
-        body.add_column(width=42)
+    if console.width >= 116:
+        body.add_column(width=52)
         body.add_column(ratio=1)
-        body.add_row(neuron(),status)
+        body.add_row(neuron(height=min(29, max(19, console.height-7)), unicode=unicode_art),context)
         content = body
     else:
-        content = Group(neuron(),status)
-    console.print(Panel(content,title='[bold magenta]C4 AI[/bold magenta] [cyan]/ AGENT RELIABILITY[/cyan]',
-                        subtitle='[dim]/help comandos · /runs evidencia · /demo ejecuta[/dim]',border_style='magenta'))
+        content = Group(neuron(width=min(38, console.width), height=19, unicode=unicode_art),context)
+    console.print()
+    console.print(content)
+    console.print(Text('\nAGENT RELIABILITY  /  Casos sintéticos · Jev: planificado', style='#64748b'))
 
 
 def show_help(console: Console):
@@ -198,7 +188,7 @@ class Harness:
             style=Style.from_dict({'prompt':'ansimagenta bold','target':'ansicyan','bottom-toolbar':'bg:#111827 #94a3b8'}))
         while True:
             try:
-                line=session.prompt(FormattedText([('class:prompt','c4 '),('class:target',self.provider+' > ')]),
+                line=session.prompt(FormattedText([('class:target','c4 / '+self.provider),('class:prompt',' [READY] > ')]),
                     bottom_toolbar=lambda:f'Tab: comandos | /help | Ctrl+D: salir | Sesión local: {monotonic()-started:.0f}s')
                 if not self.handle(line):
                     break
