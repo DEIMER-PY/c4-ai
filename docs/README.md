@@ -18,6 +18,7 @@ Actualizado el 2026-10-17. CLI end to end verificada; dashboard con mocks y cont
 - [Instalación prevista](arquitectura/INSTALACION.md)
 - [Herramientas, MCP y skills](arquitectura/HERRAMIENTAS.md)
 ## Equipo y contexto
+- [Orden de pruebas Groq/Grok](equipo/PRUEBAS_INTEGRACIONES.md)
 - [Rúbricas y auditoría de todas las tareas](equipo/RUBRICAS.md)
 - [Plan de Santiago](equipo/PLAN_SANTIAGO.md)
 - [Prompt de Claude](equipo/PROMPT_CLAUDE.md)
