@@ -1,5 +1,5 @@
 # Entrega S1 revisable
-Estado: Implementing. Responsable Deimer/Codex, revisión de presentación Santiago. Fecha 2026-10-17.
+Estado: Verified. Responsable Deimer/Codex, revisión de presentación Santiago. Fecha 2026-10-17.
 
 FR-001 / AC-001: reporte técnico y matriz oficial S1–S4 con evidencia y brechas explícitas; no declarar publicación, costos ni aceptación del jurado sin evidencia. Preservar privacidad.
 FR-002 / AC-002: video local de dos minutos renderizado con Remotion, narración española y capturas reales, con fuente reproducible y guion; identificarlo como montaje explicativo de ejecuciones guardadas, no grabación continua en vivo. Verificar duración, audio y frames.

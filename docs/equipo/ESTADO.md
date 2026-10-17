@@ -22,3 +22,5 @@ Repositorio/tablero privados y develop predeterminado. Features desde develop, c
 
 ## Pendientes humanos
 Publicación/licencia oficial S1 pendientes por decisión de privacidad. Una credencial retirada de .env.example en historial requiere rotación/revocación por su titular; limpiar plantilla no revoca ni elimina historia. Confirmar Slack/Obsidian de Santiago y revisión compartida. Git es fuente de verdad, Obsidian abre la raíz de cada clon y lee docs/; no duplicar documentación en Drive. Branch protection privado devolvió403 en preparación; no se comprobó cambio de plan. No hay vigilancia automática ni prueba de12h en curso.
+
+Entrega019 integrada por PR32 con CI quality/dashboard/video aprobada. Rama privada codex/release-s1-end-to-end creada desde develop; snapshot inicial ad1438e. [Campos preparados](../entregas/S1_FORMULARIO.md). Revisión humana y URL del video pendientes.

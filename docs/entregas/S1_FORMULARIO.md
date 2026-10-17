@@ -4,7 +4,7 @@
 
 Repositorio: https://github.com/DEIMER-PY/c4-ai
 
-Rama snapshot prevista: codex/release-s1-end-to-end. Las features se integran por PR en develop; la rama de entrega fija una versión revisable, no sustituye el flujo de trabajo.
+Rama snapshot creada: codex/release-s1-end-to-end, desde develop integrado (primer snapshot ad1438e). Las features se integran por PR en develop; la rama de entrega fija una versión revisable, no sustituye el flujo de trabajo.
 
 Reporte técnico: https://github.com/DEIMER-PY/c4-ai/blob/codex/release-s1-end-to-end/docs/entregas/S1_REPORTE_TECNICO.md
 
