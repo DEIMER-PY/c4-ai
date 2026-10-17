@@ -2,6 +2,7 @@
 import json
 import sys
 from contextlib import contextmanager
+from enum import Enum
 from pathlib import Path
 from time import monotonic
 from typing import Annotated
@@ -23,15 +24,21 @@ app = typer.Typer(name='c4', no_args_is_help=True, pretty_exceptions_show_locals
 console = Console()
 
 
+class Provider(str, Enum):
+    grok = 'grok'
+    groq = 'groq'
+
+
 @app.callback()
 def configure(ctx: typer.Context,
               store: Annotated[Path, typer.Option(help='Directorio local de evidencia privada.')] = Path('artifacts/runs'),
               env_file: Annotated[str, typer.Option(help='Archivo de entorno local.')] = '.env',
-              json_output: Annotated[bool, typer.Option('--json', help='JSON sin decoración.')] = False):
+              json_output: Annotated[bool, typer.Option('--json', help='JSON sin decoración.')] = False,
+              target_provider: Annotated[Provider, typer.Option(envvar='C4_TARGET_PROVIDER', help='Proveedor del agente evaluado; C4 razona con Grok.')] = Provider.grok):
     # Windows redirected streams may use cp1252; model text can contain any Unicode.
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(errors='backslashreplace')
-    ctx.obj = {'store': Store(store), 'env_file': env_file, 'json': json_output}
+    ctx.obj = {'store': Store(store), 'env_file': env_file, 'json': json_output, 'target_provider': target_provider.value}
 
 
 def emit(ctx: typer.Context, result: dict):
@@ -44,6 +51,8 @@ def emit(ctx: typer.Context, result: dict):
         console.print_json(data=result)
         return
     console.print(Text('Sesión: ' + result['id'], style='cyan'))
+    target = result.get('target_provider', {'provider': 'grok', **result['provider']})
+    console.print(Text('C4: Grok / ' + result['provider']['model'] + ' · Agente evaluado: ' + target['provider'] + ' / ' + target['model']))
     console.print(Text('Trabajo: ' + result['job']['status'] + ' · ' + result['job']['stage']))
     for section, field in [('incident', 'root_cause'), ('report', 'summary')]:
         if result.get(section, {}).get(field):
@@ -96,7 +105,7 @@ def execution_progress(ctx: typer.Context):
         'decide': 'Decisión: comprobando mejora, regresiones y seguridad',
         'report': 'Reporte: guardando el resultado',
     }
-    console.print(Text('Iniciando C4 AI. Las solicitudes a Grok pueden tardar; Ctrl+C cancela la ejecución.'), style='cyan')
+    console.print(Text('Iniciando C4 AI. Las solicitudes al proveedor pueden tardar; Ctrl+C cancela la ejecución.'), style='cyan')
     console.file.flush()
     with Progress(SpinnerColumn(), TextColumn('{task.description}'), TimeElapsedColumn(),
                   console=console, transient=True, disable=not console.is_terminal) as progress:
@@ -127,11 +136,12 @@ def execution_progress(ctx: typer.Context):
 
 
 def execute(ctx: typer.Context, session_id: str | None, operation: str, dataset: Path | None = None, target: str = 'refund_expired'):
-    gateway = None
+    gateway = target_gateway = None
     try:
         with execution_progress(ctx) as observer:
             gateway = Gateway(Settings.from_env(ctx.obj['env_file']))
-            service = ReliabilityService(ctx.obj['store'], gateway, on_checkpoint=observer)
+            target_gateway = gateway if ctx.obj['target_provider'] == 'grok' else Gateway(Settings.from_env(ctx.obj['env_file'], 'groq'))
+            service = ReliabilityService(ctx.obj['store'], gateway, on_checkpoint=observer, target_gateway=target_gateway)
             if session_id is None:
                 state = service.create(read_dataset(dataset), target)
                 session_id = state['id']
@@ -143,6 +153,8 @@ def execute(ctx: typer.Context, session_id: str | None, operation: str, dataset:
     except (OSError, ValueError):
         fail(ctx, WorkflowError('local_io_or_validation', 'No se pudo completar la validación o escritura local; revisar permisos y evidencia.'))
     finally:
+        if target_gateway is not None and target_gateway is not gateway:
+            target_gateway.close()
         if gateway:
             gateway.close()
 
@@ -150,10 +162,13 @@ def execute(ctx: typer.Context, session_id: str | None, operation: str, dataset:
 @app.command()
 def doctor(ctx: typer.Context, probe: Annotated[bool, typer.Option(help='Realiza una llamada mínima al gateway.')] = False):
     """Validar configuración sin mostrar la clave. --probe consume una llamada."""
-    gateway = None
+    gateway = target_gateway = None
     try:
         settings = Settings.from_env(ctx.obj['env_file'])
+        target_settings = settings if ctx.obj['target_provider'] == 'grok' else Settings.from_env(ctx.obj['env_file'], 'groq')
         result = {'configured': True, 'model': settings.model, 'https': True, 'credential': 'present',
+                  'reasoning': {'provider': 'grok', 'model': settings.model},
+                  'target': {'provider': target_settings.provider, 'model': target_settings.model},
                   'max_calls': settings.max_calls, 'max_output_tokens': settings.max_tokens,
                   'max_job_seconds': settings.max_seconds, 'probe': 'not_requested', 'cost_usd': None}
         if probe:
@@ -162,10 +177,18 @@ def doctor(ctx: typer.Context, probe: Annotated[bool, typer.Option(help='Realiza
             if response != {'connected': True}:
                 raise WorkflowError('invalid_probe', 'Respuesta inesperada del gateway.')
             result.update(probe='succeeded', calls=gateway.records)
+            if ctx.obj['target_provider'] != 'grok':
+                target_gateway = Gateway(target_settings)
+                target_gateway.share_budget(gateway)
+                response = target_gateway.complete('Return {"connected":true}.', {}, 'doctor_target')
+                if response != {'connected': True}:
+                    raise WorkflowError('invalid_probe', 'Respuesta inesperada del proveedor evaluado.')
         emit(ctx, result)
     except WorkflowError as error:
         fail(ctx, error)
     finally:
+        if target_gateway:
+            target_gateway.close()
         if gateway:
             gateway.close()
 

@@ -58,7 +58,7 @@ def read_dataset(path: Path) -> dict:
 
 
 def run_agent(gateway: Gateway, prompt: str, case: dict, purpose: str) -> dict:
-    result = gateway.complete(prompt, {'customer': case['input']}, purpose)
+    result = gateway.complete(prompt, {'customer': case['input']}, purpose, schema=Action.model_json_schema())
     try:
         return Action.model_validate(result).model_dump()
     except ValidationError:
