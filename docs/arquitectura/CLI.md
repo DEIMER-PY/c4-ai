@@ -64,7 +64,7 @@ Los límites se comparten entre proveedores. doctor --probe consume una solicitu
 ## Consola interactiva
 Ejecutar `uv run --locked c4 tui` o `uv run --locked c4 --target-provider groq tui`. En una terminal interactiva `c4` sin argumentos abre la misma consola; en una redirección muestra ayuda. --json requiere un subcomando y nunca abre la UI.
 
-La cabecera usa arte ASCII original de neurona violeta/cian y versión/modelos reales. En terminales anchas, composición lateral; en estrechas, apilada. Colores dependen del soporte del terminal y sus preferencias. Prompt con Tab para comandos e historial privado en memoria, sin persistencia en Git.
+La cabecera usa una neurona original de alta densidad en caracteres Braille Unicode: dendritas, núcleo luminoso y axón segmentado con gradiente magenta/violeta/cian. No requiere imágenes inline ni conexión. En codificaciones incompatibles o terminales legacy usa ASCII. Desde 116 columnas, composición lateral con contexto/actividad a la derecha; en estrechas, neurona compacta apilada. La altura del arte lateral se adapta al terminal. Versión/modelos y última evidencia son reales; la conexión se comprueba con /doctor --probe, nunca se simula. Colores dependen del soporte del terminal y sus preferencias. Prompt con Tab para comandos e historial privado en memoria, sin persistencia en Git.
 
 - /help: comandos y límites; /clear: redibujar; /quit o Ctrl+D: salir.
 - /target grok o /target groq: elegir target del próximo comando, sin alterar sesiones guardadas.
@@ -76,3 +76,5 @@ La cabecera usa arte ASCII original de neurona violeta/cian y versión/modelos r
 Los comandos de la consola se enrutan a la misma app Typer, sin shell ni evaluación de código. Rechazo, error o cancelación devuelve control al prompt. Una sesión es de trabajo local; un resultado de modelo solo se considera real si tiene evidencia de proveedor. Jev se muestra como planificado, no como servicio conectado. [Spec010](../specs/010-interactive-console/spec.md).
 
 [Orden de pruebas Groq/Grok y límites actuales](../equipo/PRUEBAS_INTEGRACIONES.md).
+
+Diseño de referencia, adaptación y validación: [spec012](../specs/012-neuron-console/spec.md). Para mayor semejanza usar Windows Terminal con UTF-8, fuente que soporte Braille, fondo oscuro y ventana de al menos 116 columnas; el tema de fondo lo controla el terminal.

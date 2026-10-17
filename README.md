@@ -25,7 +25,7 @@ uv run --locked c4 tui
 uv run --locked c4 --target-provider groq tui
 ```
 
-La consola muestra neurona ASCII violeta/cian, proveedor/modelo, comandos con Tab, historial en memoria y evidencia real. Abrirla no consume solicitudes. Usa `/help`, `/doctor`, `/runs`, `/report last` y `/demo`; solo los comandos de ejecución o --probe llaman a los proveedores. En una terminal interactiva, `c4` sin argumentos también abre la consola.
+La consola muestra neurona Unicode ramificada magenta/cian, con núcleo luminoso y axón segmentado, proveedor/modelo, comandos con Tab, historial en memoria y evidencia real. Abrirla no consume solicitudes. Usa `/help`, `/doctor`, `/runs`, `/report last` y `/demo`; solo los comandos de ejecución o --probe llaman a los proveedores. En una terminal interactiva, `c4` sin argumentos también abre la consola.
 
 Grok diagnostica y propone candidatos; el target puede ser Grok o Groq/Qwen. Cada comparación mantiene el mismo modelo, esquema y dataset. La prueba real Qwen se rechazó por una regresión: un ciclo terminado no implica candidato aceptado. [Configuración y evidencia Groq](docs/referencias/GROQ.md). [Rúbricas del equipo](docs/equipo/RUBRICAS.md).
 

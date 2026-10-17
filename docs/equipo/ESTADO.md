@@ -3,7 +3,7 @@ Actualizado: 2026-10-17.
 
 ## Producto y evidencia
 - **Verificada:** CLI end to end con Grok, sobre seis casos sintéticos. Baseline 5/6, candidato 6/6, cero regresiones, tres casos de seguridad aprobados; 14 llamadas, 20.730 tokens reportados. [Evidencia y rúbricas](../producto/ENTREGA_S1.md).
-- **Verificados:** contratos Pydantic v1, 15 pruebas originales. Las 52 pruebas actuales verifican contratos, servicio, gate, fallos, límites, CLI, Unicode de Windows y lectura entre procesos; ver spec007.
+- **Verificados:** contratos Pydantic v1, 15 pruebas originales. Las 54 pruebas actuales verifican contratos, servicio, gate, fallos, límites, CLI, Unicode de Windows y lectura entre procesos; ver spec007.
 - **Verificada como demo:** C4-004 dashboard de Santiago, integrado por [PR18](https://github.com/DEIMER-PY/c4-ai/pull/18), con fixtures sintéticos. Build y 32 pruebas aprobados; typecheck/lint aprobados. Revisión de navegador y cierre de criterios registrados en entrega S1.
 - **Verificados:** proveedor target Groq/Qwen separado de Grok (PR21), con prueba real rechazada por regresión; [fuente/evidencia](../referencias/GROQ.md). Consola interactiva con comandos, autocompletado e historial en memoria; spec010.
 - **Planificados:** FastAPI, PostgreSQL/Alembic, Redis/RQ, API real para dashboard, instaladores/escritorio y prueba de carga. El almacén del CLI es local con checkpoints, no una DB distribuida.
@@ -28,3 +28,5 @@ Entrega del CLI: [PR19](https://github.com/DEIMER-PY/c4-ai/pull/19), base develo
 CLI: progreso humano visible por etapa/respuestas y tiempo de espera; JSON permanece silencioso hasta el resultado. Ctrl+C registra cancelación con evidencia parcial (código 130). Ver spec008 para validación de la corrección.
 
 Auditoría de las doce issues originales: C4-001, C4-004 y C4-005 cumplen su rúbrica; C4-002/003 siguen En curso y el resto pendiente con criterios separados. [Matriz y evidencia](RUBRICAS.md). Jev de TypeSafe se planifica en C4-013; sin credencial/prueba real ni rapidez demostrada.
+
+Presentación CLI: neurona Unicode ramificada, axón segmentado, núcleo luminoso y composición lateral desde 116 columnas; fallback ASCII y vista compacta. [Spec012](../specs/012-neuron-console/spec.md). Sin cambios en llamadas o criterios del gate.
