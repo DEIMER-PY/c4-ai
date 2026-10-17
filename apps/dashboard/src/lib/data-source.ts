@@ -10,6 +10,7 @@ export type ApiResult<T> =
 export type ListScenario = "default" | "empty" | "provider_error";
 
 export interface C4DataSource {
+  capabilities?: { listJobs: boolean };
   listAgents(): Promise<ApiResult<Page<Agent>>>;
   listIncidents(scenario?: ListScenario): Promise<ApiResult<Page<Incident>>>;
   getIncident(id: string): Promise<ApiResult<Incident>>;

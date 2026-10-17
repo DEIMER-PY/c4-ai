@@ -55,8 +55,8 @@ export function gateChecks(evaluation: Evaluation): GateCheck[] {
     },
     {
       id: "no_drop",
-      label: "Casos aprobados después ≥ antes",
-      state: !comparable ? "unknown" : after.passed >= before.passed ? "met" : "failed",
+      label: "Mejora total: casos aprobados después > antes",
+      state: !comparable ? "unknown" : after.passed > before.passed ? "met" : "failed",
     },
     {
       id: "no_regressions",

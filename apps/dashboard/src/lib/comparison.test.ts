@@ -41,7 +41,7 @@ describe("gateChecks", () => {
     expect(states(evaluation("eval_rejected_001"))).toEqual({
       complete: "met",
       target: "met",
-      no_drop: "met",
+      no_drop: "failed",
       no_regressions: "failed",
       security: "met",
     });

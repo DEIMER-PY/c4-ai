@@ -15,6 +15,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Harness con actividad persistente](013-live-harness/spec.md)
 - [API local de consulta de evidencia](014-evidence-api/spec.md)
 - [Chat operativo en el CLI](015-conversational-cli/spec.md)
+- [Dashboard conectado y responsive](016-live-dashboard/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)

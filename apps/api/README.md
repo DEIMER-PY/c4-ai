@@ -5,7 +5,7 @@ Desde la raíz del repositorio:
 
 ```powershell
 uv sync --locked
-uv run --locked uvicorn c4.api:app --host 127.0.0.1 --port 8000
+uv run --locked c4-api --port 8000
 ```
 
 Abrir [OpenAPI interactivo local](http://127.0.0.1:8000/docs). En otra terminal:

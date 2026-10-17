@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { PageHeader } from "@/components/app-shell";
 import { IncidentTable } from "@/components/incident-table";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
-import { dataSource } from "@/lib/data";
+import { dataMode, dataSource } from "@/lib/data";
 import type { ListScenario } from "@/lib/data-source";
 
 export const metadata: Metadata = { title: "Incidentes" };
@@ -21,12 +21,15 @@ function toScenario(value: string | string[] | undefined): ListScenario {
 }
 
 async function IncidentList({ searchParams }: { searchParams: PageProps<"/incidents">["searchParams"] }) {
-  const scenario = toScenario((await searchParams).demo);
+  const query = await searchParams;
+  const scenario = toScenario(query.demo);
+  const filter = typeof query.q === "string" ? query.q.toLowerCase().trim() : "";
   const result = await dataSource.listIncidents(scenario);
 
+  const items = result.ok ? result.data.items.filter((i) => !filter || `${i.id} ${i.summary} ${i.status}`.toLowerCase().includes(filter)) : [];
   return (
     <>
-      <nav aria-label="Escenario de demostración" className="flex flex-wrap items-center gap-2 text-sm">
+      {dataMode === "demo" ? <nav aria-label="Escenario de demostración" className="flex flex-wrap items-center gap-2 text-sm">
         <span className="text-muted-foreground">Escenario:</span>
         {SCENARIOS.map((s) => (
           <Link
@@ -38,13 +41,13 @@ async function IncidentList({ searchParams }: { searchParams: PageProps<"/incide
             {s.label}
           </Link>
         ))}
-      </nav>
+      </nav> : null}
       {!result.ok ? (
         <ErrorState status={result.status} error={result.error} />
-      ) : result.data.items.length === 0 ? (
+      ) : items.length === 0 ? (
         <EmptyState title="No hay incidentes" description="Cuando C4 detecte un fallo en una ejecución aparecerá aquí." />
       ) : (
-        <IncidentTable incidents={result.data.items} />
+        <IncidentTable incidents={items} />
       )}
     </>
   );
