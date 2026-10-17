@@ -19,7 +19,7 @@ from c4.services.storage import Store
 from c4.tools.grok import Gateway, Settings, WorkflowError
 from c4.tools.refunds import read_dataset
 
-app = typer.Typer(name='c4', no_args_is_help=True, pretty_exceptions_show_locals=False,
+app = typer.Typer(name='c4', no_args_is_help=False, pretty_exceptions_show_locals=False,
                   help='Confiabilidad de agentes: detectar, corregir y evaluar con evidencia.')
 console = Console()
 
@@ -29,7 +29,7 @@ class Provider(str, Enum):
     groq = 'groq'
 
 
-@app.callback()
+@app.callback(invoke_without_command=True)
 def configure(ctx: typer.Context,
               store: Annotated[Path, typer.Option(help='Directorio local de evidencia privada.')] = Path('artifacts/runs'),
               env_file: Annotated[str, typer.Option(help='Archivo de entorno local.')] = '.env',
@@ -39,6 +39,36 @@ def configure(ctx: typer.Context,
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(errors='backslashreplace')
     ctx.obj = {'store': Store(store), 'env_file': env_file, 'json': json_output, 'target_provider': target_provider.value}
+    if ctx.invoked_subcommand is None:
+        if sys.stdin.isatty():
+            interactive(ctx)
+        elif json_output:
+            fail(ctx,WorkflowError('command_required','Indica un comando, por ejemplo doctor o report.'))
+        else:
+            typer.echo(ctx.get_help())
+
+
+def interactive(ctx: typer.Context):
+    from c4.terminal import Harness
+    if ctx.obj['json'] or not sys.stdin.isatty():
+        fail(ctx,WorkflowError('interactive_required','La consola requiere terminal interactiva sin --json. Usa c4 --help para comandos.'))
+    def dispatch(tokens: list[str], provider: str) -> int:
+        prefix=['--store',str(ctx.obj['store'].root),'--env-file',ctx.obj['env_file'],'--target-provider',provider]
+        try:
+            result=app(args=prefix+tokens,standalone_mode=False)
+            return result if isinstance(result,int) else 0
+        except (typer.Exit,SystemExit) as error:
+            return error.exit_code if hasattr(error,'exit_code') else int(error.code or 0)
+        except Exception:
+            console.print('No se pudo ejecutar el comando. Consulta c4 --help y revisa sus argumentos.')
+            return 1
+    Harness(console,ctx.obj['store'],ctx.obj['env_file'],ctx.obj['target_provider'],dispatch).run()
+
+
+@app.command()
+def tui(ctx: typer.Context):
+    """Abrir consola interactiva con comandos y evidencia local."""
+    interactive(ctx)
 
 
 def emit(ctx: typer.Context, result: dict):
@@ -160,8 +190,8 @@ def execute(ctx: typer.Context, session_id: str | None, operation: str, dataset:
 
 
 @app.command()
-def doctor(ctx: typer.Context, probe: Annotated[bool, typer.Option(help='Realiza una llamada mínima al gateway.')] = False):
-    """Validar configuración sin mostrar la clave. --probe consume una llamada."""
+def doctor(ctx: typer.Context, probe: Annotated[bool, typer.Option(help='Realiza una llamada mínima por proveedor distinto.')] = False):
+    """Validar configuración sin mostrar claves. --probe consume llamadas reales."""
     gateway = target_gateway = None
     try:
         settings = Settings.from_env(ctx.obj['env_file'])

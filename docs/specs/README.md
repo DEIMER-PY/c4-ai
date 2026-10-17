@@ -9,6 +9,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [CLI end to end con Grok](007-cli-end-to-end/spec.md)
 - [Progreso visible e interrupción del CLI](008-cli-progress/spec.md)
 - [Proveedor independiente del agente evaluado](009-target-providers/spec.md)
+- [Consola interactiva y aceptación del equipo](010-interactive-console/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)

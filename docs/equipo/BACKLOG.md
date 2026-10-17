@@ -1,8 +1,8 @@
 # Backlog implementable
-Actualizado 2026-10-17: gateway y primer ciclo CLI verificados; C4-002 continúa con DB/API pendientes. C4-004 revisado como demo e integrado por PR18; C4-006 espera API real. C4-011 mantiene confirmaciones humanas pendientes. Ver docs/producto/ENTREGA_S1.md.
+Actualizado 2026-10-17: gateway, primer ciclo CLI y gate local verificados; C4-002 continúa con DB/API pendientes. C4-004 revisado como demo e integrado por PR18; C4-006 espera API real. C4-011 mantiene confirmaciones humanas pendientes. Ver docs/producto/ENTREGA_S1.md.
 El campo responsable designa un humano; colaboración secundaria no sustituye revisión cruzada.
 ## C4-001 — Verificar requisitos del reto y conexión Grok
-Estado: En revisión. HTTP200 y ciclo real con grok-4.7 verificados el 2026-10-17. Requisitos vigentes contrastados; falta decidir publicación/licencia sin alterar privacidad actual y rotar la clave que estuvo en historial.
+Estado: Hecho. Fuentes/requisitos y conexión/usage de Grok verificados; PR19/21. El hito S1 aún tiene publicación/licencia pendientes por decisión de privacidad; rotación pendiente se sigue en C4-012, sin invalidar la conexión técnica comprobada.
 Responsable: DEIMER-PY. Fase: S1. Prioridad: P0.
 Dependencias: ninguna.
 Archivos: docs/referencias; c4/tools.
@@ -18,7 +18,7 @@ Aceptación: Pydantic coincide con ejemplos; migraciones crean entidades/relacio
 Validación: Pruebas de contratos, DB y errores 404/409/422.
 
 ## C4-003 — Construir primer loop y CLI de incidentes
-Estado: En curso. Ciclo CLI real y evidencia local implementados en spec007; falta adaptador API sobre el mismo servicio para cerrar toda la aceptación.
+Estado: En curso. Ciclo CLI, progreso, target Groq y consola interactiva implementados en specs007–010; falta adaptador API sobre el mismo servicio para cerrar toda la aceptación.
 Responsable: DEIMER-PY. Fase: S1. Prioridad: P0.
 Dependencias: C4-001, C4-002.
 Archivos: c4/agents; c4/workflows; c4/services; apps/cli.
@@ -34,7 +34,7 @@ Aceptación: Next.js tipado, pnpm lockfile, incidentes/detalle/comparación; eti
 Validación: Build/typecheck y revisión visual/teclado con fixtures.
 
 ## C4-005 — Implementar herramientas y gate de evaluación
-Estado: En curso parcial. Inspector, propuesta y evaluación/gate implementados para el escenario local de reembolsos; rechazo/fallos probados con transporte controlado. Ampliar integración y evidencia real según spec.
+Estado: Hecho (gate local de reembolsos). Herramientas reales y reglas verificadas: aceptación Grok 5/6→6/6, rechazo Qwen con regresión refund_eligible y evaluación fallida invalid_action conservados. Pruebas de seguridad/presupuesto/incompletos aprobadas. API/workers/escala pertenecen a sus tareas independientes.
 Responsable: DEIMER-PY. Fase: S2. Prioridad: P0.
 Dependencias: C4-003.
 Archivos: c4/tools; c4/services; tests/evals.
@@ -91,7 +91,17 @@ Archivos: tests; docs/producto; docs/arquitectura.
 Aceptación: Revisión conjunta de política/inyección/PII, gate, demo, costo y estados; evidencias finales saneadas.
 Validación: Checklist conjunto y versión etiquetada tras revisión.
 
+## C4-013 — Evaluar Jev para triage probabilístico y enrutamiento
+Estado: Pendiente; acceso/clave TypeSafe y experimento real sin verificar. No integrado en runtime.
+Responsable: DEIMER-PY; revisión compartida con Santiago. Fase: S2 / P1.
+Dependencias: acceso TypeSafe, especificación propia y dataset de evaluación versionado.
+Archivos: futura integración c4/tools y c4/services; docs/producto/JEV.md.
+Aceptación: cliente y respuestas tipadas/validadas; shadow mode sin saltar gate; probabilidades/confianza/latencia/usage reales; comparar rutas con y sin Jev y seleccionar umbrales por evidencia. No prometer rapidez por cifras del proveedor.
+Validación: entradas sintéticas, fallos de proveedor/salida/certeza, evaluación separada de calibración y reporte P50/P95/costos con fuente o null.
+
 ## Convención de tablero
 Pendiente, En curso, En revisión, Bloqueado, Hecho.
 Mover a Bloqueado con causa/siguiente acción. Mover a Hecho solo con evidencia de aceptación.
 Fuente editable por tarea: GitHub Issues; este documento describe alcance y dependencias iniciales.
+
+[Auditoría completa y rúbricas por responsable](RUBRICAS.md).

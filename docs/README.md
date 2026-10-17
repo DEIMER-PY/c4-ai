@@ -6,6 +6,7 @@ Actualizado el 2026-10-17. CLI end to end verificada; dashboard con mocks y cont
 - [Dashboard y UX](producto/DASHBOARD.md)
 - [Demo y aceptación](producto/DEMO.md)
 - [Entrega S1, evidencia y rúbrica](producto/ENTREGA_S1.md)
+- [Jev y triage probabilístico](producto/JEV.md)
 ## Arquitectura
 - [Sistema y diagramas](arquitectura/ARQUITECTURA.md)
 - [Stack](arquitectura/STACK.md)
@@ -17,6 +18,7 @@ Actualizado el 2026-10-17. CLI end to end verificada; dashboard con mocks y cont
 - [Instalación prevista](arquitectura/INSTALACION.md)
 - [Herramientas, MCP y skills](arquitectura/HERRAMIENTAS.md)
 ## Equipo y contexto
+- [Rúbricas y auditoría de todas las tareas](equipo/RUBRICAS.md)
 - [Plan de Santiago](equipo/PLAN_SANTIAGO.md)
 - [Prompt de Claude](equipo/PROMPT_CLAUDE.md)
 - [Obsidian y compartir documentación](equipo/OBSIDIAN.md)
