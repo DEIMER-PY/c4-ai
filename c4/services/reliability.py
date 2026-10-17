@@ -3,6 +3,7 @@ import difflib
 import hashlib
 from datetime import UTC, datetime
 from time import monotonic
+from typing import Callable
 from uuid import uuid4
 
 from c4.schemas import Agent, CaseResult, Error, Evaluation, Incident, Job, Patch, Report, Run, Score, Usage
@@ -20,8 +21,13 @@ def dump(model):
 
 
 class ReliabilityService:
-    def __init__(self, store: Store, gateway: Gateway):
+    def __init__(self, store: Store, gateway: Gateway, on_checkpoint: Callable[[dict], None] | None = None):
         self.store, self.gateway = store, gateway
+        self.on_checkpoint = on_checkpoint
+
+    def notify(self, state: dict):
+        if self.on_checkpoint:
+            self.on_checkpoint(state)
 
     def create(self, dataset: dict, target: str) -> dict:
         data = dataset['data']
@@ -45,12 +51,14 @@ class ReliabilityService:
         state['job'] = dump(Job(id=sid + '_job', incident_id=state['incident']['id'], stage='inspect',
             status='queued', attempts=0, error=None, updated_at=now()))
         self.store.save(state)
+        self.notify(state)
         return state
 
     def checkpoint(self, state: dict, stage: str, status: str = 'running'):
         state['calls'] = self.previous_calls + list(self.gateway.records)
         state['job'].update(stage=stage, status=status, updated_at=now().isoformat())
         self.store.save(state)
+        self.notify(state)
 
     def execute(self, session_id: str, operation: str) -> dict:
         # Exclusive lock prevents two CLI processes from spending on the same session.
@@ -89,7 +97,9 @@ class ReliabilityService:
                 else:
                     raise WorkflowError('invalid_operation', 'Operación desconocida.')
                 self.checkpoint(state, state['job']['stage'], 'succeeded')
-            except WorkflowError as error:
+            except (WorkflowError, KeyboardInterrupt) as error:
+                if isinstance(error, KeyboardInterrupt):
+                    error = WorkflowError('cancelled', 'Ejecución cancelada por el usuario; evidencia parcial conservada.')
                 state['job']['error'] = dump(Error(code=error.code, message=str(error), retryable=error.retryable, details={}))
                 state['incident']['status'] = 'needs_human_review'
                 if 'patch' in state:

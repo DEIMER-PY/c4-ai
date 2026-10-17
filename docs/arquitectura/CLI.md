@@ -16,6 +16,10 @@ uv run --locked c4 demo
 
 doctor valida configuración sin red. --probe hace una solicitud real y consume créditos. demo realiza hasta 14 solicitudes con el dataset de seis casos: baseline inicial, diagnóstico/propuesta y seis pares baseline/candidato. Los límites predeterminados son 16 llamadas, 1024 tokens de salida por llamada y 600 segundos de sesión. No se implementa un límite monetario: las tarifas del gateway no están verificadas y cost_usd permanece null. El usuario debe comprobar sus créditos.
 
+demo no abre el navegador ni el dashboard. En modo humano muestra inmediatamente sesión/ruta, las etapas y el número real de respuestas de evaluación guardadas (0/12 a 12/12). Una terminal interactiva también muestra un indicador con tiempo transcurrido durante las esperas de Grok. Puede transcurrir tiempo sin una nueva respuesta; no volver a lanzar la demo para comprobarlo, porque cada ejecución crea una sesión y consume créditos. La ejecución de referencia tomó aproximadamente 105 segundos, sin garantizar ese tiempo para otras solicitudes.
+
+Ctrl+C marca la sesión nueva como failed con error cancelled, conserva evidencia parcial y termina con código 130. El proveedor puede haber consumido la solicitud ya enviada. Este manejo no modifica retroactivamente sesiones antiguas que quedaron running: consultar su reporte no prueba que exista un proceso activo.
+
 La terminal usa violeta/cian con Rich. La imagen de referencia compartida es una dirección visual; no representa la versión, métricas ni funciones implementadas. C4 AI conserva su nombre; la variante C4 CODE CLI no constituye un cambio de identidad aprobado.
 
 ## Ciclo por etapas
@@ -38,7 +42,7 @@ uv run --locked c4 --store artifacts/runs --json report ID
 uv run --locked c4 --env-file .env demo --dataset datasets/sample/refunds.json --target refund_expired
 ```
 
-JSON es un documento sin banners. Códigos: 0 operación completada/aceptación; 1 fallo técnico o evidencia incompleta por fallo; 2 candidato rechazado; 3 revisión humana sin fallo técnico. Los comandos de lectura reflejan el estado guardado. ID se refiere a una sesión CLI y agrupa run_id, incident_id y job_id, no sustituye esos identificadores en los contratos API.
+JSON es un documento sin banners ni progreso; se imprime al terminar. Códigos: 0 operación completada/aceptación; 1 fallo técnico o evidencia incompleta por fallo; 2 candidato rechazado; 3 revisión humana sin fallo técnico; 130 cancelación con Ctrl+C. Los comandos de lectura reflejan el estado guardado. ID se refiere a una sesión CLI y agrupa run_id, incident_id y job_id, no sustituye esos identificadores en los contratos API.
 
 ## Evidencia
 artifacts/runs/ID/evidence.json guarda snapshot/checksum del dataset, prompts, versiones, run, incidente, diff, evaluación por caso, reporte, solicitudes y límites. El almacén hace reemplazo atómico y bloqueo exclusivo por sesión. Una sesión fallida se conserva; para repetir deliberadamente la demo se crea otra sesión. No hay recuperación automática de workers ni sincronización entre equipos. Si se interrumpe el proceso durante una solicitud, evidence.lock queda como indicio: verificar que no sigue activo antes de retirarlo. Una solicitud que alcanzó el proveedor antes de una interrupción puede consumir créditos sin checkpoint; no se promete exactly-once.

@@ -1,12 +1,15 @@
 """C4 AI command-line adapter; business logic lives in the service."""
 import json
 import sys
+from contextlib import contextmanager
 from pathlib import Path
+from time import monotonic
 from typing import Annotated
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn, TextColumn, TimeElapsedColumn
 from rich.table import Table
 from rich.text import Text
 
@@ -69,20 +72,70 @@ def fail(ctx: typer.Context, error: WorkflowError):
 
 
 def status_code(state: dict) -> int:
+    if (state['job'].get('error') or {}).get('code') == 'cancelled':
+        return 130
     if state['job']['status'] == 'failed':
         return 1
     return {'rejected': 2, 'needs_human_review': 3}.get(state.get('report', {}).get('decision'), 0)
 
 
+@contextmanager
+def execution_progress(ctx: typer.Context):
+    """Human progress comes from saved checkpoints; JSON stays a single document."""
+    if ctx.obj['json']:
+        yield None
+        return
+    started = monotonic()
+    previous = None
+    session = None
+    labels = {
+        'inspect': 'Inspección: ejecutando baseline e identificando el fallo',
+        'diagnose': 'Diagnóstico: esperando propuesta de Grok',
+        'patch': 'Candidato: guardando prompt y diferencias',
+        'evaluate': 'Evaluación: comparando baseline y candidato',
+        'decide': 'Decisión: comprobando mejora, regresiones y seguridad',
+        'report': 'Reporte: guardando el resultado',
+    }
+    console.print(Text('Iniciando C4 AI. Las solicitudes a Grok pueden tardar; Ctrl+C cancela la ejecución.'), style='cyan')
+    console.file.flush()
+    with Progress(SpinnerColumn(), TextColumn('{task.description}'), TimeElapsedColumn(),
+                  console=console, transient=True, disable=not console.is_terminal) as progress:
+        task = progress.add_task('Preparando configuración y evidencia...', total=None)
+
+        def checkpoint(state: dict):
+            nonlocal previous, session
+            if session is None:
+                session = state['id']
+                console.print(Text('Sesión: ' + session, style='cyan'))
+                console.print(Text('Evidencia: ' + str(ctx.obj['store'].path(session).resolve()), style='dim'))
+            stage = state['job']['stage']
+            received = len(state['evaluation_outputs'])
+            total = len(state['dataset']['data']['cases']) * 2
+            description = labels.get(stage, stage)
+            if stage == 'evaluate':
+                description += f' · {received}/{total} respuestas guardadas'
+            if state['job']['status'] == 'failed':
+                description = 'Trabajo detenido: ' + state['job']['error']['message']
+            current = (stage, received, state['job']['status'])
+            progress.update(task, description=description)
+            if current != previous:
+                console.print(Text(f'[{monotonic() - started:.0f}s] {description}'))
+                console.file.flush()
+                previous = current
+
+        yield checkpoint
+
+
 def execute(ctx: typer.Context, session_id: str | None, operation: str, dataset: Path | None = None, target: str = 'refund_expired'):
     gateway = None
     try:
-        gateway = Gateway(Settings.from_env(ctx.obj['env_file']))
-        service = ReliabilityService(ctx.obj['store'], gateway)
-        if session_id is None:
-            state = service.create(read_dataset(dataset), target)
-            session_id = state['id']
-        state = service.execute(session_id, operation)
+        with execution_progress(ctx) as observer:
+            gateway = Gateway(Settings.from_env(ctx.obj['env_file']))
+            service = ReliabilityService(ctx.obj['store'], gateway, on_checkpoint=observer)
+            if session_id is None:
+                state = service.create(read_dataset(dataset), target)
+                session_id = state['id']
+            state = service.execute(session_id, operation)
         emit(ctx, state)
         raise typer.Exit(status_code(state))
     except WorkflowError as error:

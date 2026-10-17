@@ -1,4 +1,5 @@
 import json
+import io
 import os
 import subprocess
 import sys
@@ -9,6 +10,7 @@ from unittest.mock import patch
 
 import httpx
 from typer.testing import CliRunner
+from rich.console import Console
 
 from c4.cli import app
 from c4.schemas import Evaluation, Job, Report
@@ -229,6 +231,61 @@ class ReliabilityTests(unittest.TestCase):
         self.assertEqual(len(attempts), 2)
         self.assertEqual(self.store.load(state['id'])['job']['stage'], 'diagnose')
         self.assertFalse(list(self.store.path(state['id']).parent.glob('*.tmp')))
+
+
+    def test_cli_shows_session_and_progress_before_first_provider_response(self):
+        output = io.StringIO()
+        observed = []
+        actual = transport()
+        def handler(request):
+            observed.append(output.getvalue())
+            return actual.handle_request(request)
+        with patch('c4.cli.console', Console(file=output, force_terminal=False, width=140)), \
+             patch('c4.cli.Gateway', side_effect=lambda settings: Gateway(settings, httpx.Client(transport=httpx.MockTransport(handler)))), \
+             patch('c4.cli.Settings.from_env', return_value=Settings('https://gateway.example/v1', 'test', 'SECRET-TEST-KEY')):
+            result = CliRunner().invoke(app, ['--store', self.tmp.name, 'demo', '--dataset', str(DATASET)])
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertEqual(len(observed), 14)
+        self.assertIn('Sesión: c4_', observed[0])
+        self.assertIn('Evidencia:', observed[0])
+        self.assertIn('Inspección:', observed[0])
+        self.assertIn('6/12 respuestas guardadas', output.getvalue())
+        self.assertIn('12/12 respuestas guardadas', output.getvalue())
+        self.assertNotIn('SECRET-TEST-KEY', output.getvalue())
+
+    def test_ctrl_c_preserves_partial_evaluation_and_releases_lock(self):
+        actual = transport()
+        count = 0
+        def handler(request):
+            nonlocal count
+            count += 1
+            if count == 5:
+                raise KeyboardInterrupt()
+            return actual.handle_request(request)
+        gateway = Gateway(Settings('https://gateway.example/v1', 'test', 'SECRET-TEST-KEY'),
+                          httpx.Client(transport=httpx.MockTransport(handler)))
+        self.addCleanup(gateway.close)
+        service = ReliabilityService(self.store, gateway)
+        state = service.create(read_dataset(DATASET), 'refund_expired')
+        state = service.execute(state['id'], 'demo')
+        self.assertEqual(state['job']['status'], 'failed')
+        self.assertEqual(state['job']['error']['code'], 'cancelled')
+        self.assertEqual(len(state['evaluation_outputs']), 2)
+        self.assertEqual(state['patch']['approval_status'], 'needs_human_review')
+        self.assertEqual(state['evaluation']['status'], 'failed')
+        self.assertEqual(self.store.load(state['id']), state)
+        self.assertFalse(self.store.path(state['id']).with_suffix('.lock').exists())
+
+    def test_json_cancel_is_one_document_with_exit_130(self):
+        def handler(request):
+            raise KeyboardInterrupt()
+        with patch('c4.cli.Gateway', side_effect=lambda settings: Gateway(settings, httpx.Client(transport=httpx.MockTransport(handler)))), \
+             patch('c4.cli.Settings.from_env', return_value=Settings('https://gateway.example/v1', 'test', 'SECRET-TEST-KEY')):
+            result = CliRunner().invoke(app, ['--store', self.tmp.name, '--json', 'demo', '--dataset', str(DATASET)])
+        self.assertEqual(result.exit_code, 130, result.output)
+        state = json.loads(result.output)
+        self.assertEqual(state['job']['error']['code'], 'cancelled')
+        self.assertNotIn('Iniciando', result.output)
 
 
 if __name__ == '__main__':
