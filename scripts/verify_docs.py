@@ -9,7 +9,7 @@ import os
 
 ROOT = Path(__file__).resolve().parents[1]
 errors = []
-IGNORED_DIRS = {".git", "node_modules", ".venv", ".obsidian", "artifacts", "__pycache__"}
+IGNORED_DIRS = {".git", "node_modules", ".venv", ".obsidian", ".next", "artifacts", "__pycache__"}
 
 def project_files(extension):
     result = []
@@ -173,6 +173,14 @@ require(set(c["case_id"] for c in scenario["evaluation"]["case_results"]) <= {c[
 for scenario_name in ("accepted", "rejected", "incomplete"):
     evaluation = responses[scenario_name]["evaluation"]
     require((evaluation["dataset_id"], evaluation["dataset_version"]) == (dataset["id"], dataset["version"]), scenario_name + ": dataset/version mismatch")
+
+for line in (ROOT / '.env.example').read_text(encoding='utf-8-sig').splitlines():
+    if '=' in line and not line.lstrip().startswith('#'):
+        key, value = line.split('=', 1)
+        if any(token in key.upper() for token in ('API_KEY', 'SECRET', 'PASSWORD', 'TOKEN')):
+            # Token-limit settings are numeric configuration, not credentials.
+            if key.strip() not in {'C4_MAX_OUTPUT_TOKENS'}:
+                require(not value.strip(), 'Credential fields in .env.example must be empty: ' + key.strip())
 
 if errors:
     raise SystemExit("\n".join(errors))

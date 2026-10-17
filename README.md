@@ -6,7 +6,9 @@
 
 C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de prompt o configuración y compara su comportamiento contra el baseline. El resultado es una decisión trazable: aceptar, rechazar o solicitar revisión humana.
 
-**Estado actual:** documentación y colaboración preparadas; primera implementación de contratos Pydantic del backend disponible y probada. API, CLI, agentes, workers y dashboard siguen planificados. Los fixtures son sintéticos; no representan resultados reales obtenidos con Grok ni una aplicación en producción.
+**Estado actual (2026-10-17):** CLI end to end con Grok verificada sobre seis casos sintéticos: baseline 5/6 → candidato 6/6, cero regresiones y controles obligatorios aprobados. Contratos Pydantic disponibles y dashboard de Santiago con mocks integrado por PR18. API, PostgreSQL y workers siguen planificados; el dashboard todavía no muestra esta evidencia real.
+
+[Ejecutar el CLI](docs/arquitectura/CLI.md) · [Evidencia y rúbrica pendiente](docs/producto/ENTREGA_S1.md) · [Dashboard local](apps/dashboard/README.md)
 
 **Acceso:** repositorio y tablero privados para Deimer y Santiago. Trabajo en equipo autorizado por la organización, confirmado por Deimer. La publicación se decidirá posteriormente.
 
@@ -142,7 +144,7 @@ c4-ai/
 └── .github/                    Plantillas, ownership y CI
 ```
 
-Las carpetas apps describen responsabilidades sin aplicación ejecutable todavía; c4/schemas contiene los primeros contratos tipados del backend.
+apps/dashboard contiene la interfaz de demostración; c4/cli.py expone la CLI instalable y c4/services/reliability.py implementa el ciclo compartible con la futura API. Persistencia actual: evidencia local por sesión, sin PostgreSQL todavía.
 
 ## Metodología SDD
 
@@ -203,9 +205,9 @@ Para leer todo el contexto en Obsidian, abrir la carpeta del repositorio como b�
 
 Preparar los ajustes locales: `python scripts/setup_obsidian.py`. Cada persona abre su clon como bóveda; Git comparte la documentación. La configuración privada `.obsidian/` no se publica.
 
-No hay todavía comandos de arranque de la aplicación ni servicios desplegados. [Instalación prevista y requisitos del gateway](docs/arquitectura/INSTALACION.md).
+Ejecutar el ciclo local con `uv sync --locked` y `uv run --locked c4 demo`, después de configurar `.env` local. Consultar `uv run --locked c4 --help`. [Instalación y requisitos](docs/arquitectura/INSTALACION.md).
 
-La primera parte del backend se puede verificar con Python 3.12 y uv: `uv sync --locked`, seguido de `uv run --locked python -m unittest discover -s tests/unit -p 'test_*.py' -v`.
+El backend se verifica con Python 3.12 y uv: `uv run --locked python -m unittest discover -s tests/unit -p 'test_*.py' -v`. En apps/dashboard: `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm start`. El servidor local muestra fixtures con etiqueta Demo.
 
 ## Evaluación, seguridad y roadmap
 

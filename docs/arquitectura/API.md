@@ -32,7 +32,8 @@ Evaluation: pending, running, completed, failed.
 Job: queued, running, succeeded, failed; stage identifica paso actual.
 Report.decision: accepted, rejected, needs_human_review.
 Aceptar exige evaluación completed y controles del [protocolo](EVALUACIONES.md). Failed no puede convertirse en accepted.
-## CLI prevista
+## CLI prevista sobre contratos API
+Ya existe un [CLI local por sesiones](CLI.md) para el primer ciclo end to end. Los comandos siguientes describen el adaptador HTTP futuro; no son la sintaxis de esa entrega local.
 c4 analyze RUN_ID --dataset DATASET --dataset-version VERSION
 c4 patch INCIDENT_ID
 c4 eval PATCH_ID --dataset DATASET --dataset-version VERSION

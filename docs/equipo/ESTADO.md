@@ -1,26 +1,23 @@
 # Estado de C4 AI
-Actualizado: 2026-10-11.
-## Preparación verificada
-Documentación, contratos sintéticos, backlog y reglas compartidas preparados.
-Repositorio privado: https://github.com/DEIMER-PY/c4-ai. Rama predeterminada: develop. Santiago conserva write.
-Tablero privado: https://github.com/users/DEIMER-PY/projects/1/views/2; Santiago tiene WRITER concedido con autorización explícita. Hay 12 tareas, cinco estados y cinco hitos.
-Flujo Git: PR 10 integrado con CI aprobada. SDD: PR 14 integrado con CI aprobada.
-README/recursos SVG: [PR 15](https://github.com/DEIMER-PY/c4-ai/pull/15), verificación de 61 Markdown/cinco JSON/15 SVG y revisión visual aprobadas; CI aprobada. Integración mediante feature hacia develop.
-[Enlaces verificables y hilos](ENLACES.md).
-## Equipo
-Acceso GitHub de escritura de santiagosanabria-1 confirmado por la API de permisos; invitación aceptada.
-Canal Slack #c4-ai creado; onboarding y 12 hilos publicados. Santiago aún no aparece en la búsqueda del workspace; no afirmar recepción/lectura.
-Documentación disponible para Obsidian; [configuración local](OBSIDIAN.md) y [plan/prompt de Santiago](PLAN_SANTIAGO.md) preparados. Cada integrante debe abrir su clon como bóveda; la interfaz no se ha abierto automáticamente.
-## Producto
-Contratos Pydantic: implementados y probados; primera parte de C4-002. Persistencia/FastAPI y el resto de C4-002 siguen En curso.
-Evidencia: 15 pruebas y [PR 17](https://github.com/DEIMER-PY/c4-ai/pull/17) con CI aprobada. La aceptación de la feature se registra en su PR; #2 no se cierra por esta primera parte.
-API, CLI, runtime, DB, workers, gateway y dashboard: **planificados**.
-Fixtures/latencias/tokens del ejemplo son sintéticos, no evidencia de funcionamiento ni costos reales.
+Actualizado: 2026-10-17.
+
+## Producto y evidencia
+- **Verificada:** CLI end to end con Grok, sobre seis casos sintéticos. Baseline 5/6, candidato 6/6, cero regresiones, tres casos de seguridad aprobados; 14 llamadas, 20.730 tokens reportados. [Evidencia y rúbricas](../producto/ENTREGA_S1.md).
+- **Verificados:** contratos Pydantic v1, 15 pruebas originales. Las 33 pruebas actuales verifican contratos, servicio, gate, fallos, límites, CLI, Unicode de Windows y lectura entre procesos; ver spec007.
+- **Verificada como demo:** C4-004 dashboard de Santiago, integrado por [PR18](https://github.com/DEIMER-PY/c4-ai/pull/18), con fixtures sintéticos. Build y 32 pruebas aprobados; typecheck/lint aprobados. Revisión de navegador y cierre de criterios registrados en entrega S1.
+- **Planificados:** FastAPI, PostgreSQL/Alembic, Redis/RQ, API real para dashboard, instaladores/escritorio y prueba de carga. El almacén del CLI es local con checkpoints, no una DB distribuida.
+
+## Flujo y acceso
+Repositorio y tablero privados; rama predeterminada develop. Features independientes, commits convencionales con emoji y PR hacia develop. La feature actual es codex/feat-c4-003-cli-end-to-end, [spec007](../specs/007-cli-end-to-end/spec.md). No hay cambios incompatibles de contratos v1.
+Santiago conserva ownership frontend. No se alteró su código durante esta revisión. Las dudas CL-001–005 se responden en [entrega S1](../producto/ENTREGA_S1.md); la API de listados/métricas requiere spec y revisión compartida antes de C4-006.
+
 ## Próximo trabajo
-Deimer: completar clave/modelo de gateway y continuar C4-002 con persistencia/API después de los contratos tipados.
-Santiago: C4-011 y [spec inicial del dashboard](../specs/006-dashboard-mocks/spec.md); fixtures permiten frontend paralelo.
-## Pendientes externos
-Gateway: base publicada confirmada; clave local y modelos del panel pendientes. Equipo autorizado, confirmado por Deimer. Mantener privado hasta nueva instrucción.
-Branch protection devolvió 403 en el repo privado del plan actual; PR/CI/revisión se aplican operativamente, sin protección obligatoria del servidor.
-No hay monitoreo autónomo ni sincronización automática de chats privados configurados.
-Actualizar estado con evidence/Issue/PR; no inferir implementación a partir de documentación.
+Deimer: integrar PR19 al aprobar CI; continuar C4-002 con persistencia/API y acordar acceso a evidencia real. Santiago: completar revisión C4-004; preparar C4-006 contra API, después C4-008. [Backlog](BACKLOG.md).
+
+## Pendientes humanos y límites
+La organización autorizó trabajo en equipo según Deimer. Repo/tablero permanecen privados hasta nueva instrucción; publicación/licencia oficial de S1 siguen pendientes.
+Se detectó una credencial en .env.example del historial remoto; se retiró de la plantilla y se conserva solo en .env local ignorado. **Rotación/revocación pendiente en el panel del titular**; sanear el archivo no revoca una clave ni borra historia compartida.
+No se verificó nuevamente membresía Slack/apertura Obsidian de Santiago; no inferir confirmación por su entrega GitHub. Obsidian usa clones locales y Git, sin duplicación de documentos en Drive.
+Branch protection del plan privado devolvió 403 en la preparación; no se comprobó un cambio de plan. No hay vigilancia automática ni prueba de doce horas ejecutándose.
+
+Entrega del CLI: [PR19](https://github.com/DEIMER-PY/c4-ai/pull/19), base develop. Documentación y código publicados en la feature privada; integrar solamente tras checks aprobados.

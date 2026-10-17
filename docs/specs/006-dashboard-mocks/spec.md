@@ -1,5 +1,5 @@
 # Dashboard inicial de Santiago
-ID: C4-UI-006. Issue: C4-004 / #4. Estado: Implementing; UI-T02–T06 hechas, pendiente respuesta a CL-001/CL-002 y revisión de Deimer.
+ID: C4-UI-006. Issue: C4-004 / #4. Estado: Verified como dashboard con mocks; revisión Deimer 2026-10-17, PR18 integrado. No incluye API real.
 Responsable: Santiago/Claude; revisión de integración: Deimer.
 ## Requisitos
 FR-001: Preparar Next.js App Router/TypeScript/pnpm en apps/dashboard con lockfile y comandos reproducibles.
@@ -23,3 +23,6 @@ CL-002 (bloquea overview de FR-002): GET /metrics no tiene schema ni fixture, y 
 CL-003: DASHBOARD.md pide agente/versión y fecha en la lista de incidentes, pero Incident no tiene created_at ni agent_id (solo run_id) y api-responses.json no incluye runs. Propuesta: mostrar run_id y omitir fecha hasta que el contrato lo incluya.
 CL-004: ningún fixture de api-responses.json trae costo; cost/usage solo existe en Run. Propuesta: FR-005 se cubre con el formatter nullable y una prueba unitaria, sin dato visible en pantalla por ahora.
 CL-005: la evaluación incompleta trae before/after 0/0. La UI no debe mostrar 0 % de pass rate: con total 0 se muestra "Sin datos".
+
+## Resolución de revisión
+Deimer revisó AC-001–005: 32 pruebas/build/typecheck/lint aprobados y navegación desktop/móvil/teclado, aceptación, regresión, revisión humana, vacío y 503 comprobados. CL-001–005 se aceptan para el adaptador de mocks según [entrega S1](../../producto/ENTREGA_S1.md). Los nuevos endpoints requieren spec conjunta en C4-006; no se cambian contratos v1 aquí.
