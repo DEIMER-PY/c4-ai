@@ -44,3 +44,4 @@ Spec016: dashboard conectado a GET v1 existentes, sin fallback Demo; 37 pruebas 
 C4-006 dispone de lectura end-to-end; listados globales jobs/métricas y candidatos sin reporte siguen pendientes, sin inventar contratos.
 
 Spec017: chat SSE con panel de consumo, Markdown y entrada multilínea; una solicitud por turno con contexto local precargado. /chat selecciona conversación; Groq es predeterminado si hay clave. /run, /inspect y /status disponibles. Benchmark de una muestra por proveedor registrado, sin extrapolar ni alterar el gate.
+`nHermes: spec018 implementa cuatro herramientas MCP de lectura; conexión local y reporte accepted comprobados, cero llamadas nuevas. Telegram configurado por Deimer, flujo Telegram→C4 pendiente. Ver docs/integraciones/HERMES.md.

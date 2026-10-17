@@ -1,0 +1,12 @@
+{
+  "transport": "stdio",
+  "tools": [
+    "list_incidents",
+    "get_incident",
+    "get_report",
+    "get_evaluation"
+  ],
+  "decision": "accepted",
+  "incident_id": "c4_63fb290ce5244c248f0b929120f14df2_incident",
+  "new_model_calls": 0
+}
