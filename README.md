@@ -25,17 +25,19 @@ uv run --locked c4 tui
 uv run --locked c4 --target-provider groq tui
 ```
 
-La consola muestra neurona Unicode ramificada magenta/cian, con núcleo luminoso y axón segmentado, proveedor/modelo, comandos con Tab, historial en memoria y evidencia real. Abrirla no consume solicitudes. Usa `/help`, `/doctor`, `/runs`, `/report last` y `/demo`; el texto normal conversa con Grok y consume llamadas; /demo y --probe también llaman a proveedores. En una terminal interactiva, `c4` sin argumentos también abre la consola.
+La consola muestra neurona Unicode ramificada magenta/cian, con núcleo luminoso y axón segmentado, proveedor/modelo, comandos con Tab, historial en memoria y evidencia real. Abrirla no consume solicitudes. Usa `/help`, `/doctor`, `/runs`, `/report last` y `/demo`; el texto normal conversa por streaming y consume llamadas; /demo y --probe también llaman a proveedores. En una terminal interactiva, `c4` sin argumentos también abre la consola.
 
 Grok diagnostica y propone candidatos; el target puede ser Grok o Groq/Qwen. Cada comparación mantiene el mismo modelo, esquema y dataset. La prueba real Qwen se rechazó por una regresión: un ciclo terminado no implica candidato aceptado. [Configuración y evidencia Groq](docs/referencias/GROQ.md). [Rúbricas del equipo](docs/equipo/RUBRICAS.md).
 
 Jev de TypeSafe queda como experimento de triage probabilístico; todavía no está integrado ni hay rapidez verificada en C4. [Propuesta, acceso y aceptación](docs/producto/JEV.md).
 
-Escribe `Hola, ¿qué puedes hacer?` para conversar. Usa `/use last` y pregunta `¿Por qué se rechazó el candidato?` para consultar evidencia; `/new` borra la conversación. Grok atiende el chat y Groq sigue siendo el agente evaluado.
+Escribe `Hola, ¿qué puedes hacer?` para conversar. Usa `/use last` y pregunta `¿Por qué se rechazó el candidato?` para consultar evidencia; `/new` borra la conversación. El chat usa Groq si está configurado; `/chat grok` elige Grok. El analista del workflow sigue siendo Grok y el target de evaluación se configura aparte.
 
 ![Dashboard conectado a evidencia CLI](docs/assets/dashboard-desktop.png)
 
 [Vista tablet](docs/assets/dashboard-tablet.png) · [Vista teléfono](docs/assets/dashboard-phone.png)
+
+![Chat con panel de consumo](docs/assets/cli-chat-preview.svg)
 
 ## Consultar evidencia por HTTP
 

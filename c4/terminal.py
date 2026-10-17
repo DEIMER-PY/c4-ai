@@ -2,6 +2,7 @@
 import os
 import re
 import shlex
+from contextlib import nullcontext
 from importlib.metadata import version
 from time import monotonic
 from typing import Callable
@@ -12,10 +13,13 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.formatted_text import FormattedText
 from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.styles import Style
+from prompt_toolkit.key_binding import KeyBindings
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
+from rich.live import Live
+from rich.markdown import Markdown
 
 from c4.services.storage import Store
 from c4.services.chat import Chat
@@ -26,6 +30,10 @@ COMMANDS = {
     '/help': 'Mostrar comandos y límites',
     '/use ID|last': 'Seleccionar evidencia para conversar',
     '/new': 'Borrar conversación y reiniciar presupuesto de chat',
+    '/chat groq|grok': 'Elegir proveedor de conversación',
+    '/status': 'Ver proveedores y presupuesto de chat',
+    '/run': 'Ejecutar el ciclo completo (alias de /demo)',
+    '/inspect ID|last': 'Consultar reporte (alias de /report)',
     '/target grok|groq': 'Elegir proveedor para el próximo trabajo',
     '/doctor [--probe]': 'Validar configuración; --probe hace llamadas',
     '/demo': 'Ciclo completo: diagnóstico, candidato y evaluación',
@@ -85,7 +93,7 @@ def header(console: Console, store: Store, env_file: str, provider: str):
         activity.append('Resultado anterior; /report ID para consultar\n', style='#94a3b8')
     else:
         activity.append('\n[LOCAL] Sin ejecuciones guardadas\n', style='#94a3b8')
-    activity.append('\nEscribe para conversar con Grok (consume llamadas)\n/help comandos   /runs evidencia   /demo ejecutar', style='#c4b5fd')
+    activity.append('\nEscribe para conversar (consume llamadas)\n/help comandos   /runs evidencia   /run ejecutar', style='#c4b5fd')
     context = Group(status, activity)
     try:
         '⠿'.encode(console.encoding)
@@ -111,7 +119,7 @@ def show_help(console: Console):
         table.add_row(command,purpose)
     console.print(table)
     console.print(Text('No se ejecutan comandos del sistema. Las claves se configuran en .env, no en este prompt.',style='dim'))
-    console.print(Text('Texto normal: chat Grok. Hasta 2 llamadas/turno y 16/conversación; /new reinicia. /use ID fija evidencia.',style='cyan'))
+    console.print(Text('Chat streaming: una llamada/turno, hasta 16/conversación. /chat elige proveedor; /new reinicia; /use ID fija evidencia. Enter envía; Alt+Enter o Esc+Enter inserta línea.',style='cyan'))
 
 
 def show_runs(console: Console, store: Store):
@@ -141,10 +149,40 @@ class Harness:
         self.chat = Chat(store,env_file)
 
     def talk(self, line):
+        started = monotonic()
+        content = ''
+        phase = 'Contexto local / respuesta en curso'
+        def update(text):
+            nonlocal content
+            content = text
+        def render():
+            usage = self.chat.last_usage
+            metrics = Text(f'Proveedor  {self.chat.provider.upper()}\nEstado     {phase}\n',style='cyan')
+            metrics.append('Modelo     '+self.chat.model+'\n',style='white')
+            metrics.append(f'Tiempo     {monotonic()-started:.1f}s\n',style='white')
+            metrics.append(f'Llamadas   {self.chat.used}/16\n',style='white')
+            metrics.append(f'Caracteres {len(content)}\n',style='dim')
+            if usage:
+                tokens = str(usage['tokens']) if usage['coverage'] else 'no reportados'
+                first = str(usage['ttft_ms'])+' ms' if usage.get('ttft_ms') is not None else 'no recibido'
+                metrics.append(f'Tokens     {tokens}\nPrimer fragmento {first}\n',style='white')
+            else:
+                metrics.append('Tokens     pendientes de usage\n',style='dim')
+            metrics.append('Costo      desconocido',style='dim')
+            response = Panel(Markdown(content) if content else Text('Consultando contexto local y esperando al proveedor…',style='dim'),title='[cyan]C4 AI / respuesta[/cyan]',border_style='cyan')
+            meter = Panel(metrics,title='CONSUMO / SESIÓN',border_style='magenta')
+            if self.console.width>=110:
+                row = Table.grid(expand=True,padding=(0,1))
+                row.add_column(ratio=3); row.add_column(width=36)
+                row.add_row(response,meter)
+                return row
+            return Group(response,meter)
         try:
-            with self.console.status('Grok está respondiendo · consulta de evidencia de solo lectura...',spinner='dots'):
-                reply = self.chat.ask(line,self.provider)
-            self.console.print(Panel(Text(reply),title='C4 AI / Grok',border_style='cyan'))
+            with (Live(get_renderable=render,console=self.console,refresh_per_second=12,transient=True) if self.console.is_terminal else nullcontext()):
+                reply = self.chat.stream(line,self.provider,update)
+            content = reply
+            phase = 'Completado'
+            self.console.print(render())
         except WorkflowError as error:
             self.console.print(Text(error.code+': '+str(error),style='yellow'))
         except KeyboardInterrupt:
@@ -153,7 +191,8 @@ class Harness:
             self.console.print('No se pudo consultar el contexto local; revisa /runs y la configuración.')
         usage = self.chat.last_usage
         if usage:
-            self.console.print(Text(f'Chat: {usage["calls"]} llamadas · {usage["tokens"]} tokens reportados '
+            tokens = str(usage['tokens']) if usage['coverage'] else 'no reportados'
+            self.console.print(Text(f'Chat: {usage["calls"]} llamadas · tokens {tokens} '
                 f'({usage["coverage"]}/{usage["calls"]}) · {usage["latency_ms"]} ms acumulados · '
                 f'{usage["total_calls"]}/16 llamadas · costo desconocido',style='dim'))
 
@@ -181,6 +220,7 @@ class Harness:
             return True
         command,*args = tokens
         command = command.removeprefix('/')
+        command = {'run':'demo','inspect':'report'}.get(command,command)
         if command in {'quit','exit'} and not args:
             return False
         if command=='help' and not args:
@@ -199,6 +239,12 @@ class Harness:
         elif command=='new' and not args:
             self.chat.reset()
             self.console.print('Conversación borrada de memoria; presupuesto de chat reiniciado.')
+        elif command=='chat' and len(args)==1 and args[0] in {'grok','groq'}:
+            self.chat.provider = args[0]
+            self.chat.model = 'según configuración'
+            self.console.print(Text('Proveedor de conversación: '+args[0]+'. El target y el analista del workflow no cambian.',style='cyan'))
+        elif command=='status' and not args:
+            self.console.print(Text(f'Chat {self.chat.provider} · Target {self.provider} · Analista Grok\nPresupuesto chat {self.chat.used}/16 llamadas · historial {len(self.chat.history)}/8 mensajes · costo desconocido',style='cyan'))
         elif command=='use' and len(args)==1:
             try:
                 self.console.print(Text('Evidencia seleccionada: '+self.chat.select(args[0]),style='cyan'))
@@ -231,13 +277,20 @@ class Harness:
             def append_string(self, string):
                 if not chat.has_secret(string):
                     super().append_string(string)
+        bindings = KeyBindings()
+        @bindings.add('enter')
+        def submit(event):
+            event.current_buffer.validate_and_handle()
+        @bindings.add('escape','enter')
+        def newline(event):
+            event.current_buffer.insert_text('\n')
         session=session or PromptSession(completer=WordCompleter([c.split()[0] for c in COMMANDS],sentence=True),
-            history=PrivateHistory(),complete_while_typing=False,
+            history=PrivateHistory(),complete_while_typing=False,multiline=True,key_bindings=bindings,
             style=Style.from_dict({'prompt':'ansimagenta bold','target':'ansicyan','bottom-toolbar':'bg:#111827 #94a3b8'}))
         while True:
             try:
                 line=session.prompt(FormattedText([('class:target','c4 / '+self.provider),('class:prompt',' [READY] > ')]),
-                    bottom_toolbar=lambda:f'Chat Grok | /help comandos | /new reinicia | Sesión: {monotonic()-started:.0f}s')
+                    bottom_toolbar=lambda:f'Chat {self.chat.provider.upper()} | /help | Alt+Enter: línea | /new | Sesión {monotonic()-started:.0f}s')
                 if not self.handle(line):
                     break
             except KeyboardInterrupt:
