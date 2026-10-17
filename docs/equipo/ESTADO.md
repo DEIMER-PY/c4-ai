@@ -9,10 +9,12 @@ Actualizado: 2026-10-17.
 - **Planificados:** FastAPI, PostgreSQL/Alembic, Redis/RQ, API real para dashboard, instaladores/escritorio y prueba de carga. El almacén del CLI es local con checkpoints, no una DB distribuida.
 
 ## Flujo y acceso
-Repositorio y tablero privados; rama predeterminada develop. Features independientes, commits convencionales con emoji y PR hacia develop. PR19 integrado en develop (95c0ed3). PR20 de progreso integrado (0c087d7); PR21 de proveedores integrado (3817fc8). Consola interactiva en [spec010](../specs/010-interactive-console/spec.md). No hay cambios incompatibles de contratos v1.
+Repositorio y tablero privados; rama predeterminada develop. Features independientes, commits convencionales con emoji y PR hacia develop. PR19 integrado en develop (95c0ed3). PR20 de progreso integrado (0c087d7); PR21 de proveedores integrado (3817fc8). Consola interactiva integrada por PR22 (6c04d69), en [spec010](../specs/010-interactive-console/spec.md). No hay cambios incompatibles de contratos v1.
 Santiago conserva ownership frontend. No se alteró su código durante esta revisión. Las dudas CL-001–005 se responden en [entrega S1](../producto/ENTREGA_S1.md); la API de listados/métricas requiere spec y revisión compartida antes de C4-006.
 
 ## Próximo trabajo
+Primero validar el perfil Groq/Qwen evaluado por Grok según la [guía ordenada de integraciones](PRUEBAS_INTEGRACIONES.md). El gate final sigue siendo determinista; no hay juez Grok por cada caso. Esta revisión documental no ejecuta nuevas generaciones.
+
 Deimer: continuar C4-002 con persistencia/API y acordar acceso a evidencia real. Santiago: preparar C4-006 contra API, después C4-008. [Backlog](BACKLOG.md).
 
 ## Pendientes humanos y límites

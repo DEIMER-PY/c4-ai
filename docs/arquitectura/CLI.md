@@ -52,10 +52,10 @@ Las herramientas reales son trace_reader (inspección), patch_writer (propuesta 
 Baseline y candidato se evalúan sobre el mismo snapshot. El gate exige objetivo mejorado, mejora total, cero regresiones y aprobación de todos los casos de seguridad. Las validaciones no afirman seguridad general fuera del dataset. Los fallos de conexión/HTTP/JSON/límites preservan lo completado y requieren revisión.
 
 ## Fronteras pendientes
-PostgreSQL/Alembic, FastAPI, Redis/RQ, API de evidencia para Santiago, TUI interactiva, instaladores y aplicación de escritorio se desarrollan en features posteriores. La CLI se instala desde el clon privado; no hay paquete público de instalación todavía.
+PostgreSQL/Alembic, FastAPI, Redis/RQ, API de evidencia para Santiago, instaladores y aplicación de escritorio se desarrollan en features posteriores. La CLI se instala desde el clon privado; no hay paquete público de instalación todavía.
 
 ## Modelo evaluado independiente
-C4 diagnostica/proporciona candidatos con Grok. Para evaluar Qwen en Groq, configurar GROQ_API_KEY y C4_GROQ_MODEL en .env; ejecutar `uv run --locked c4 --target-provider groq doctor` y `uv run --locked c4 --target-provider groq demo`. El proveedor elegido se aplica por igual al baseline y al candidato. --target-provider va antes del comando. Sin opción se conserva Grok; C4_TARGET_PROVIDER permite elegir el valor local por defecto.
+C4 diagnostica/proporciona candidatos con Grok. Para evaluar Qwen en Groq, configurar GROQ_API_KEY y C4_GROQ_MODEL en .env; ejecutar `uv run --locked c4 --target-provider groq doctor` y `uv run --locked c4 --target-provider groq demo`. El proveedor elegido se aplica por igual al baseline y al candidato. --target-provider va antes del comando. Sin opción se conserva Grok; C4_TARGET_PROVIDER permite elegir el valor por defecto como variable del proceso PowerShell (`$env:C4_TARGET_PROVIDER = "groq"`); escribirla solo en .env no selecciona el target al parsear los argumentos. Para este flujo usar siempre --target-provider groq.
 
 Los límites se comparten entre proveedores. doctor --probe consume una solicitud por gateway distinto (dos al seleccionar Groq). JSON/evidencia registran target_provider y proveedor/modelo por llamada. Qwen usa el mismo esquema estricto de acciones en ambas versiones; modelos Groq no documentados con strict usan JSON object con validación local. Una respuesta inválida sigue siendo fallo, nunca aprobación.
 
@@ -74,3 +74,5 @@ La cabecera usa arte ASCII original de neurona violeta/cian y versión/modelos r
 - /report ID o /compare ID: lectura; last selecciona la sesión más reciente. Estas lecturas no requieren credenciales ni generan nuevas solicitudes.
 
 Los comandos de la consola se enrutan a la misma app Typer, sin shell ni evaluación de código. Rechazo, error o cancelación devuelve control al prompt. Una sesión es de trabajo local; un resultado de modelo solo se considera real si tiene evidencia de proveedor. Jev se muestra como planificado, no como servicio conectado. [Spec010](../specs/010-interactive-console/spec.md).
+
+[Orden de pruebas Groq/Grok y límites actuales](../equipo/PRUEBAS_INTEGRACIONES.md).

@@ -14,6 +14,8 @@ C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de
 
 [Documentación](docs/README.md) · [Especificaciones SDD](docs/specs/README.md) · [Contratos](docs/arquitectura/API.md) · [Kanban](https://github.com/users/DEIMER-PY/projects/1/views/2) · [Tareas](https://github.com/DEIMER-PY/c4-ai/issues) · [Onboarding](docs/equipo/ONBOARDING_SANTIAGO.md)
 
+[Probar las integraciones en orden: Groq → Grok → evidencia](docs/equipo/PRUEBAS_INTEGRACIONES.md).
+
 ## Consola de C4 AI
 
 ```powershell
