@@ -16,14 +16,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: { default: "C4 AI — Dashboard", template: "%s · C4 AI" },
-  description: "Incidentes, candidatos y evaluaciones de C4 AI (datos de demostración).",
+  description: "Evidencia, incidentes y evaluaciones del harness C4 AI.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <AppShell>{children}</AppShell>

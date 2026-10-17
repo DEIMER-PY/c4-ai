@@ -6,7 +6,7 @@
 
 C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de prompt o configuración y compara su comportamiento contra el baseline. El resultado es una decisión trazable: aceptar, rechazar o solicitar revisión humana.
 
-**Estado actual (2026-10-17):** CLI end to end con Grok verificada sobre seis casos sintéticos: baseline 5/6 → candidato 6/6, cero regresiones y controles obligatorios aprobados. Contratos Pydantic disponibles y dashboard de Santiago con mocks integrado por PR18. API local de consulta disponible; escritura, PostgreSQL y workers siguen planificados; el dashboard todavía no muestra esta evidencia real.
+**Estado actual (2026-10-17):** CLI end to end con Grok verificada sobre seis casos sintéticos: baseline 5/6 → candidato 6/6, cero regresiones y controles obligatorios aprobados. Contratos Pydantic disponibles y dashboard de Santiago con mocks integrado por PR18. API local de consulta disponible; escritura, PostgreSQL y workers siguen planificados; el dashboard consulta la evidencia real vía API, con modo Demo explícito.
 
 [Abrir consola interactiva](docs/arquitectura/CLI.md) · [Evidencia y rúbrica pendiente](docs/producto/ENTREGA_S1.md) · [Dashboard local](apps/dashboard/README.md)
 
@@ -33,10 +33,14 @@ Jev de TypeSafe queda como experimento de triage probabilístico; todavía no es
 
 Escribe `Hola, ¿qué puedes hacer?` para conversar. Usa `/use last` y pregunta `¿Por qué se rechazó el candidato?` para consultar evidencia; `/new` borra la conversación. Grok atiende el chat y Groq sigue siendo el agente evaluado.
 
+![Dashboard conectado a evidencia CLI](docs/assets/dashboard-desktop.png)
+
+[Vista tablet](docs/assets/dashboard-tablet.png) · [Vista teléfono](docs/assets/dashboard-phone.png)
+
 ## Consultar evidencia por HTTP
 
 ```powershell
-uv run --locked uvicorn c4.api:app --host 127.0.0.1 --port 8000
+uv run --locked c4-api --port 8000
 ```
 
 OpenAPI en http://127.0.0.1:8000/docs. Lee los mismos checkpoints del CLI, sin llamadas a modelos. [Cobertura y límites](apps/api/README.md).

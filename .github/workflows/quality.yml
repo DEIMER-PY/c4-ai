@@ -28,3 +28,29 @@ jobs:
         env:
           C4_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: python scripts/verify_commits.py --base "$C4_BASE_SHA"
+  dashboard:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/dashboard
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Install pinned pnpm
+        run: npm install --global pnpm@10.34.7
+      - name: Install locked dashboard dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Test dashboard and HTTP adapter
+        run: pnpm test
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Lint
+        run: pnpm lint
+      - name: Build explicit demo mode (CI has no local API)
+        env:
+          C4_DATA_MODE: demo
+        run: pnpm build

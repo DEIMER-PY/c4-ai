@@ -1,130 +1,42 @@
 import Link from "next/link";
-
+import { Suspense } from "react";
+import { Activity, ShieldCheck, GitCompareArrows, Cpu, ArrowUpRight, Terminal } from "lucide-react";
 import { PageHeader } from "@/components/app-shell";
+import { EvaluationChart } from "@/components/evaluation-chart";
 import { ErrorState } from "@/components/states";
 import { StatusBadge } from "@/components/status-badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { dataSource } from "@/lib/data";
+import { dataMode, dataSource } from "@/lib/data";
 import { formatCostUsd, formatScore } from "@/lib/format";
-import { DECISION, EVALUATION_STATUS, INCIDENT_STATUS, JOB_STATUS } from "@/lib/labels";
+import { DECISION, EVALUATION_STATUS } from "@/lib/labels";
 import { loadOverview } from "@/lib/overview";
-import { INCIDENT_STATUSES, JOB_STATUSES, DECISIONS } from "@/types/contracts";
+import { DECISIONS } from "@/types/contracts";
 
-function CountList<K extends string>({
-  keys,
-  counts,
-  labels,
-}: {
-  keys: readonly K[];
-  counts: Partial<Record<K, number>>;
-  labels: Record<K, { label: string; tone: "success" | "danger" | "warning" | "neutral" }>;
-}) {
-  const present = keys.filter((key) => (counts[key] ?? 0) > 0);
-  if (present.length === 0) return <p className="text-sm text-muted-foreground">Sin registros.</p>;
-  return (
-    <ul className="flex flex-col gap-2">
-      {present.map((key) => (
-        <li key={key} className="flex items-center justify-between gap-2">
-          <StatusBadge {...labels[key]} />
-          <span className="font-mono text-sm tabular-nums">{counts[key]}</span>
-        </li>
-      ))}
-    </ul>
-  );
+async function OverviewContent() {
+ const result = await loadOverview(dataSource);
+ if (!result.ok) return <><PageHeader title="Centro de control" /><ErrorState status={result.status} error={result.error} /></>;
+ const { data } = result;
+ const metrics = [
+  { title:"Incidentes registrados", value:data.incidentCount, note:"Detectados en el almacén consultado", icon:Activity, color:"text-primary" },
+  { title:"Candidatos aceptados", value:data.decisions.accepted ?? 0, note:"Con reporte de evaluación", icon:ShieldCheck, color:"text-success" },
+  { title:"Regresiones detectadas", value:data.evaluations.reduce((s,e)=>s+e.regressions.length,0), note:"Casos que dejaron de pasar", icon:GitCompareArrows, color:"text-pink-300" },
+  { title:"Tokens del baseline inicial", value:data.usage.tokens.toLocaleString("es"), note:`Cobertura ${data.usage.knownRuns}/${data.usage.totalRuns} ejecuciones iniciales`, icon:Cpu, color:"text-cyan-300" },
+ ];
+ return <>
+  <PageHeader title="Centro de control" description={dataMode === "api" ? "Evidencia del CLI, consultada desde tu API local. Cada decisión conserva su contexto." : "Modo Demo: fixtures sintéticos, separados de las ejecuciones del CLI."} />
+  <section className="c4-hero overflow-hidden rounded-2xl border border-primary/20 p-6 md:p-8"><div className="flex flex-wrap items-center justify-between gap-6">
+   <div className="max-w-xl"><p className="mb-3 text-[10px] font-semibold tracking-[0.2em] text-primary">C4 AI / RELIABILITY HARNESS</p><h2 className="text-2xl font-semibold tracking-tight md:text-3xl">Menos incertidumbre.<br /><span className="text-primary">Más evidencia.</span></h2><p className="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">Detecta fallos, compara candidatos y rechaza las correcciones que introducen regresiones.</p></div>
+   <div className="flex flex-col gap-3"><div className="flex items-center gap-2 rounded-xl border border-primary/25 bg-background/30 p-4 font-mono text-xs"><Terminal size={17} className="text-primary" aria-hidden="true" />c4 --target-provider groq tui</div><Link href="/incidents" className="flex items-center justify-between rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground">Explorar incidentes <ArrowUpRight size={16} aria-hidden="true" /></Link></div>
+  </div></section>
+  <section aria-label="Métricas de la evidencia disponible" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{metrics.map((m)=><article key={m.title} className="c4-kpi"><div className="flex items-center justify-between gap-3"><h2 className="text-xs text-muted-foreground">{m.title}</h2><m.icon size={18} className={m.color} aria-hidden="true" /></div><strong>{m.value}</strong><p className="text-[11px] leading-relaxed text-muted-foreground">{m.note}</p></article>)}</section>
+  <div className="grid gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)]">
+   <Card><CardHeader><CardTitle>Baseline y candidato</CardTitle><CardDescription>Comparaciones completas del mismo dataset por ejecución.</CardDescription></CardHeader><CardContent><EvaluationChart evaluations={data.evaluations} /></CardContent></Card>
+   <Card><CardHeader><CardTitle>Decisiones con evidencia</CardTitle><CardDescription>Aceptar no significa aplicar a producción.</CardDescription></CardHeader><CardContent className="space-y-5">{DECISIONS.map((d)=><div className="flex items-center justify-between gap-3" key={d}><StatusBadge {...DECISION[d]} /><span className="font-mono text-xl">{data.decisions[d] ?? 0}</span></div>)}<div className="border-t pt-4 text-xs leading-relaxed text-muted-foreground">Costo conocido: <span className="text-foreground">{formatCostUsd(data.cost.knownTotalUsd)}</span><br />Cobertura {data.cost.known}/{data.cost.total}.<br />{data.jobsAvailable ? "Trabajos consultados desde la fuente Demo." : "Listado global de trabajos: no disponible en API v1."}</div></CardContent></Card>
+  </div>
+  <section aria-labelledby="evaluaciones" className="space-y-4"><div className="flex items-center justify-between"><h2 id="evaluaciones" className="text-lg font-semibold">Evaluaciones registradas</h2><Link href="/incidents" className="text-xs text-primary">Ver incidentes →</Link></div>
+   {data.evaluations.length===0 ? <p className="text-sm text-muted-foreground">Sin evaluaciones disponibles todavía.</p> : <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">{data.evaluations.map((e)=><li key={e.id}><Card size="sm"><CardHeader><div className="flex items-center justify-between gap-3"><CardTitle className="text-sm">{e.dataset_id}</CardTitle><StatusBadge {...EVALUATION_STATUS[e.status]} /></div><CardDescription>Dataset v{e.dataset_version}</CardDescription></CardHeader><CardContent className="space-y-3 text-sm"><div className="flex items-center justify-between rounded-lg bg-muted/50 p-3"><span>{formatScore(e.before)}</span><span className="text-primary">→</span><strong>{formatScore(e.after)}</strong></div><div className="flex items-center justify-between text-xs"><span className="text-muted-foreground">{e.regressions.length} regresiones</span><Link href={`/evaluations/${encodeURIComponent(e.id)}`} className="text-primary underline-offset-4 hover:underline">Ver comparación</Link></div><p className="break-all font-mono text-[10px] text-muted-foreground">{e.id}</p></CardContent></Card></li>)}</ul>}
+  </section>
+ </>;
 }
 
-export default async function OverviewPage() {
-  const result = await loadOverview(dataSource);
-  if (!result.ok) {
-    return (
-      <>
-        <PageHeader title="Resumen" />
-        <ErrorState status={result.status} error={result.error} />
-      </>
-    );
-  }
-  const { data } = result;
-
-  return (
-    <>
-      <PageHeader
-        title="Resumen"
-        description="Estado de incidentes, trabajos, decisiones y evaluaciones. Derivado de los fixtures: aún no existe el contrato de /metrics."
-      />
-
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Incidentes</CardTitle>
-            <CardDescription>
-              {data.incidentCount} en total · <Link href="/incidents" className="underline underline-offset-4">ver lista</Link>
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CountList keys={INCIDENT_STATUSES} counts={data.incidentsByStatus} labels={INCIDENT_STATUS} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Trabajos</CardTitle>
-            <CardDescription>En cola y en ejecución no cuentan como éxito.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CountList keys={JOB_STATUSES} counts={data.jobsByStatus} labels={JOB_STATUS} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Decisiones</CardTitle>
-            <CardDescription>Reportes por decisión final.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CountList keys={DECISIONS} counts={data.decisions} labels={DECISION} />
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Costo</CardTitle>
-            <CardDescription>
-              Cobertura: {data.cost.known} de {data.cost.total} ejecuciones con costo conocido.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold tabular-nums">{formatCostUsd(data.cost.knownTotalUsd)}</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <section aria-labelledby="evaluaciones" className="flex flex-col gap-3">
-        <h2 id="evaluaciones" className="text-lg font-semibold">
-          Evaluaciones
-        </h2>
-        <ul className="grid gap-3 md:grid-cols-3">
-          {data.evaluations.map((evaluation) => (
-            <li key={evaluation.id}>
-              <Card size="sm">
-                <CardHeader>
-                  <CardTitle className="font-mono text-sm">{evaluation.id}</CardTitle>
-                  <CardDescription>
-                    {evaluation.dataset_id} v{evaluation.dataset_version}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-2 text-sm">
-                  <StatusBadge {...EVALUATION_STATUS[evaluation.status]} />
-                  <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-                    <dt className="text-muted-foreground">Antes</dt>
-                    <dd className="tabular-nums">{formatScore(evaluation.before)}</dd>
-                    <dt className="text-muted-foreground">Después</dt>
-                    <dd className="tabular-nums">{formatScore(evaluation.after)}</dd>
-                    <dt className="text-muted-foreground">Regresiones</dt>
-                    <dd className="tabular-nums">{evaluation.regressions.length}</dd>
-                  </dl>
-                </CardContent>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </>
-  );
-}
+export default function OverviewPage() { return <Suspense fallback={<p className="text-muted-foreground">Cargando evidencia local…</p>}><OverviewContent /></Suspense>; }

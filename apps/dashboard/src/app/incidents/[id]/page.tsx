@@ -131,7 +131,7 @@ async function IncidentDetail({ params }: { params: PageProps<"/incidents/[id]">
     dataSource.listPatchesForIncident(incident.id),
     dataSource.listReportsForIncident(incident.id),
     dataSource.listAgents(),
-    dataSource.listJobs(),
+    dataSource.capabilities?.listJobs === false ? Promise.resolve(null) : dataSource.listJobs(),
   ]);
   const agents = agentsResult.ok ? agentsResult.data.items : [];
   const reportByPatch = new Map<string, Report>(
@@ -169,7 +169,7 @@ async function IncidentDetail({ params }: { params: PageProps<"/incidents/[id]">
         <h2 id="trabajos" className="text-lg font-semibold">
           Trabajos
         </h2>
-        {jobsResult.ok ? (
+        {jobsResult === null ? (<p className="text-sm text-muted-foreground">El listado global de trabajos aún no está disponible en la API v1. El estado del incidente y su evidencia se muestran abajo.</p>) : jobsResult.ok ? (
           <JobList jobs={jobsResult.data.filter((job) => job.incident_id === incident.id)} />
         ) : (
           <ErrorState status={jobsResult.status} error={jobsResult.error} />
