@@ -7,3 +7,5 @@
 Responsable Deimer/Codex. Dependencia: spec014, instalación Hermes existente verificada.
 
 Evidencia: 83 pruebas Python aprobadas; cliente stdio recupera accepted; hermes mcp test descubre cuatro herramientas (8695 ms). CI en PR.
+
+PR31 integrado en develop con CI aprobada.

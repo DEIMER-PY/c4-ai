@@ -6,9 +6,9 @@
 
 C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de prompt o configuración y compara su comportamiento contra el baseline. El resultado es una decisión trazable: aceptar, rechazar o solicitar revisión humana.
 
-**Estado actual (2026-10-17):** CLI end to end con Grok verificada sobre seis casos sintéticos: baseline 5/6 → candidato 6/6, cero regresiones y controles obligatorios aprobados. Contratos Pydantic disponibles y dashboard de Santiago con mocks integrado por PR18. API local de consulta disponible; escritura, PostgreSQL y workers siguen planificados; el dashboard consulta la evidencia real vía API, con modo Demo explícito.
+**Estado actual (2026-10-17):** CLI end-to-end y chat streaming, dashboard conectado a API local y cuatro herramientas MCP de lectura para Hermes verificados. Baseline5/6→candidato6/6, cero regresiones sobre seis casos sintéticos. 83 pruebas backend y37 frontend aprobadas. API de ejecución, PostgreSQL y workers pendientes; repo privado.
 
-[Abrir consola interactiva](docs/arquitectura/CLI.md) · [Evidencia y rúbrica pendiente](docs/producto/ENTREGA_S1.md) · [Dashboard local](apps/dashboard/README.md)
+[Abrir consola interactiva](docs/arquitectura/CLI.md) · [Reporte técnico y entrega](docs/entregas/S1_REPORTE_TECNICO.md) · [Dashboard local](apps/dashboard/README.md)
 
 **Acceso:** repositorio y tablero privados para Deimer y Santiago. Trabajo en equipo autorizado por la organización, confirmado por Deimer. La publicación se decidirá posteriormente.
 
@@ -257,3 +257,12 @@ Los hitos del reto recuperados del chat deben contrastarse con los requisitos of
 [Evaluaciones](docs/arquitectura/EVALUACIONES.md) · [Controles de seguridad](docs/arquitectura/SEGURIDAD.md) · [Roadmap](docs/producto/ROADMAP.md) · [Demo](docs/producto/DEMO.md) · [Estado actual](docs/equipo/ESTADO.md)
 
 Credenciales quedan fuera de Git, incluso en el repositorio privado. La licencia del código está pendiente de decisión; los iconos conservan su licencia y atribución propias.
+
+
+## Entrega S1 y prototipos
+
+[Reporte técnico](docs/entregas/S1_REPORTE_TECNICO.md) · [Matriz oficial](docs/entregas/S1_CRITERIOS.md) · [Video Remotion](apps/demo-video/README.md) · [Hermes MCP](docs/integraciones/HERMES.md) · [Prototipo navegable](docs/prototipos/index.html).
+
+![Vistas responsive reales](docs/assets/app-responsive-preview.svg)
+
+El requisito público de S1 y la URL del video siguen pendientes; no se cambió la privacidad ni se envió el formulario.

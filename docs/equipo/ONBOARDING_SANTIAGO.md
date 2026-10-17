@@ -1,21 +1,14 @@
-# Santiago + Claude — empezar
-## Leer en orden
-1. [Visión](../producto/PRD.md), [reglas compartidas](../../AGENTS.md) y [entrada Claude](../../CLAUDE.md).
-2. [Estado](ESTADO.md), [roles](ROLES.md) y [backlog](BACKLOG.md).
-3. [Contratos](../arquitectura/API.md), [mock API](../../examples/contracts/api-responses.json) y [dashboard](../producto/DASHBOARD.md).
-## Primera tarea
-Aplicar [SDD](SDD.md): crear spec/plan/tasks de dashboard antes de implementar; remitir a contratos canónicos y probar escenarios AC.
-C4-004: preparar dashboard tipado con fixtures, pantalla de incidentes, detalle y comparaciones.
-Partir de develop y crear rama santiago/feat-c4-004-dashboard-mocks. PR hacia develop; commits convencionales con emoji. Deimer/Codex construye backend de forma independiente.
-No introducir auth/hosting/otro framework sin ADR.
-## Checklist
-- Clonar repo y aceptar invitación de GitHub si se requiere escribir.
-- Acceso write ya confirmado: clonar con tu propia cuenta GitHub; no usar credenciales de Deimer.
-- Ejecutar python scripts/setup_obsidian.py y abrir la carpeta raíz como bóveda en Obsidian.
-- Claude lee AGENTS + CLAUDE; no necesita chat/memoria de Codex.
-- Confirmar task, archivos y dependencias en GitHub.
-- Construir interfaz con etiqueta Demo; costos null visibles como desconocidos.
-- Enviar PR con screenshots de interfaz futura, validación y bloqueos.
-- Para Slack, unirse al workspace y canal; configurar conexión propia de Claude si desea enviar directamente.
-No hay comandos de arranque del dashboard todavía; los añadirá esta tarea con su lockfile.
-Leer [plan detallado](PLAN_SANTIAGO.md), [prompt para Claude](PROMPT_CLAUDE.md) y [guía Obsidian](OBSIDIAN.md). La [spec inicial](../specs/006-dashboard-mocks/spec.md) ya tiene requisitos/aceptación para revisar e implementar.
+# Santiago + Claude — retomar el proyecto
+
+Actualizado 2026-10-17. C4-004 está terminada y la integración de lectura API de PR29 ya existe; no rehacerlas.
+
+1. Actualizar el clon privado en develop sin sobrescribir cambios. Leer [AGENTS](../../AGENTS.md), [CLAUDE](../../CLAUDE.md), [estado](ESTADO.md), [backlog](BACKLOG.md) y [API](../arquitectura/API.md).
+2. Leer [plan actual](PLAN_SANTIAGO.md), [prompt Claude](PROMPT_CLAUDE.md), specs016–019 y [reporte S1](../entregas/S1_REPORTE_TECNICO.md).
+3. Continuar #6 con la spec de capacidades pendientes; coordinar contratos jobs/métricas/candidatos antes de implementarlos. Mantener ownership de apps/dashboard y cambios compartidos con revisión.
+4. Probar API/dashboard con [guía ordenada](PRUEBAS_INTEGRACIONES.md). Los checkpoints artifacts/runs no viajan por Git: ejecutar demo propio o usar modo Demo explícito. Sin claves en frontend.
+5. Revisar #8: fuente de video y render local de120s preparados; presentación/ensayo/alojamiento pendientes. No publicar sin acuerdo.
+
+Ramas santiago/feat-<id>-<tema> desde develop, commits convencionales con emoji y PR→develop. Cada feature con spec/plan/tasks, FR/AC, archivos, validación y bloqueos. Ejecutar pnpm test/typecheck/lint/build. No push directo a develop/main.
+
+## Confirmaciones humanas pendientes
+En #12 confirmar Slack, acceso al clon y bóveda Obsidian. Ejecutar `python scripts/setup_obsidian.py` y abrir la **raíz del clon** como bóveda; leer docs/README.md. [Guía Obsidian](OBSIDIAN.md). Git es fuente de verdad; no copiar specs a Drive ni compartir claves. Claude utiliza sus conexiones y el contexto versionado, no la memoria privada de Codex.

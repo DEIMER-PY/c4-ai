@@ -54,3 +54,18 @@ jobs:
         env:
           C4_DATA_MODE: demo
         run: pnpm build
+  video:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/demo-video
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - run: npm install --global pnpm@10.34.7
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck

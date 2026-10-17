@@ -1,0 +1,9 @@
+{
+  "name": "c4-s1-video",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.34.7",
+  "scripts": {"studio": "remotion studio src/index.tsx", "typecheck": "tsc --noEmit", "render": "remotion render src/index.tsx S1 ../../artifacts/c4-ai-s1-demo.mp4 --codec=h264 --concurrency=2"},
+  "dependencies": {"remotion": "4.0.536", "@remotion/cli": "4.0.536", "react": "19.3.0", "react-dom": "19.3.0"},
+  "devDependencies": {"typescript": "5.9.3", "@types/react": "19.3.0", "@types/react-dom": "19.3.0"}
+}

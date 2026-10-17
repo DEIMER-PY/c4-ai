@@ -1,5 +1,5 @@
 # Backlog implementable
-Actualizado 2026-10-17: gateway, primer ciclo CLI y gate local verificados; C4-002 continúa con DB/API pendientes. C4-004 revisado como demo e integrado por PR18; C4-006 espera API real. C4-011 mantiene confirmaciones humanas pendientes. Ver docs/producto/ENTREGA_S1.md.
+Actualizado 2026-10-17: gateway, primer ciclo CLI y gate local verificados; C4-002 continúa con DB/API pendientes. C4-004 revisado como demo e integrado por PR18; C4-006 ya consulta API real; faltan capacidades globales y actualización de estados. C4-011 mantiene confirmaciones humanas pendientes. Ver docs/producto/ENTREGA_S1.md.
 El campo responsable designa un humano; colaboración secundaria no sustituye revisión cruzada.
 ## C4-001 — Verificar requisitos del reto y conexión Grok
 Estado: Hecho. Fuentes/requisitos y conexión/usage de Grok verificados; PR19/21. El hito S1 aún tiene publicación/licencia pendientes por decisión de privacidad; rotación pendiente se sigue en C4-012, sin invalidar la conexión técnica comprobada.
@@ -42,6 +42,7 @@ Aceptación: trace_reader, patch_writer y eval_runner reales; accepted exige mis
 Validación: Aceptación, rechazo por regresión y evaluación fallida.
 
 ## C4-006 — Integrar dashboard con API y evidencia real
+Estado: En curso. Lectura real y responsive implementados PR29; pendientes listado global jobs/métricas, candidatos sin reporte y actualización de estados con contrato acordado. Santiago revisa UX.
 Responsable: santiagosanabria-1. Fase: S2. Prioridad: P1.
 Dependencias: C4-002, C4-004.
 Archivos: apps/dashboard.
@@ -56,6 +57,7 @@ Aceptación: 30+ casos versionados/procedencia; baseline/candidato por caso; cos
 Validación: Reporte reproducible con IDs/regresiones y checksum dataset.
 
 ## C4-008 — Preparar visualización, pitch y video de demo
+Estado: En curso. Feature019 prepara Remotion, narración, reporte y prototipo; revisión Deimer/Santiago y alojamiento pendientes.
 Responsable: santiagosanabria-1. Fase: S3. Prioridad: P1.
 Dependencias: C4-005, C4-006.
 Archivos: apps/dashboard; docs/producto.

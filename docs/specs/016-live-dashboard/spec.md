@@ -1,5 +1,5 @@
 # Dashboard conectado y entrega responsive
-Estado: Ready. Fecha: 2026-10-17. C4-006. Deimer autoriza integración y pulido frontend en esta sesión; no hay PR remoto abierto de Santiago al comenzar.
+Estado: Verified. Fecha: 2026-10-17. C4-006. Deimer autoriza integración y pulido frontend en esta sesión; no hay PR remoto abierto de Santiago al comenzar.
 
 FR-001 / AC-001: adaptador HTTP del servidor Next.js sobre GET v1 existentes; seleccionar modo api por defecto y demo explícito por entorno. No inventar endpoints ni claves en navegador. Desconexión muestra error, nunca fallback silencioso a fixtures.
 FR-002 / AC-002: navegar lista → incidente → patch/reporte → evaluación real del CLI; paginación completa, cancelación por timeout, 404/503/costo desconocido y evidencia parcial. Jobs sin listado documentado se muestran como no disponibles, no cero inventado.

@@ -111,16 +111,20 @@ uv run --locked c4 --target-provider groq report ID
 
 start ejecuta baseline inicial en Groq y diagnóstico/propuesta en Grok (dos llamadas). patch guarda el prompt candidato sin generación adicional. eval ejecuta los seis pares en Groq (12 llamadas). Completar las etapas dentro del límite de 600 segundos desde la creación de sesión. Para volver a probar deliberadamente, crear otra sesión.
 
-## 7. Revisar el dashboard por separado
-En otra terminal, desde la raíz del repositorio:
+## 7. Dashboard con evidencia real
+En otra terminal desde la raíz: `uv run --locked c4-api --port 8000`.
 
 ```powershell
 Set-Location apps/dashboard
 pnpm install --frozen-lockfile
-pnpm dev --hostname 127.0.0.1
+$env:C4_DATA_MODE='api'
+$env:C4_API_URL='http://127.0.0.1:8000'
+pnpm dev --hostname 127.0.0.1 --port 3001
 ```
 
-Abrir la dirección local indicada por Next.js. Revisar listado de incidentes, detalle y comparación; mantener visible la identificación de demo. **Actualmente usa fixtures:** los resultados de /demo todavía no aparecen allí. La conexión con evidencia real corresponde a C4-002/C4-006; no es un error del CLI.
+Abrir http://127.0.0.1:3001 y buscar el ID de la ejecución. Lista→detalle→comparación lee la misma evidencia del CLI. Sin artifacts propios el almacén aparece vacío. Demo usa fixtures solo si se selecciona explícitamente `C4_DATA_MODE=demo`; desconexión muestra error, sin fallback.
+
+Para chat, abrir `c4 tui`: `/chat groq`, `/use last` y texto normal; `/status` muestra consumo, `/new` reinicia conversación. Grok continúa como analista del workflow. Para Hermes seguir [configuración MCP](../integraciones/HERMES.md); primero descubrir cuatro consultas y probar reporte, después validar Telegram personalmente.
 
 ## 8. Verificación automatizada y siguiente entrega
 Desde la raíz:
@@ -130,8 +134,8 @@ uv run --locked python -m unittest discover -s tests/unit -p 'test_*.py' -v
 uv run --locked python scripts/verify_docs.py
 ```
 
-Estas pruebas usan dobles de proveedor para cubrir errores y gate; no sustituyen el probe ni la ejecución real. La última entrega runtime verificó 52 pruebas de Python y 32 del dashboard. No hace falta provocar errores con claves reales para comprobar fallos.
+Estas pruebas usan dobles de proveedor para cubrir errores y gate; no sustituyen el probe ni la ejecución real. La última entrega runtime verificó 83 pruebas de Python y 37 del dashboard. No hace falta provocar errores con claves reales para comprobar fallos.
 
 Aceptar esta revisión manual cuando haya conexión a ambos proveedores, una sesión completa con decisión explicable, evidencia consultable y separación clara entre dashboard demo y CLI real. Un candidato rechazado con evaluación completa es un resultado válido; una evaluación incompleta exige revisión.
 
-Después: Deimer continúa persistencia y API (C4-002/003); Santiago conecta frontend (C4-006) cuando se acuerde la API. Jev sigue planificado en C4-013 y requiere acceso y experimento; escritorio, sitio e instaladores siguen pendientes. [Rúbricas y responsables](RUBRICAS.md).
+Después: Deimer continúa persistencia y API (C4-002/003); Santiago revisa la integración existente (PR29) y completa capacidades pendientes de C4-006 con contrato acordado. Jev sigue planificado en C4-013 y requiere acceso y experimento; escritorio, sitio e instaladores siguen pendientes. [Rúbricas y responsables](RUBRICAS.md).

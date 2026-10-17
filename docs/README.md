@@ -1,5 +1,12 @@
 # Centro de documentación C4 AI
-Actualizado el 2026-10-17. CLI end to end verificada; dashboard con mocks y contratos implementados. API local de consulta disponible; escritura/DB/workers pendientes.
+Actualizado el 2026-10-17. CLI end to end verificada; dashboard conectado a API y chat streaming implementados. API local de consulta disponible; escritura/DB/workers pendientes.
+## Entrega actual
+- [Reporte técnico S1](entregas/S1_REPORTE_TECNICO.md)
+- [Criterios y brechas](entregas/S1_CRITERIOS.md)
+- [Video Remotion](../apps/demo-video/README.md)
+- [Hermes MCP](integraciones/HERMES.md)
+- [Prototipo responsive](prototipos/index.html)
+
 ## Producto
 - [Visión y PRD](producto/PRD.md)
 - [Roadmap](producto/ROADMAP.md)
