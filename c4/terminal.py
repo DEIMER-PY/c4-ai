@@ -18,11 +18,14 @@ from rich.table import Table
 from rich.text import Text
 
 from c4.services.storage import Store
+from c4.services.chat import Chat
 from c4.terminal_art import neuron
 from c4.tools.grok import WorkflowError
 
 COMMANDS = {
     '/help': 'Mostrar comandos y límites',
+    '/use ID|last': 'Seleccionar evidencia para conversar',
+    '/new': 'Borrar conversación y reiniciar presupuesto de chat',
     '/target grok|groq': 'Elegir proveedor para el próximo trabajo',
     '/doctor [--probe]': 'Validar configuración; --probe hace llamadas',
     '/demo': 'Ciclo completo: diagnóstico, candidato y evaluación',
@@ -82,7 +85,7 @@ def header(console: Console, store: Store, env_file: str, provider: str):
         activity.append('Resultado anterior; /report ID para consultar\n', style='#94a3b8')
     else:
         activity.append('\n[LOCAL] Sin ejecuciones guardadas\n', style='#94a3b8')
-    activity.append('\n/help comandos   /runs evidencia   /demo ejecutar', style='#c4b5fd')
+    activity.append('\nEscribe para conversar con Grok (consume llamadas)\n/help comandos   /runs evidencia   /demo ejecutar', style='#c4b5fd')
     context = Group(status, activity)
     try:
         '⠿'.encode(console.encoding)
@@ -108,6 +111,7 @@ def show_help(console: Console):
         table.add_row(command,purpose)
     console.print(table)
     console.print(Text('No se ejecutan comandos del sistema. Las claves se configuran en .env, no en este prompt.',style='dim'))
+    console.print(Text('Texto normal: chat Grok. Hasta 2 llamadas/turno y 16/conversación; /new reinicia. /use ID fija evidencia.',style='cyan'))
 
 
 def show_runs(console: Console, store: Store):
@@ -134,13 +138,39 @@ class Harness:
     def __init__(self, console: Console, store: Store, env_file: str, provider: str,
                  dispatch: Callable[[list[str], str], int]):
         self.console,self.store,self.env_file,self.provider,self.dispatch = console,store,env_file,provider,dispatch
+        self.chat = Chat(store,env_file)
+
+    def talk(self, line):
+        try:
+            with self.console.status('Grok está respondiendo · consulta de evidencia de solo lectura...',spinner='dots'):
+                reply = self.chat.ask(line,self.provider)
+            self.console.print(Panel(Text(reply),title='C4 AI / Grok',border_style='cyan'))
+        except WorkflowError as error:
+            self.console.print(Text(error.code+': '+str(error),style='yellow'))
+        except KeyboardInterrupt:
+            self.console.print('Chat cancelado; la solicitud enviada puede consumir créditos.')
+        except (OSError,ValueError,KeyError,TypeError):
+            self.console.print('No se pudo consultar el contexto local; revisa /runs y la configuración.')
+        usage = self.chat.last_usage
+        if usage:
+            self.console.print(Text(f'Chat: {usage["calls"]} llamadas · {usage["tokens"]} tokens reportados '
+                f'({usage["coverage"]}/{usage["calls"]}) · {usage["latency_ms"]} ms acumulados · '
+                f'{usage["total_calls"]}/16 llamadas · costo desconocido',style='dim'))
 
     def redraw(self):
         header(self.console,self.store,self.env_file,self.provider)
 
     def handle(self, line: str) -> bool:
-        if re.search(r'\b(?:gsk_|pk_|sk-)[A-Za-z0-9_-]{12,}',line):
+        if self.chat.has_secret(line):
             self.console.print('Configura credenciales solo en .env; este prompt no las utiliza.')
+            return True
+        head = line.strip().split(maxsplit=1)[0] if line.strip() else ''
+        aliases = {c.split()[0].removeprefix('/') for c in COMMANDS} | {'exit','analyze'}
+        if not head.startswith('/') and head and head not in aliases:
+            if head.lower() in {'python','python3','powershell','pwsh','cmd','bash','node'}:
+                self.console.print('No se ejecuta código ni shell. Escribe una pregunta o usa /help.')
+            else:
+                self.talk(line)
             return True
         try:
             tokens = shlex.split(line)
@@ -166,6 +196,14 @@ class Harness:
                 self.console.print(Text('Target elegido: '+self.provider+'. C4 sigue razonando con Grok; las sesiones conservan su modelo.',style='cyan'))
         elif command=='runs' and not args:
             show_runs(self.console,self.store)
+        elif command=='new' and not args:
+            self.chat.reset()
+            self.console.print('Conversación borrada de memoria; presupuesto de chat reiniciado.')
+        elif command=='use' and len(args)==1:
+            try:
+                self.console.print(Text('Evidencia seleccionada: '+self.chat.select(args[0]),style='cyan'))
+            except (WorkflowError,OSError,ValueError,KeyError) as error:
+                self.console.print('No se pudo seleccionar evidencia. Usa /runs y copia un ID válido.')
         elif command in {'demo','start','doctor','analyze','patch','eval','report','compare'}:
             if command in {'report','compare'} and args==['last']:
                 rows=summaries(self.store,1)
@@ -188,13 +226,18 @@ class Harness:
     def run(self, session=None):
         self.redraw()
         started=monotonic()
+        chat = self.chat
+        class PrivateHistory(InMemoryHistory):
+            def append_string(self, string):
+                if not chat.has_secret(string):
+                    super().append_string(string)
         session=session or PromptSession(completer=WordCompleter([c.split()[0] for c in COMMANDS],sentence=True),
-            history=InMemoryHistory(),complete_while_typing=False,
+            history=PrivateHistory(),complete_while_typing=False,
             style=Style.from_dict({'prompt':'ansimagenta bold','target':'ansicyan','bottom-toolbar':'bg:#111827 #94a3b8'}))
         while True:
             try:
                 line=session.prompt(FormattedText([('class:target','c4 / '+self.provider),('class:prompt',' [READY] > ')]),
-                    bottom_toolbar=lambda:f'Tab: comandos | /help | Ctrl+D: salir | Sesión local: {monotonic()-started:.0f}s')
+                    bottom_toolbar=lambda:f'Chat Grok | /help comandos | /new reinicia | Sesión: {monotonic()-started:.0f}s')
                 if not self.handle(line):
                     break
             except KeyboardInterrupt:

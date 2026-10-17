@@ -3,7 +3,7 @@ Actualizado: 2026-10-17.
 
 ## Producto y evidencia
 - **Verificada:** CLI end to end con Grok, sobre seis casos sintéticos. Baseline 5/6, candidato 6/6, cero regresiones, tres casos de seguridad aprobados; 14 llamadas, 20.730 tokens reportados. [Evidencia y rúbricas](../producto/ENTREGA_S1.md).
-- **Verificados:** contratos Pydantic v1, 15 pruebas originales. Las 65 pruebas actuales verifican contratos, servicio, gate, fallos, límites, CLI, Unicode de Windows y lectura entre procesos; ver spec007.
+- **Verificados:** contratos Pydantic v1, 15 pruebas originales. Las 73 pruebas actuales verifican contratos, servicio, gate, fallos, límites, CLI, Unicode de Windows y lectura entre procesos; ver spec007.
 - **Verificada como demo:** C4-004 dashboard de Santiago, integrado por [PR18](https://github.com/DEIMER-PY/c4-ai/pull/18), con fixtures sintéticos. Build y 32 pruebas aprobados; typecheck/lint aprobados. Revisión de navegador y cierre de criterios registrados en entrega S1.
 - **Verificados:** proveedor target Groq/Qwen separado de Grok (PR21), con prueba real rechazada por regresión; [fuente/evidencia](../referencias/GROQ.md). Consola interactiva con comandos, autocompletado e historial en memoria; spec010.
 - **Planificados:** operaciones HTTP de escritura, PostgreSQL/Alembic, Redis/RQ, API real para dashboard, instaladores/escritorio y prueba de carga. El almacén del CLI es local con checkpoints, no una DB distribuida.
@@ -36,3 +36,5 @@ Presentación CLI: neurona Unicode ramificada, axón segmentado, núcleo luminos
 - FastAPI de consulta sobre contratos v1 y mismos archivos del CLI: paginación, errores y OpenAPI. HTTP real Uvicorn: 10 incidentes locales, reporte Qwen rejected y evaluación completed; cero llamadas nuevas. [Instalación](../../apps/api/README.md).
 - C4-002/003 continúan En curso: faltan escritura API, PostgreSQL/Alembic y adaptador HTTP del servicio de ejecución. C4-006 pendiente de integración de Santiago y acuerdos de listados extra; frontend sin cambios.
 - Próximo incremento: persistencia/migraciones, ejecución HTTP, integración UI; después dataset30+, workers y Jev condicionado a acceso.
+
+Chat CLI (spec015): texto natural con Grok, list_runs/read_session de solo lectura, /use ID|last, historial RAM y /new. Hasta dos llamadas por turno y 16/conversación; comandos de evaluación y gate conservados. No implica ejecución natural de acciones ni integración Jev.
