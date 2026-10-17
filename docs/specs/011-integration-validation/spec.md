@@ -1,5 +1,5 @@
 # Validación ordenada Groq → Grok → evidencia
-Estado: Ready. Fecha: 2026-10-17. Responsable: Deimer/Codex. Vinculada a C4-003.
+Estado: Verified. Fecha: 2026-10-17. Responsable: Deimer/Codex. Vinculada a C4-003.
 
 ## Intención y alcance
 Deimer solicita consolidar Groq como agente evaluado y Grok como analista, y probar las integraciones existentes antes de implementar nuevas capacidades. Entrega documental, sin modificar contratos ni comportamiento runtime.
