@@ -1,5 +1,5 @@
 # Integración Hermes mediante MCP
-Estado: Ready. Responsable Deimer/Codex. Fecha: 2026-10-17.
+Estado: Verified. Responsable Deimer/Codex. Fecha: 2026-10-17.
 
 FR-001 / AC-001: servidor MCP stdio con herramientas list_incidents/get_incident/get_report/get_evaluation, basado en EvidenceReader y contratos existentes; solo lectura, sin claves ni llamadas a modelos.
 FR-002 / AC-002: root de evidencia configurado explícitamente por entorno; validación de IDs, límites, errores saneados y sin aceptar por opinión. No exponer lectura arbitraria del disco ni shell ni evaluación remota.

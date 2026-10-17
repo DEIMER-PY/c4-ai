@@ -8,9 +8,9 @@ Revisión: 2026-10-17. Se leyeron las doce issues originales y sus criterios. Un
 | C4-003 / Deimer | En curso | CLI end to end, progreso y consola interactiva; API de lectura disponible; falta adaptador HTTP de ejecución del mismo servicio |
 | C4-004 / Santiago | Hecho: dashboard demo | PR18 integrado; 32 pruebas, build/typecheck/lint y revisión desktop/móvil/teclado. No equivale a integración real |
 | C4-005 / Deimer | Hecho: gate local | trace_reader, patch_writer y eval_runner ejecutados; aceptación Grok, rechazo por regresión Qwen y fallo por contrato reales, más pruebas de seguridad/incompletos |
-| C4-006 / Santiago | Pendiente | Integrar API real, distinguir modo demo, polling/errores/ID y evidencia; depende de C4-002 |
+| C4-006 / Santiago | En curso | PR29: lectura API real, modo Demo explícito y responsive. Pendientes jobs/métricas, candidatos sin reporte y actualización de estados con contrato acordado |
 | C4-007 / Deimer | Pendiente | Hay seis casos sintéticos. Faltan 30+ propios con procedencia, métricas y tarifas verificadas |
-| C4-008 / Santiago | Pendiente | Interfaz base disponible; faltan guion, pitch y video de dos minutos sobre evidencia real |
+| C4-008 / Santiago | En curso | Feature019: Remotion narrado, guion y evidencia real. Pendientes revisión conjunta, ensayo y alojamiento |
 | C4-009 / Deimer | Pendiente | Checkpoints/lock locales disponibles; faltan Redis/RQ, idempotencia y recuperación/reinicio de worker |
 | C4-010 / Deimer | Pendiente | Ninguna prueba de 1.000 unidades/doce horas realizada; requiere C4-007/009 |
 | C4-011 / Santiago | Pendiente parcial | GitHub/entrega Claude verificados; falta confirmación humana de Slack, bóveda y onboarding en #12 |

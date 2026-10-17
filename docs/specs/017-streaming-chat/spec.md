@@ -1,5 +1,5 @@
 # Chat rápido y experiencia de terminal
-Estado: Ready. Responsable: Deimer/Codex. Fecha: 2026-10-17. C4-003.
+Estado: Verified. Responsable: Deimer/Codex. Fecha: 2026-10-17. C4-003.
 
 FR-001 / AC-001: chat interactivo con streaming de texto, Markdown y panel de consumo. Separar estado/herramienta de la respuesta; no mostrar razonamiento interno ni inventar conteos de tokens durante SSE. Capturar primer fragmento y duración reales; costo desconocido.
 FR-002 / AC-002: contexto de evidencia seleccionado por ID o /use precargado de forma determinista para requerir una sola llamada por turno. /chat groq|grok elige proveedor de conversación; con clave Groq configurada es el predeterminado, sin alterar Grok del diagnóstico ni target del workflow. Qwen permite reasoning_effort none según fuente oficial; no aplicar ese parámetro a modelos no documentados.

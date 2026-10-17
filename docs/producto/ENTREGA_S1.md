@@ -45,3 +45,5 @@ La aprobación de estas soluciones de mocks no añade endpoints al contrato comp
 Deimer: concluir evidencia/CI/PR de CLI, continuar C4-002 (DB/API), acordar endpoints y facilitar evidencia a Santiago. Santiago: revisar C4-004 y preparar spec de C4-006 contra API real; después C4-008 video/pitch. Ambos: revisión de contratos y decisión futura sobre licencia/publicación.
 
 Escritorio, Hermes y sitio explicativo quedan después de esta entrega; [evaluación técnica](../decisiones/ADR-002-desktop.md). No se anuncian instaladores, API real ni integración frontend que todavía no existen.
+## Actualización de entrega019
+El reporte anterior conserva la primera ejecución y validaciones históricas. El estado vigente está en [reporte técnico S1](../entregas/S1_REPORTE_TECNICO.md): dashboard con API real, chat streaming y MCP Hermes implementados;83 pruebas backend y37 frontend aprobadas. No interpretar los conteos y pendientes históricos como estado actual. Publicación y aceptación de la organización siguen pendientes.

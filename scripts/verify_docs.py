@@ -3,6 +3,8 @@ from pathlib import Path
 from urllib.parse import unquote
 from datetime import datetime
 import json
+import base64
+import binascii
 import re
 import xml.etree.ElementTree as ET
 import os
@@ -114,7 +116,15 @@ for svg in svg_files:
             for attr, value in node.attrib.items():
                 require(not attr.lower().startswith("on"), str(svg.relative_to(ROOT)) + ": SVG event handler")
                 if attr.split("}")[-1] == "href":
-                    require(value.startswith("#"), str(svg.relative_to(ROOT)) + ": external SVG resource")
+                    embedded_image = False
+                    if node.tag.split("}")[-1] == 'image' and value.startswith(('data:image/png;base64,', 'data:image/jpeg;base64,')):
+                        try:
+                            raw_image = base64.b64decode(value.split(',', 1)[1], validate=True)
+                            signature = b'\xff\xd8\xff' if value.startswith('data:image/jpeg;') else b'\x89PNG\r\n\x1a\n'
+                            embedded_image = len(raw_image) <= 6_000_000 and raw_image.startswith(signature)
+                        except (ValueError, binascii.Error):
+                            pass
+                    require(value.startswith("#") or embedded_image, str(svg.relative_to(ROOT)) + ": external SVG resource")
     except (ET.ParseError, UnicodeError) as error:
         errors.append(str(svg.relative_to(ROOT)) + ": " + str(error))
 validate(scenario, schema)
