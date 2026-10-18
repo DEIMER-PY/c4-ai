@@ -26,11 +26,11 @@ C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de
 
 <p align="center"><img src="docs/assets/cortex.svg" width="220" alt="Cortex, núcleo neuronal de C4 AI con visor cian y alas doradas"></p>
 
-**Disponible:** CLI/chat, dashboard web conectado a API local y consultas de evidencia mediante Hermes/Telegram. **Planificado:** website con documentación profesional, aplicación desktop y app móvil React Native. WhatsApp Business sigue en preparación con Meta Cloud API; Slack coordina al equipo.
+**Disponible:** CLI/chat, dashboard web conectado a API local y consultas de evidencia mediante Hermes/Telegram. **Implementado por Santiago:** website estático y nueve guías MDX ([source y comandos](apps/website/README.md)), integrado en PR41; despliegue público pendiente. **Planificado:** aplicación desktop y app móvil React Native. WhatsApp Business sigue en preparación con Meta Cloud API; Slack coordina al equipo.
 
-Santiago y Claude desarrollarán website y documentación, después el spike de desktop y luego React Native. Referencias: [Kiro](https://kiro.dev/) para narrativa de producto y [Kimi Code Docs](https://www.kimi.com/code/docs/en/) para organización de documentación; identidad propia C4, sin copiar capacidades de otros productos. [Handoff, configuración, pruebas y tareas](docs/equipo/HANDOFF_2026-10-17.md) · [Prompt para Claude](docs/equipo/PROMPT_CLAUDE.md).
+Santiago y Claude entregaron website y documentación; sigue su revisión y el spike de desktop, después React Native. Referencias: [Kiro](https://kiro.dev/) para narrativa de producto y [Kimi Code Docs](https://www.kimi.com/code/docs/en/) para organización de documentación; identidad propia C4, sin copiar capacidades de otros productos. [Handoff, configuración, pruebas y tareas](docs/equipo/HANDOFF_2026-10-17.md) · [Prompt para Claude](docs/equipo/PROMPT_CLAUDE.md).
 
-El nuevo [showcase Remotion de dos minutos](my-video/FILM.md) amplía el teaser aprobado con Cortex, ocho escenas y roadmap explícito. Dylan/ElevenLabs es la voz elegida; ver su estado de generación en la guía. Los mockups desktop/tablet/teléfono no representan apps nativas publicadas.
+La continuación elegida es la [ampliación del video de Santiago a dos minutos](my-video/EXTENSION.md), con su voz original y nuevos capítulos subtitulados sobre pruebas, JEV e impacto. Se conservan el teaser aprobado y la variante anterior con Cortex. Los mockups desktop/tablet/teléfono no representan apps nativas publicadas.
 
 ## Consola de C4 AI
 

@@ -5,7 +5,7 @@ C4-004 está terminada: PR18 integrado y revisado con 32 pruebas, build/typechec
 
 ## Nueva secuencia de producto
 
-Deimer asignó website principal y documentación a Santiago, con Kiro y Kimi Code Docs como referencias. Comenzar C4-014/C4-015; la siguiente migración corresponde a desktop (C4-016, spike Tauri) y luego React Native (C4-017). Mantener revisión transversal de C4-006. Dependencias, ownership y aceptación: [handoff del 17 de octubre](HANDOFF_2026-10-17.md). Usar el [prompt actualizado para Claude](PROMPT_CLAUDE.md). No declarar estas superficies implementadas por aparecer en el video.
+Deimer asignó website principal y documentación a Santiago, con Kiro y Kimi Code Docs como referencias. C4-014/C4-015 ya se implementaron e integraron en PR41: revisar aceptación sin reconstruirlas; la siguiente migración corresponde a desktop (C4-016, spike Tauri) y luego React Native (C4-017). Mantener revisión transversal de C4-006. Dependencias, ownership y aceptación: [handoff del 17 de octubre](HANDOFF_2026-10-17.md). Usar el [prompt actualizado para Claude](PROMPT_CLAUDE.md). No declarar estas superficies implementadas por aparecer en el video.
 
 ## Continuar C4-006 / issue #6
 1. Actualizar develop sin sobrescribir cambios locales y leer AGENTS/CLAUDE, ESTADO, API y specs016–019. PR29 ya implementó adaptador HTTP y diseño responsive; no repetir bootstrap ni adaptador.

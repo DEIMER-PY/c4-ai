@@ -3,7 +3,7 @@ Sitio de producto y documentación de C4 AI. Responsable: Santiago. Spec: [024-w
 
 Sitio estático (`output: "export"`): no tiene servidor, no lee evidencia local ni usa claves. La publicación y el hosting están pendientes de la decisión de privacidad del proyecto.
 ## Stack
-Next.js 16.4.2 (App Router, `src/`), React 19.3.0, TypeScript 5.9.3, Tailwind CSS 4.3.3, MDX (`@next/mdx` 3.1.1) y Vitest 5 con Testing Library. Versiones exactas en package.json y pnpm-lock.yaml.
+Next.js 16.4.2 (App Router, `src/`), React 19.3.0, TypeScript 5.9.3, Tailwind CSS 4.3.3, MDX (`@next/mdx` 16.4.2 y `@mdx-js/*` 3.1.1) y Vitest 5 con Testing Library. Versiones exactas en package.json y pnpm-lock.yaml.
 ## Comandos
 Ejecutar desde apps/website con Node.js 24 y pnpm 10.34.7:
 

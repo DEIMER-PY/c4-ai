@@ -6,7 +6,7 @@ Showcase profesional de **120 segundos: 3600 frames, 30 FPS, 1920×1080**. Ampl�
 
 Montaje visual implementado con ocho escenas, mascota SVG Cortex, neurona animada, terminales, arquitectura, gate, canales y mockups. El video distingue funciones disponibles del roadmap: website/documentación, desktop y React Native todavía se desarrollarán.
 
-Voz elegida: **Dylan, motor ElevenLabs**. Se generó el capítulo Hermes mediante Higgsfield; cinco solicitudes fueron rechazadas por falta de créditos. Deimer eligió continuar con su cuenta ElevenLabs. La clave no está configurada: el montaje no se presenta como locución Dylan completa hasta generar y validar las ocho pistas. Un render `visual-cut` es revisión de imagen/música, no entrega de audio final. No se usa Helena como sustitución de Dylan.
+Voz elegida: **Dylan, motor ElevenLabs**. Se generó el capítulo Hermes mediante Higgsfield; cinco solicitudes fueron rechazadas por falta de créditos. Deimer eligió continuar con su cuenta ElevenLabs. Posteriormente se validó una clave propia, pero la cuenta Free rechaza Dylan de biblioteca con402. Deimer eligió conservar la voz del MP4 de Santiago: la continuación vigente es spec027. No se generaron pistas nuevas ni se importaron voces. Este montaje se conserva como variante previa, no como entrega con Dylan completa. Un render `visual-cut` es revisión de imagen/música, no entrega de audio final. No se usa Helena como sustitución de Dylan.
 
 ## Ejecutar y exportar
 
@@ -56,3 +56,7 @@ Las escenas anteriores a una transición duran su bloque nominal +18 frames; sie
 Las barras del mockup son ilustrativas y se etiquetan; las cifras 5/6→6/6 representan la evaluación Grok registrada, no una ejecución en vivo ni precisión general. La ejecución Groq de referencia fue rechazada por regresión. Costo desconocido sigue desconocido.
 
 [Spec, FR/AC](../docs/specs/025-cinematic-film/spec.md) · [Handoff a Santiago/Claude](../docs/equipo/HANDOFF_2026-10-17.md).
+
+## Continuación elegida
+
+Deimer prefirió la dirección del video de Santiago. [Ampliación de ese MP4 a120s](EXTENSION.md), spec027. Se conserva esta composición y el teaser; no se sobreescribe el material anterior.

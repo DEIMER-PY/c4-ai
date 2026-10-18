@@ -2,6 +2,7 @@
 
 Composiciones Remotion de C4 AI.
 
+- [Ampliación elegida del video de Santiago, con voz original y capítulos nuevos](EXTENSION.md).
 - [Showcase de dos minutos: ocho escenas, Cortex y Dylan/ElevenLabs](FILM.md).
 - [Teaser de quince segundos aprobado](LAUNCH.md).
 - [Composición anterior de entrega S1](ENTREGA.md).
