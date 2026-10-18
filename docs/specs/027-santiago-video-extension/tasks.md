@@ -9,3 +9,5 @@
 - [x] T006 Deimer — FR003 actualizado — probar voz premade autorizada, narrar timeline completo, mezclar y verificar120s sin reemplazar originales; documentar respuesta del proveedor y consumo.
 
 Evidencia T006: Brian HTTP200,13 clips,120.000s,3600frames, flujo H264 idéntico, audio final sin saturación. TypeScript/ESLint y documentación verificados; revisión de voz humana pendiente.
+
+- [x] T007 Deimer — FR005 — portada PNG de YouTube, reporte y campos S1 actualizados; YouTube pendiente de subida humana.

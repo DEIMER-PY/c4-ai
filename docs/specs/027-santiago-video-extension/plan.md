@@ -8,3 +8,5 @@
 6. Validar frames, types/lint,120s/3600frames, audio y enlaces. Describir explícitamente qué es actual y qué es roadmap.
 
 7. Nueva elección humana: narración completa Brian, voz premade disponible en cuenta. Muestra HTTP200. Generar clips cacheados por hash, ajustar tempo hasta1.2 sin truncar, abreviar texto que exceda ventana. Mezclar a120s con música local y ducking; reemplazar pista de audio en copia del montaje mediante stream copy, conservando video y originales. Añadir composición C4SantiagoBrian para reproducción Remotion.
+
+8. Generar portada de marketing mediante imagegen, guardar PNG en docs/assets, comprobar tamaño menor de2MB. Actualizar reporte/formulario/cierre S1 al video Brian y Telegram verificado; comprobar URLs sin inventar enlace YouTube. Publicar por el mismo PR42.

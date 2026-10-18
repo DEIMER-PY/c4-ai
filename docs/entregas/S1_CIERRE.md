@@ -1,57 +1,29 @@
-# Cierre de entrega S1 — 17 de octubre
+# Cierre de entrega S1 — 17 de octubre de2026
 
-Estado: preparación local en desarrollo; **no enviada**. No confundir evidencia técnica con aceptación del jurado.
+Estado: paquete técnico y video local preparados, PR42 en revisión; formulario **no enviado**. Repo/tablero privados. [Campos y enlaces](S1_FORMULARIO.md).
 
-| Elemento | Estado | Acción restante |
+| Elemento | Estado | Pendiente |
 |---|---|---|
-| Ciclo Grok completo | Verificado | Revisar reporte:5/6→6/6, cero regresiones |
-| Groq como target | Verificado con rechazo | Explicar regresión; no presentarlo como mejora |
-| CLI conversacional | Verificado anteriormente | Ensayar `/use last`, consulta y `/report last` |
-| Dashboard conectado a API | Verificado anteriormente | Mantener API local disponible |
-| Colores y laboratorio editable | Implementado localmente | Revisar visualmente; datos editados son simulación |
-| Figma exacto | Bloqueado por referencia | Enlace actual abre Introduction con imágenes promocionales; falta frame CRM |
-| Telegram/Hermes/C4 | Verificado localmente | Evidencia publicada en PR38, revisión pendiente |
-| WhatsApp Business | Preparación, sin conectar | Meta Cloud API con número de prueba elegida; faltan credenciales y prueba real |
-| Video anterior | Render local verificado | Versión anterior contiene cierre de Telegram pendiente; no es la nueva composición |
-| Video nuevo para YouTube | Spec025 en revisión de montaje |120s, Cortex y roadmap; completar Dylan y subir tras revisión; URL ausente |
-| Reporte técnico | Preparado | Actualizaciones locales sin publicar |
-| Repo público requerido por S1 | Pendiente por decisión humana | Repo sigue privado; resolver acceso/visibilidad y credencial histórica antes de publicación |
-| Formulario | No enviado | Completar URLs accesibles y notas tras revisión |
+| Ciclo Grok | Verificado:5/6→6/6, cero regresiones | Revisión de evidencia |
+| Groq target | Verificado con rechazo por regresión | No presentarlo como mejora |
+| CLI/chat, dashboard/API local | Verificados | Revisión cruzada de personalización PR40 |
+| Hermes/Telegram | Verificado, consultas de lectura | Sin ejecución de cambios |
+| Website/docs Santiago | Implementados PR41;15 tests/tipos/lint/build | Hosting y aceptación visual |
+| WhatsApp Cloud API | Preparación | App, credenciales, webhook y prueba real |
+| Video vigente | Brian,120.000s,3600frames,1080p30 | Revisión humana y subida YouTube |
+| Portada YouTube | PNG1672×941,1.87MB | Subir con el video |
+| Reporte técnico | Actualizado en feature/PR42 | Revisión e integración hacia develop |
+| Acceso para jurado | Pendiente | Repo privado por decisión humana |
+| Formulario S1 | No enviado | URL YouTube y acceso a enlaces |
 
-## Revisión local de interfaz
+## Validación
 
-Desde la raíz, en una terminal:
+83 pruebas backend,5 asistente WhatsApp,40 dashboard y15 website aprobadas; tipos/lint/build correspondientes y documentación verificados. Remotion tipado/lint aprobado. Video Brian conserva flujo H264 idéntico al montaje revisado;13 segmentos de narración, pico final−4.84dBFS y cero muestras saturadas. [Evidencia de voz](../evidencia/2026-10-17-brian-narration.json).
 
-```powershell
-uv run --locked c4-api --port 8000
-```
+## Publicación
 
-Si esa API ya está funcionando, reutilizarla. En otra terminal:
+PR38 Telegram → PR39 preparación WhatsApp → PR40 personalización → PR42 video/contexto: revisión ordenada de pila antes de merge, siempre hacia develop. No se han fusionado PR propios ni cambiado contratos o privacidad. [PR42](https://github.com/DEIMER-PY/c4-ai/pull/42).
 
-```powershell
-cd apps/dashboard
-pnpm dev --port 3002
-```
+MP4 para subir: `artifacts/c4-ai-santiago-brian-120s.mp4`. Portada: [c4-ai-youtube-cover.png](../assets/c4-ai-youtube-cover.png), ilustración de marketing generada con IA, no evidencia. [Guía y procedencia](../../my-video/EXTENSION.md).
 
-Abrir `http://localhost:3002/delivery`. `Colores` aparece en la barra superior y el laboratorio de comparación está dentro de Entrega S1. Las preferencias permanecen en el navegador. No se han modificado las capturas del video para fingir esta nueva vista.
-
-## Video y YouTube
-
-Seguir [la guía de Remotion](../../my-video/ENTREGA.md). El nuevo destino será `artifacts/c4-ai-s1-entrega.mp4`. El entorno de la sesión bloqueó Studio/voz y la revisión automática de permisos no pudo completarse por cuota. Fuente nueva tipada, pero exportación/inspección visual pendientes. El MP4 anterior `c4-ai-s1-demo.mp4` sí existe y tiene evidencia de render propia; ambos estados se conservan separados.
-
-YouTube fue elegido por Deimer; no hay una URL inventada ni subida confirmada. Revisar el archivo, subir desde su cuenta y copiar la URL compartible. Usar los capítulos de la guía. No colocar una ruta local en el formulario.
-
-## Validación de estos cambios
-
-- TypeScript de dashboard y nueva composición: aprobado localmente.
-- Lint de los componentes/funciones de dashboard editados: aprobado.
-- Pruebas nuevas de preferencias, contraste y límites:3 aprobadas.
-- Suite frontend completa: bloqueada por `ENOENT` al leer transformaciones temporales de Vitest en el sandbox; no se declara aprobada. La ejecución previa integrada de37 pruebas permanece como evidencia histórica.
-- Enlaces, fixtures y SVG: verificados por `python scripts/verify_docs.py`; no implica que el producto se haya ejecutado.
-- Revisión visual, build nuevo, render nuevo y CI de estas features: pendientes.
-
-## Publicación por feature
-
-No hacer commits mezclados:020 Telegram,021 video/documentación y023 personalización tienen specs separadas. Preparar ramas independientes desde develop, commits `type(scope): emoji descripción` y PR a develop cuando se restablezca la revisión automática. En esta sesión no se completaron commit/push/PR de los cambios nuevos. No cerrar Issues por preparar documentación ni alterar el snapshot de entrega sin verificarlo.
-
-Santiago: revisar colores/contraste y responsive, proporcionar el frame CRM correcto y completar jobs/métricas/estados con los contratos existentes. Deimer: exportación, paquete de evidencia y acceso para evaluación. Ambos revisan la entrega final.
+JEV, runner unitario de repositorios, DB/API de ejecución, dataset30+, costos y escala siguen pendientes. No cerrar tareas por un video o mockup.

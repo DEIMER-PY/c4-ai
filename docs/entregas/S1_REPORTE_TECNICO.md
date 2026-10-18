@@ -43,7 +43,7 @@ El ciclo Grok suma 95.828 ms de latencia reportada de llamadas y106,029s de tiem
 - Chat: una solicitud por turno con contexto de evidencia precargado, sin exponer claves; máximo de 16 por conversación y `/new` para reiniciar. Una muestra comparable: Groq 906 ms total / 625 ms primer texto; Grok 6.391 / 5.797 ms. Uso Grok streaming no reportado, no se cuenta como cero. [Datos](../evidencia/2026-10-17-chat-stream.json). No es benchmark estadístico ni promesa de latencia.
 - Dashboard: fuente API predeterminada, modo Demo solo explícito, filtros, incidentes/detalle/comparaciones, costos desconocidos y ausencia de capacidades visible. El KPI de tokens es del baseline inicial, no del workflow entero. Falta listado global de jobs/métricas y candidatos sin reporte.
 - API: 48 consultas concurrentes verificadas con 200. Launcher local con SelectorEventLoop tras reproducir WinError64 con Proactor en Windows. Host restringido a loopback.
-- Hermes v0.22.2: cuatro herramientas MCP de lectura descubiertas por Hermes y reporte accepted recuperado por cliente stdio real. [Configuración y límites](../integraciones/HERMES.md). Telegram fue configurado por Deimer; flujo Telegram→C4 pendiente de prueba humana. No se alteraron permisos nativos ni se enviaron mensajes.
+- Hermes v0.22.2: cuatro herramientas MCP de lectura descubiertas por Hermes y reporte accepted recuperado por cliente stdio real. [Configuración y límites](../integraciones/HERMES.md). Telegram→Hermes→MCP C4→respuesta verificado: reporte/evaluación de lectura, accepted,5/6→6/6, cero regresiones,19,110s en una prueba registrada. [Evidencia](../evidencia/2026-10-17-telegram.json). No es una nueva evaluación ni un SLA.
 
 ## Presentación
 
@@ -53,7 +53,11 @@ El ciclo Grok suma 95.828 ms de latencia reportada de llamadas y106,029s de tiem
 
 ![CLI: chat y consumo](../assets/cli-chat-preview.svg)
 
-Video: fuente y reproducción en [apps/demo-video](../../apps/demo-video/README.md). Render verificado de120s,1280×720/24fps, H.264/AAC y voz española. [Metadatos/hash](../evidencia/2026-10-17-video.json). Es un montaje narrado de capturas y evidencia guardada; no una grabación continua de una ejecución en vivo. MP4 local generado fuera de Git; no se subió a servicios externos. Guion y voz local española incluidos.
+Video vigente: [source Remotion y reproducción](../../my-video/EXTENSION.md), ampliación del montaje de Santiago a120s/3600frames,1920×1080/30FPS,H264/AAC. Narración completa en español con Brian de ElevenLabs y música con ducking;13 segmentos. Flujo de video idéntico al montaje revisado, cero muestras saturadas en el audio final. [Evidencia/hash](../evidencia/2026-10-17-brian-narration.json). No es una ejecución continua en vivo: contiene evidencia real guardada, explicaciones de producto y roadmap explícitamente identificado. Jev y runner unitario todavía planificados. YouTube pendiente de subida humana.
+
+Website y nueve guías MDX entregados por Santiago en PR41:15 pruebas, tipos, lint y build estático aprobados; hosting pendiente. Desktop y React Native son los siguientes incrementos. Narración acreditada a ElevenLabs; no se compró plan ni se afirma licencia comercial.
+
+[Portada de YouTube](../assets/c4-ai-youtube-cover.png): ilustración de marketing generada con IA; no es evidencia de ejecución. PNG,1672×941,1.87MB decimal.
 
 ## Reproducir en orden
 
@@ -77,11 +81,11 @@ pnpm dev --port 3001
 
 Abrir http://127.0.0.1:3001. En un clon nuevo sin artifacts/runs, el modo API muestra evidencia vacía; ejecutar primero `/run` con las claves locales configuradas. Para diseño sin proveedores: `C4_DATA_MODE=demo`, etiquetado Demo. No versionar `.env` ni copiar claves al chat.
 
-Validación: 83 pruebas Python y 37 frontend aprobadas; typecheck/lint/build y enlaces/fixtures/SVG aprobados, además de revisión en navegador de escritorio/tablet/móvil y comparación aceptada/rechazada. Specs016–018 y PR29–31 conservan evidencia por feature. Las pruebas simuladas de errores no se presentan como llamadas reales al proveedor.
+Validación: 83 pruebas Python y 40 frontend aprobadas;5 pruebas del asistente WhatsApp y15 del website aprobadas; typecheck/lint/build y enlaces/fixtures/SVG aprobados, además de revisión en navegador de escritorio/tablet/móvil y comparación aceptada/rechazada. Specs016–018 y PR29–31 conservan evidencia por feature. Las pruebas simuladas de errores no se presentan como llamadas reales al proveedor.
 
 ## Riesgos y siguiente incremento
 
-Privacidad impide cumplir hoy el requisito público de S1. La credencial retirada de una plantilla histórica requiere rotación/revocación por su titular antes de considerar publicación; no se reescribió historia compartida. Falta prueba Telegram→C4, API de ejecución/DB, dataset30+, costo monetario, workers e idempotencia, 1.000 unidades/12 horas reales, Jev y escritorio Tauri. [Matriz oficial](S1_CRITERIOS.md) y [campos del formulario](S1_FORMULARIO.md).
+Privacidad impide cumplir hoy el requisito público de S1. La credencial retirada de una plantilla histórica requiere rotación/revocación por su titular antes de considerar publicación; no se reescribió historia compartida. Faltan API de ejecución/DB, dataset30+, costo monetario, workers e idempotencia, 1.000 unidades/12 horas reales, Jev y escritorio Tauri. [Matriz oficial](S1_CRITERIOS.md) y [campos del formulario](S1_FORMULARIO.md).
 
 Fuentes: [reto oficial](https://reto.pltk.mx/), [MCP Hermes](https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp), [streaming Groq](https://console.groq.com/docs/text-chat), [Remotion](https://www.remotion.dev/docs/cli/render). Requisitos consultados el 2026-10-17; fechas/cambios del panel deben confirmarse por el equipo.
 
