@@ -1,0 +1,22 @@
+{
+  "sound_design": "original_procedural_synthesis",
+  "seed": 24,
+  "sample_rate": 48000,
+  "voice": "Windows SAPI Helena - provisional, not ElevenLabs",
+  "voice_windows": [
+    {
+      "start": 0.35,
+      "end": 2.474
+    },
+    {
+      "start": 3.85,
+      "end": 7.178
+    },
+    {
+      "start": 10.85,
+      "end": 14.543
+    }
+  ],
+  "external_assets": false,
+  "note": "Replace voiceover.mp3 with licensed ElevenLabs narration and update ducking windows if timing changes."
+}

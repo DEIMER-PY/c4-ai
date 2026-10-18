@@ -2,19 +2,35 @@
 
 # C4 AI
 
+<p><img src="docs/assets/c4-mark.svg" alt="Marca C4 AI" width="64"></p>
+
 **Un ingeniero de confiabilidad para agentes de IA, con correcciones respaldadas por evidencia.**
 
 C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de prompt o configuración y compara su comportamiento contra el baseline. El resultado es una decisión trazable: aceptar, rechazar o solicitar revisión humana.
 
-**Estado actual (2026-10-17):** CLI end-to-end y chat streaming, dashboard conectado a API local y cuatro herramientas MCP de lectura para Hermes verificados. Baseline5/6→candidato6/6, cero regresiones sobre seis casos sintéticos. 83 pruebas backend y37 frontend aprobadas. API de ejecución, PostgreSQL y workers pendientes; repo privado.
+**Estado actual (2026-10-17):** CLI end-to-end y chat streaming, dashboard conectado a API local y cuatro herramientas MCP de lectura para Hermes verificados. Baseline5/6→candidato6/6, cero regresiones sobre seis casos sintéticos. 83 pruebas backend y40 frontend aprobadas. API de ejecución, PostgreSQL y workers pendientes; repo privado.
 
 [Abrir consola interactiva](docs/arquitectura/CLI.md) · [Reporte técnico y entrega](docs/entregas/S1_REPORTE_TECNICO.md) · [Dashboard local](apps/dashboard/README.md)
+
+**Canales y entrega:** Telegram→Hermes→C4→Telegram ya verificado con consultas de reporte/evaluación (19,110s en una prueba). [WhatsApp Business](docs/integraciones/WHATSAPP.md) requiere configurar Meta y sigue pendiente. [Nueva composición Remotion](my-video/ENTREGA.md) preparada para YouTube; exportación y URL nuevas pendientes. La personalización local del dashboard está en desarrollo: colores y laboratorio de datos simulado, sin modificar evidencia.
+
+![Interfaces, evidencia y canales con estado real](docs/assets/channels.svg)
 
 **Acceso:** repositorio y tablero privados para Deimer y Santiago. Trabajo en equipo autorizado por la organización, confirmado por Deimer. La publicación se decidirá posteriormente.
 
 [Documentación](docs/README.md) · [Especificaciones SDD](docs/specs/README.md) · [Contratos](docs/arquitectura/API.md) · [Kanban](https://github.com/users/DEIMER-PY/projects/1/views/2) · [Tareas](https://github.com/DEIMER-PY/c4-ai/issues) · [Onboarding](docs/equipo/ONBOARDING_SANTIAGO.md)
 
 [Probar las integraciones en orden: Groq → Grok → evidencia](docs/equipo/PRUEBAS_INTEGRACIONES.md).
+
+## Ecosistema y siguiente entrega
+
+<p align="center"><img src="docs/assets/cortex.svg" width="220" alt="Cortex, núcleo neuronal de C4 AI con visor cian y alas doradas"></p>
+
+**Disponible:** CLI/chat, dashboard web conectado a API local y consultas de evidencia mediante Hermes/Telegram. **Planificado:** website con documentación profesional, aplicación desktop y app móvil React Native. WhatsApp Business sigue en preparación con Meta Cloud API; Slack coordina al equipo.
+
+Santiago y Claude desarrollarán website y documentación, después el spike de desktop y luego React Native. Referencias: [Kiro](https://kiro.dev/) para narrativa de producto y [Kimi Code Docs](https://www.kimi.com/code/docs/en/) para organización de documentación; identidad propia C4, sin copiar capacidades de otros productos. [Handoff, configuración, pruebas y tareas](docs/equipo/HANDOFF_2026-10-17.md) · [Prompt para Claude](docs/equipo/PROMPT_CLAUDE.md).
+
+El nuevo [showcase Remotion de dos minutos](my-video/FILM.md) amplía el teaser aprobado con Cortex, ocho escenas y roadmap explícito. Dylan/ElevenLabs es la voz elegida; ver su estado de generación en la guía. Los mockups desktop/tablet/teléfono no representan apps nativas publicadas.
 
 ## Consola de C4 AI
 
@@ -81,7 +97,7 @@ El MVP limita cambios a prompts y configuración de agentes de prueba. Aplicar c
 
 ![Arquitectura planificada de C4 AI: interfaces, servicios, workflow, herramientas y almacenamiento](docs/assets/architecture.svg)
 
-La **API y la CLI comparten servicios de negocio**. El workflow procesa incidentes con herramientas controladas; PostgreSQL conserva evidencia y versiones, mientras Redis/RQ administra los trabajos. El dashboard consulta esos resultados.
+La **API y la CLI comparten servicios de negocio**. Actualmente el CLI guarda checkpoints locales y la API los consulta para el dashboard. El workflow procesa incidentes con herramientas controladas. PostgreSQL para evidencia/versiones y Redis/RQ para trabajos pertenecen a la arquitectura planificada; todavía no están implementados.
 
 | Módulo | Responsabilidad | Resultado |
 |---|---|---|
@@ -139,7 +155,7 @@ Los contratos v1 se documentan antes de implementar endpoints. Un trabajo `queue
 | <img src="docs/assets/icons/docker.svg" width="28" height="28" alt="Docker"> | Docker Compose | Entorno local reproducible |
 | <img src="docs/assets/icons/obsidian.svg" width="28" height="28" alt="Obsidian"> | Obsidian | Lectura y edición de documentación |
 
-Herramientas adicionales: **Typer/Rich** para CLI, **httpx** para HTTP y **Recharts** para comparaciones. Grok se integrará mediante el gateway del reto, con URL, modelo y credencial configurables.
+Herramientas adicionales: **Typer/Rich** para CLI, **httpx** para HTTP y **Recharts** para comparaciones. Grok usa el gateway del reto, con URL, modelo y credencial configurables; consultar el estado de cada capacidad antes de implementar.
 
 Las versiones exactas de dependencias se fijarán al implementar. Los recursos SVG son locales y tienen [procedencia y atribución](docs/assets/README.md).
 
