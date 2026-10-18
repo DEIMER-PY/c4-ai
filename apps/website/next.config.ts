@@ -17,4 +17,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default createMDX({})(nextConfig);
+// Turbopack exige el nombre del plugin como texto (guía MDX de Next 16).
+export default createMDX({ options: { remarkPlugins: ["remark-gfm"] } })(nextConfig);

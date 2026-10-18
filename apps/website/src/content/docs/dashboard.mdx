@@ -1,0 +1,31 @@
+# Dashboard
+
+El dashboard muestra en el navegador los incidentes, los candidatos y las comparaciones que generó la CLI. Lee la evidencia a través de la [API local](/docs/api/).
+
+## Iniciar
+
+Necesitas dos terminales. En la primera, desde la raíz del proyecto:
+
+```bash
+uv run --locked c4-api --port 8000
+```
+
+En la segunda:
+
+```bash
+cd apps/dashboard
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Abre `http://localhost:3000`.
+
+> Si en Windows el puerto 8000 no está disponible, usa `--port 8001` en la API y arranca el dashboard con `C4_API_URL=http://127.0.0.1:8001`.
+
+## Qué verás
+
+- **Centro de control:** incidentes registrados, candidatos aceptados y regresiones detectadas.
+- **Incidentes:** cada fallo con su categoría, severidad, estado y diagnóstico.
+- **Comparación:** baseline y candidato caso por caso, regresiones por ID y la decisión final.
+
+Si todavía no ejecutaste ningún ciclo, las listas aparecen vacías: corre `c4 demo` y recarga. Si la API no responde, el dashboard muestra el error en lugar de datos de ejemplo.
