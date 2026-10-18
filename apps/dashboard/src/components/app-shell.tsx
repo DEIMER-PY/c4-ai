@@ -5,6 +5,7 @@ import { Activity, ArrowUpRight, Search, ShieldCheck, Terminal } from "lucide-re
 import { DemoBadge } from "@/components/demo-badge";
 import { NavLinks } from "@/components/nav-links";
 import { dataMode } from "@/lib/data";
+import { DashboardCustomizer } from "@/components/dashboard-customizer";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -40,7 +41,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <label htmlFor="search-incidents" className="sr-only">Buscar incidentes</label>
           <input id="search-incidents" name="q" placeholder="Buscar incidente, estado o ID…" className="w-full min-w-0 bg-transparent text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary" />
         </form>
-        <div className="flex items-center gap-4"><DemoBadge live={dataMode === "api"} /><span className="hidden items-center gap-2 text-xs text-muted-foreground xl:flex"><Activity size={15} aria-hidden="true" /> S1 / Testbed local</span></div>
+        <div className="flex items-center gap-4"><DashboardCustomizer /><DemoBadge live={dataMode === "api"} /><span className="hidden items-center gap-2 text-xs text-muted-foreground xl:flex"><Activity size={15} aria-hidden="true" /> S1 / Testbed local</span></div>
       </div>
       <main id="contenido" className="mx-auto flex w-full max-w-[1600px] min-w-0 flex-col gap-7 px-5 py-7 md:px-8 md:py-9">
         {children}
