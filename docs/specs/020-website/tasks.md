@@ -8,7 +8,7 @@ Fuente: [spec](spec.md) y [plan](plan.md). Responsable de integración: Santiago
 - [x] W-T05: Santiago — vitrina de producto con pestañas y módulo de evidencia; FR-003, FR-004, FR-008; AC-003, AC-005; depende W-T03.
 - [x] W-T06: Santiago — cómo funciona, integraciones, video y tarjetas de docs; FR-004, FR-005, FR-007; depende W-T05.
 - [x] W-T07: Santiago — documentación MDX con navegación; FR-006; AC-004; depende W-T03.
-- [ ] W-T08: Santiago — pruebas, build estático, revisión de contenido y capturas 390/820/1440; FR-010; AC-005, AC-006; depende W-T04–W-T07.
+- [x] W-T08: Santiago — pruebas, build estático, revisión de contenido y capturas 390/820/1440; FR-010; AC-005, AC-006; depende W-T04–W-T07.
 - [ ] W-T09: Santiago — PR a develop con evidencia y revisión de Deimer antes del merge; depende W-T08.
 
 W-T05 y W-T07 pueden avanzar en paralelo si no editan los mismos archivos.
