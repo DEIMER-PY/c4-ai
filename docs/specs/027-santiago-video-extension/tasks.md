@@ -5,3 +5,7 @@
 - [x] T003 Deimer — FR003 — elección humana actualizada: conservar voz original;49s nuevos subtitulados y sin sustitución/clonado. Fuente y guion versionados, clave local ignorada.
 - [x] T004 Deimer — FR004 — integrar website y actualizar estado/roles/issues; no duplicar lo entregado por Santiago.
 - [x] T005 Deimer — FR005 — exportar y verificar120s, types/lint/docs/audio; commit/PR→develop en esta entrega; aceptación creativa humana pendiente.
+
+- [x] T006 Deimer — FR003 actualizado — probar voz premade autorizada, narrar timeline completo, mezclar y verificar120s sin reemplazar originales; documentar respuesta del proveedor y consumo.
+
+Evidencia T006: Brian HTTP200,13 clips,120.000s,3600frames, flujo H264 idéntico, audio final sin saturación. TypeScript/ESLint y documentación verificados; revisión de voz humana pendiente.

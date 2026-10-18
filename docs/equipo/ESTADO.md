@@ -21,7 +21,7 @@ Siguiente desarrollo de Santiago/Claude: C4-016 desktop, primero ADR/spike Tauri
 
 ## Video y presentación
 
-Deimer eligió el MP4 de Santiago de71s como referencia principal. Se preservan su voz, montaje y archivo original; spec027 inserta49s subtitulados sobre pruebas, JEV, impacto y ecosistema, hasta120s. La fuente del editor/voz original no está identificada por metadatos ni por el remoto. El proyecto editable no está disponible. [Source y reproducción](../../my-video/EXTENSION.md).
+Deimer eligió el MP4 de Santiago de71s como referencia principal. La primera edición preserva su voz, montaje y archivo original; spec027 inserta49s subtitulados sobre pruebas, JEV, impacto y ecosistema, hasta120s. La fuente del editor/voz original no está identificada por metadatos ni por el remoto. El proyecto editable no está disponible. [Source y reproducción](../../my-video/EXTENSION.md).
 
 La variante025 de120s y el teaser026 de15s aprobado se conservan. Dylan/ElevenLabs se intentó antes del cambio de preferencia: una pista previa por Higgsfield, sin créditos para el resto; cuenta propia Free rechazó Dylan de biblioteca con402. No se compraron planes, no se importaron voces ni se presenta otra voz como original. La clave permanece local.
 
@@ -41,3 +41,5 @@ Repo/tablero privados; develop predeterminado. Commits type(scope): emoji descri
 Git es fuente de verdad. Obsidian abre el clon y sus Markdown; no duplicar documentación en Drive ni exportar chats/memoria privados. Slack coordina, no almacena decisiones. No se enviaron mensajes a Santiago por preparar contexto. Confirmaciones humanas de onboarding y revisión final siguen pendientes.
 
 La decisión sobre publicación/licencia S1 sigue siendo humana. La limpieza de una credencial histórica no la revoca; su titular conserva la acción de rotación pendiente. No se comprobó cambio de plan para branch protection privado. No hay vigilancia ni prueba de12h ejecutándose.
+
+Actualización de voz: Deimer eligió otra voz de ElevenLabs. Brian premade generó muestra HTTP200; nueva edición con narración completa en español de los120s y música con ducking. La variante con voz original permanece disponible. Guion, clips y consumo se registran en my-video/EXTENSION.md; publicación y revisión creativa pendientes.

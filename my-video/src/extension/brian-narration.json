@@ -1,0 +1,80 @@
+[
+  {
+    "id": "intro",
+    "start": 0.5,
+    "end": 12.2,
+    "text": "Tu agente falla. Encontrar por qué, corregirlo y comprobar que no rompiste nada lleva tiempo. C cuatro convierte ese proceso en una decisión respaldada por evidencia."
+  },
+  {
+    "id": "detect",
+    "start": 12.5,
+    "end": 19,
+    "text": "Detecta el fallo en una ejecución. Un reembolso aprobado fuera de plazo revela un problema de política."
+  },
+  {
+    "id": "diagnose",
+    "start": 19.3,
+    "end": 25.7,
+    "text": "Diagnostica la causa: el agente ignoró el plazo que devolvió la herramienta. El diagnóstico queda registrado."
+  },
+  {
+    "id": "patch",
+    "start": 26,
+    "end": 30.1,
+    "text": "Propone un candidato de prompt versionado, conservando el original."
+  },
+  {
+    "id": "evaluate",
+    "start": 30.4,
+    "end": 36,
+    "text": "Lo evalúa contra el original, con los mismos seis casos. La comparación debe ser reproducible."
+  },
+  {
+    "id": "result",
+    "start": 36.3,
+    "end": 45.9,
+    "text": "En esta ejecución real: de cinco de seis a seis de seis. Cero regresiones. Controles de seguridad aprobados. Solo se acepta una versión de prueba."
+  },
+  {
+    "id": "reject",
+    "start": 46.2,
+    "end": 55.1,
+    "text": "Otro candidato corrigió el objetivo, pero rompió un caso que funcionaba. C cuatro lo rechazó. Mejorar un caso no basta para aceptar una corrección."
+  },
+  {
+    "id": "interfaces",
+    "start": 55.4,
+    "end": 61.2,
+    "text": "Úsalo desde la terminal, revisa el dashboard o consulta la evidencia con Hermes."
+  },
+  {
+    "id": "tests",
+    "start": 61.7,
+    "end": 76.1,
+    "text": "Cuando tu agente falla, C cuatro reproduce el caso, compara la corrección con el original y detecta regresiones. Hoy evalúa comportamientos controlados. Ejecutar pruebas unitarias de repositorios requerirá un runner aislado."
+  },
+  {
+    "id": "jev",
+    "start": 76.7,
+    "end": 91.1,
+    "text": "Jev se plantea como una capa probabilística para clasificar incidentes, estimar riesgo y priorizar investigación. Primero se probará en modo sombra. Su recomendación no aceptará correcciones ni sustituirá las pruebas y el gate."
+  },
+  {
+    "id": "impact",
+    "start": 91.7,
+    "end": 102.1,
+    "text": "Menos ajustes a ciegas. Comparaciones reproducibles para calidad. Decisiones explicables para operaciones. El ahorro de tiempo y costo todavía debe medirse."
+  },
+  {
+    "id": "ecosystem",
+    "start": 102.7,
+    "end": 110.1,
+    "text": "Consola y dashboard disponibles. Website y documentación implementados. Después: aplicación de escritorio y móvil con React Native."
+  },
+  {
+    "id": "closing",
+    "start": 111,
+    "end": 119.4,
+    "text": "C cuatro. Cuando tu agente falla, demuestra la corrección. Conversa, compara y decide con evidencia. Empieza desde la consola."
+  }
+]

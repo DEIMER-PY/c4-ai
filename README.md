@@ -12,7 +12,7 @@ C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de
 
 [Abrir consola interactiva](docs/arquitectura/CLI.md) · [Reporte técnico y entrega](docs/entregas/S1_REPORTE_TECNICO.md) · [Dashboard local](apps/dashboard/README.md)
 
-**Canales y entrega:** Telegram→Hermes→C4→Telegram ya verificado con consultas de reporte/evaluación (19,110s en una prueba). [WhatsApp Business](docs/integraciones/WHATSAPP.md) requiere configurar Meta y sigue pendiente. [Nueva composición Remotion](my-video/ENTREGA.md) preparada para YouTube; exportación y URL nuevas pendientes. La personalización local del dashboard está en desarrollo: colores y laboratorio de datos simulado, sin modificar evidencia.
+**Canales y entrega:** Telegram→Hermes→C4→Telegram ya verificado con consultas de reporte/evaluación (19,110s en una prueba). [WhatsApp Business](docs/integraciones/WHATSAPP.md) requiere configurar Meta y sigue pendiente. [Video narrado de dos minutos](my-video/EXTENSION.md) exportado para revisión; URL de YouTube pendiente. La personalización local del dashboard está en desarrollo: colores y laboratorio de datos simulado, sin modificar evidencia.
 
 ![Interfaces, evidencia y canales con estado real](docs/assets/channels.svg)
 
@@ -30,7 +30,7 @@ C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de
 
 Santiago y Claude entregaron website y documentación; sigue su revisión y el spike de desktop, después React Native. Referencias: [Kiro](https://kiro.dev/) para narrativa de producto y [Kimi Code Docs](https://www.kimi.com/code/docs/en/) para organización de documentación; identidad propia C4, sin copiar capacidades de otros productos. [Handoff, configuración, pruebas y tareas](docs/equipo/HANDOFF_2026-10-17.md) · [Prompt para Claude](docs/equipo/PROMPT_CLAUDE.md).
 
-La continuación elegida es la [ampliación del video de Santiago a dos minutos](my-video/EXTENSION.md), con su voz original y nuevos capítulos subtitulados sobre pruebas, JEV e impacto. Se conservan el teaser aprobado y la variante anterior con Cortex. Los mockups desktop/tablet/teléfono no representan apps nativas publicadas.
+La continuación elegida es la [ampliación del video de Santiago a dos minutos](my-video/EXTENSION.md), con narración completa Brian de ElevenLabs y nuevos capítulos sobre pruebas, JEV e impacto; la variante con voz original se conserva. Se conservan el teaser aprobado y la variante anterior con Cortex. Los mockups desktop/tablet/teléfono no representan apps nativas publicadas.
 
 ## Consola de C4 AI
 

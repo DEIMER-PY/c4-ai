@@ -504,7 +504,7 @@ export const EcosystemChapter = () => {
   );
 };
 
-export const SantiagoAdditions = () => {
+export const SantiagoAdditions = ({ silent = false }: { silent?: boolean }) => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
   const chapter = narration.find(
@@ -563,12 +563,17 @@ export const SantiagoAdditions = () => {
         src={staticFile("launch/ambient-drone.mp3")}
         loop
         volume={(n) =>
-          interpolate(n, [0, 15, 1455, 1470], [0, 0.07, 0.07, 0], clamp)
+          silent
+            ? 0
+            : interpolate(n, [0, 15, 1455, 1470], [0, 0.07, 0.07, 0], clamp)
         }
       />
       {[0, 450, 900, 1230].map((n) => (
         <Sequence key={n} from={n} durationInFrames={24}>
-          <Audio src={staticFile("launch/whoosh.mp3")} volume={0.08} />
+          <Audio
+            src={staticFile("launch/whoosh.mp3")}
+            volume={silent ? 0 : 0.08}
+          />
         </Sequence>
       ))}
       {clips.map((c) => (
@@ -577,14 +582,14 @@ export const SantiagoAdditions = () => {
           from={c.startFrame}
           durationInFrames={c.durationFrames}
         >
-          <Audio src={staticFile(c.file)} volume={1} />
+          <Audio src={staticFile(c.file)} volume={silent ? 0 : 1} />
         </Sequence>
       ))}
     </AbsoluteFill>
   );
 };
 
-export const SantiagoClosing = () => {
+export const SantiagoClosing = ({ silent = false }: { silent?: boolean }) => {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{ background: C.bg }}>
@@ -592,26 +597,35 @@ export const SantiagoClosing = () => {
         src={staticFile("reference/santiago-original.mp4")}
         trimBefore={1842}
         style={{ opacity: interpolate(f, [0, 9, 18], [0, 0, 1], clamp) }}
-        volume={(n) => interpolate(n, [0, 4], [0, 1], clamp)}
+        volume={(n) => (silent ? 0 : interpolate(n, [0, 4], [0, 1], clamp))}
       />
     </AbsoluteFill>
   );
 };
 
-export const SantiagoExtended = () => (
+export const SantiagoExtended = ({ silent = false }: { silent?: boolean }) => (
   <AbsoluteFill style={{ background: C.bg }}>
     <Sequence durationInFrames={1842}>
       <OffthreadVideo
         src={staticFile("reference/santiago-original.mp4")}
         trimAfter={1842}
-        volume={(f) => interpolate(f, [0, 4, 1838, 1842], [1, 1, 1, 0], clamp)}
+        volume={(f) =>
+          silent ? 0 : interpolate(f, [0, 4, 1838, 1842], [1, 1, 1, 0], clamp)
+        }
       />
     </Sequence>
     <Sequence from={1842} durationInFrames={1470}>
-      <SantiagoAdditions />
+      <SantiagoAdditions silent={silent} />
     </Sequence>
     <Sequence from={3312} durationInFrames={288}>
-      <SantiagoClosing />
+      <SantiagoClosing silent={silent} />
     </Sequence>
+  </AbsoluteFill>
+);
+
+export const SantiagoBrian = () => (
+  <AbsoluteFill>
+    <SantiagoExtended silent />
+    <Audio src={staticFile("extension-voice/brian-120s.mp3")} />
   </AbsoluteFill>
 );

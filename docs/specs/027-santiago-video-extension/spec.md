@@ -11,3 +11,5 @@ FR003 / AC003: conservar audio original de fragmentos reutilizados. Actualizaci�
 FR004 / AC004: actualizar contexto y tareas con el remoto vigente: PR41 website/MDX integrado en develop589e410. No rehacer website ni mantener C4-014/015 como no implementadas. Revisar calidad antes de cerrarlas; despliegue sigue pendiente. Resolver colisión024 con teaser renumerado026; conservar todos los cambios locales al integrar remoto.
 
 FR005 / AC005: entregar source Remotion, guion/procedencia, video120s, fotogramas y reporte de validación. Feature y PR→develop, commits convencionales con emojis, sin cambios de contratos del backend ni mensajes a terceros.
+
+Actualización FR003 autorizada por Deimer: sustituir la narración completa por otra voz disponible de ElevenLabs. Seleccionar una voz premade de tono sobrio, probar un fragmento antes de generar el guion completo, sin importar voces ni cambiar de plan. Conservar ambos MP4 anteriores. La nueva edición debe mantener120s, narrar también los capítulos añadidos y registrar voz/modelo/uso real sin secretos. Si el proveedor rechaza la generación, conservar la edición previa e informar el error real.

@@ -1,0 +1,24 @@
+{
+  "voice": "Brian - Deep, Resonant and Comforting",
+  "model": "eleven_multilingual_v2",
+  "video_sha256": "f56db69b6b85736e0f90b7a8684d31f0ad666a9f17aef144d9bfc3bb5723702e",
+  "video_bitstream_unchanged": true,
+  "video_bitstream_hash": "f39c223966b8a2da727f9e4444d1c18f6dc9f55ce65131c08846d216c61b4bdf",
+  "frames": 3600,
+  "video_seconds": 120,
+  "container_seconds": 120.0,
+  "audio": {
+    "sample_rate": 48000,
+    "peak_dbfs": -4.84,
+    "rms_dbfs": -24.28,
+    "clipped_samples": 0
+  },
+  "speech_segments": 13,
+  "max_tempo": 1.153742,
+  "original_audio_replaced": true,
+  "original_files_preserved": true,
+  "publication": "Local review only; YouTube not uploaded",
+  "usage_scope": "before/after/delta refer to latest generation invocation only; previous clips were cached. Account total includes earlier attempts and sample.",
+  "account_character_count_after": 2241,
+  "cost_usd": null
+}
