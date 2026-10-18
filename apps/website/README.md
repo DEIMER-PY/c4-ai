@@ -1,5 +1,5 @@
 # apps/website
-Sitio de producto y documentación de C4 AI. Responsable: Santiago. Spec: [020-website](../../docs/specs/020-website/spec.md).
+Sitio de producto y documentación de C4 AI. Responsable: Santiago. Spec: [024-website](../../docs/specs/024-website/spec.md).
 
 Sitio estático (`output: "export"`): no tiene servidor, no lee evidencia local ni usa claves. La publicación y el hosting están pendientes de la decisión de privacidad del proyecto.
 ## Stack

@@ -10,7 +10,7 @@ const LABEL: Record<CopyState, string> = {
   failed: "Cópialo a mano",
 };
 
-/** Copia texto al portapapeles y anuncia el resultado; si el navegador lo bloquea, lo dice (spec 020, casos de error). */
+/** Copia texto al portapapeles y anuncia el resultado; si el navegador lo bloquea, lo dice (spec 024, casos de error). */
 export function CopyButton({ text, className }: { text: string; className?: string }) {
   const [state, setState] = useState<CopyState>("idle");
 

@@ -23,4 +23,4 @@ Promesas no verificables en la web (mitigación: módulo de evidencia y revisió
 AC-001 → captura 1440 sin scroll del hero + vitrina. AC-002 → prueba de componente de copiar y revisión manual. AC-003 → prueba de pestañas con teclado. AC-004 → seguir la guía en una carpeta limpia hasta `c4 doctor`. AC-005 → checklist de contenido contra evidencia. AC-006 → `pnpm build`, typecheck, lint, test y capturas por viewport.
 
 ## Rollout
-Rama `santiago/feat-020-website`, PR a develop con capturas y revisión de Deimer antes del merge. Sin despliegue público en esta feature.
+Rama `santiago/feat-024-website`, PR a develop con capturas y revisión de Deimer antes del merge. Sin despliegue público en esta feature.

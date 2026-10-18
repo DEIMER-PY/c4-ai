@@ -14,4 +14,4 @@ Fuente: [spec](spec.md) y [plan](plan.md). Responsable de integración: Santiago
 W-T05 y W-T07 pueden avanzar en paralelo si no editan los mismos archivos.
 
 ## Evidencia y handoff
-Tarea → rama `santiago/feat-020-website` → commits → PR → pruebas → aceptación. No marcar tareas sin evidencia.
+Tarea → rama `santiago/feat-024-website` → commits → PR → pruebas → aceptación. No marcar tareas sin evidencia.

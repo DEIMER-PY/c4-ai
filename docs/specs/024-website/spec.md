@@ -1,5 +1,5 @@
 # Website de producto y documentación
-ID: C4-UI-020. Estado: Draft. Responsable: Santiago/Claude. Revisores: Deimer.
+ID: C4-UI-024. Estado: Draft. Responsable: Santiago/Claude. Revisores: Deimer.
 
 ## Problema y usuario
 C4 AI ya cierra el ciclo con evidencia real (CLI, API, dashboard, Hermes), pero no tiene una página que explique qué hace, cómo se instala y cómo se usa. Público: desarrolladores que operan agentes, jueces del reto y equipos que evalúan adoptar C4. Necesitan entender la propuesta en segundos, instalarlo sin leer documentos internos y confiar en que lo mostrado es verificable.

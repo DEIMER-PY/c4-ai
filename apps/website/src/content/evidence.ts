@@ -1,4 +1,4 @@
-// Única fuente de cifras del sitio (spec 020, FR-004/FR-008). Cada valor viene de evidencia documentada en el repo;
+// Única fuente de cifras del sitio (spec 024, FR-004/FR-008). Cada valor viene de evidencia documentada en el repo;
 // los componentes no escriben números a mano. Antes de publicar, confirmar contra la evidencia vigente.
 
 export const REFERENCE_SESSION = {
