@@ -1,0 +1,25 @@
+# Preguntas frecuentes
+
+## `c4 doctor` responde `missing_credentials`
+
+Falta la clave o el modelo en tu `.env`. Revisa que `C4_GROK_API_KEY` y `C4_GROK_MODEL` tengan valor, sin espacios ni comillas. Si usas `--target-provider groq`, también hacen falta `GROQ_API_KEY` y `C4_GROQ_MODEL`.
+
+## La demo terminó en revisión humana con HTTP 429
+
+El proveedor limitó la cantidad de solicitudes, algo común en el plan gratuito de Groq. C4 guarda lo completado y no acepta el candidato sin evidencia. Espera unos minutos y ejecuta una nueva demo; no reintenta solo para no gastar créditos.
+
+## El dashboard no muestra incidentes
+
+La API lee `artifacts/runs`. Si no has ejecutado ningún ciclo, no hay nada que mostrar: corre `uv run --locked c4 demo` y recarga. Si ves un error de conexión, confirma que la API está corriendo y en qué puerto.
+
+## En Windows el puerto 8000 está ocupado
+
+Arranca la API con `--port 8001` y el dashboard con `C4_API_URL=http://127.0.0.1:8001`.
+
+## Al escribir `python` se abre Microsoft Store
+
+Es un alias de Windows. Usa `uv run python …`, o desactiva el alias en Configuración → Aplicaciones → Configuración avanzada de aplicaciones → Alias de ejecución de aplicaciones.
+
+## ¿Puedo usar C4 con mi propio agente?
+
+Todavía no. Hoy trabaja con el agente de prueba de reembolsos y su dataset. Conectar agentes propios requiere definir su política, herramientas y casos, y es trabajo planificado.

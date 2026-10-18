@@ -1,0 +1,30 @@
+# Hermes
+
+[Hermes Agent](https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp) puede consultar la evidencia de C4 como herramientas MCP. Así preguntas por tus incidentes desde Hermes sin abrir la terminal ni el dashboard.
+
+## Herramientas
+
+| Herramienta | Para qué |
+|---|---|
+| `list_incidents` | Listar incidentes, hasta 100 por página |
+| `get_incident` | Ver el estado y las referencias de un incidente |
+| `get_report` | Leer la decisión guardada |
+| `get_evaluation` | Ver la comparación y las regresiones |
+
+Las cuatro son de solo lectura: no ejecutan modelos, no acceden a tus claves ni aplican cambios.
+
+## Conectar
+
+Desde la raíz del proyecto ya instalado, registra el servidor con las rutas absolutas de tu equipo:
+
+```powershell
+hermes mcp add c4-ai --command "C:/ruta/c4-ai/.venv/Scripts/python.exe" --env "C4_STORE=C:/ruta/c4-ai/artifacts/runs" --args -m c4.mcp_server
+hermes mcp test c4-ai
+hermes mcp list
+```
+
+Acepta solo las cuatro herramientas de la tabla. Luego abre una sesión nueva en Hermes, o usa `/reload-mcp` si tu versión lo admite.
+
+## Probar
+
+Pregunta en Hermes: «Usa c4-ai para listar incidentes y mostrar la evaluación del último reporte, sin ejecutar cambios». Comprueba que aparezcan llamadas a las herramientas y no solo una respuesta de texto.
