@@ -1,11 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight" aria-label="C4 AI, inicio">
-      <span aria-hidden className="grid size-7 place-items-center rounded-lg bg-violet text-[13px] font-bold text-white">
-        C4
-      </span>
+      <Image src="/brand/c4-mark-128.png" alt="" width={125} height={128} priority className="h-auto w-[30px]" />
       <span className="text-[17px]">C4 AI</span>
     </Link>
   );

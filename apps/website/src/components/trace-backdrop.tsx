@@ -34,12 +34,13 @@ export function TraceBackdrop() {
     >
       <defs>
         <linearGradient id="trace-bg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#efeafe" />
+          <stop offset="0" stopColor="#f7ebf4" />
           <stop offset="0.55" stopColor="#f3f1fb" />
           <stop offset="1" stopColor="#e3f5f7" />
         </linearGradient>
         <linearGradient id="trace-line" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#6b46f5" />
+          <stop offset="0" stopColor="#c2246e" />
+          <stop offset="0.5" stopColor="#6b46f5" />
           <stop offset="1" stopColor="#1ba6b8" />
         </linearGradient>
       </defs>

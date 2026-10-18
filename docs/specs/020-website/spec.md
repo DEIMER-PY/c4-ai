@@ -38,7 +38,7 @@ Portapapeles bloqueado: mostrar el comando seleccionable y avisar que se copie a
 CL-W01 (comando del hero): el repo es privado y no hay instalador público; hoy se instala con `git clone` + `uv sync`. ¿Mostramos esos pasos tal cual, o habrá un instalador (`uv tool install`, script) antes de publicar?
 CL-W02 (idioma): ¿solo español, o español e inglés desde el inicio? Afecta estructura de rutas y contenido.
 CL-W03 (dirección visual): las referencias son claras y minimalistas; el dashboard y el CLI son oscuros violeta/cian. Propuesta: sitio claro con acento violeta y ventanas de producto oscuras, para que la vitrina resalte. ¿De acuerdo?
-CL-W04 (marca): ¿usamos el logo y banner de `docs/assets/c4-ai-banner.svg` o hay identidad nueva?
+CL-W04 (marca): resuelta el 2026-10-17 por Santiago: logos "C4 AI Harness" (sitio y favicon) y "C4 AI CLI" (guía de la CLI) del arte del equipo.
 
 No bloquean construir: publicación, dominio y hosting (se deciden antes del deploy, no antes del código).
 

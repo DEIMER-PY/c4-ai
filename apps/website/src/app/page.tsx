@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { InstallCommand } from "@/components/install-command";
@@ -7,7 +8,8 @@ import { ProductShowcase } from "@/components/product-showcase";
 export default function Home() {
   return (
     <>
-      <section className="mx-auto flex max-w-6xl flex-col items-center px-4 pt-20 pb-14 text-center sm:px-6 sm:pt-28">
+      <section className="hero-in mx-auto flex max-w-6xl flex-col items-center px-4 pt-16 pb-14 text-center sm:px-6 sm:pt-20">
+        <Image src="/brand/c4-mark-128.png" alt="" width={125} height={128} priority className="mb-6 h-auto w-[62px]" />
         <h1 className="max-w-4xl text-[clamp(2.5rem,6.5vw,4.6rem)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance">
           Cuando tu agente falla, C4 demuestra la corrección
         </h1>
@@ -33,7 +35,7 @@ export default function Home() {
           </Link>
         </div>
       </section>
-      <div className="mx-auto max-w-6xl px-2 sm:px-6">
+      <div className="showcase-settle mx-auto max-w-6xl px-2 sm:px-6">
         <ProductShowcase />
       </div>
       <HowItWorks />

@@ -1,11 +1,16 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 import { INTEGRATIONS, REFERENCE_CASES, REFERENCE_SESSION as S } from "@/content/evidence";
 
+/** Orden de aparición escalonada (70 ms por elemento) para grupos que entran juntos. */
+function revealIndex(index: number): CSSProperties {
+  return { "--reveal-index": index } as CSSProperties;
+}
+
 function SectionHeading({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
-    <div className="max-w-2xl">
+    <div data-reveal className="max-w-2xl">
       <h2 id={id} className="text-3xl font-semibold tracking-[-0.025em] text-balance sm:text-[2.5rem] sm:leading-[1.1]">
         {title}
       </h2>
@@ -30,7 +35,7 @@ export function HowItWorks() {
       </SectionHeading>
       <ol className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-rule bg-rule sm:grid-cols-2 lg:grid-cols-5">
         {STEPS.map((step, index) => (
-          <li key={step.title} className="flex flex-col gap-3 bg-paper-raised p-6">
+          <li key={step.title} data-reveal style={revealIndex(index)} className="flex flex-col gap-3 bg-paper-raised p-6">
             <span className="font-mono text-sm text-violet">{index + 1}</span>
             <h3 className="text-lg font-semibold">{step.title}</h3>
             <p className="text-[15px] leading-relaxed text-ink-soft">{step.text}</p>
@@ -59,7 +64,7 @@ export function EvidenceSection() {
             Un agente de soporte aprobaba reembolsos fuera del plazo de 30 días. C4 encontró la causa, corrigió el prompt
             y lo comprobó contra los seis casos del dataset.
           </SectionHeading>
-          <p className="text-[clamp(3rem,8vw,5.5rem)] leading-none font-semibold tracking-[-0.04em] tabular-nums">
+          <p data-reveal className="text-[clamp(3rem,8vw,5.5rem)] leading-none font-semibold tracking-[-0.04em] tabular-nums">
             <span className="text-ink-soft">
               {S.before.passed}/{S.before.total}
             </span>
@@ -69,7 +74,7 @@ export function EvidenceSection() {
             <span className="sr-only"> pasó a </span>
             {S.after.passed}/{S.after.total}
           </p>
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+          <dl data-reveal style={revealIndex(1)} className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
             <div>
               <dt className="text-ink-soft">Regresiones</dt>
               <dd className="text-lg font-semibold">{S.regressions}</dd>
@@ -92,7 +97,7 @@ export function EvidenceSection() {
             desconocido porque el gateway no publica tarifas.
           </p>
         </div>
-        <div className="overflow-hidden rounded-2xl border border-rule">
+        <div data-reveal style={revealIndex(1)} className="overflow-hidden rounded-2xl border border-rule">
           <table className="w-full text-left">
             <caption className="sr-only">Resultado de cada caso antes y después de la corrección</caption>
             <thead className="border-b border-rule bg-paper text-sm text-ink-soft">
@@ -136,8 +141,8 @@ export function Integrations() {
         Lo verificado está disponible en el clon del proyecto. Lo planificado se marca como tal hasta tener evidencia.
       </SectionHeading>
       <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {INTEGRATIONS.map((item) => (
-          <li key={item.name} className="flex flex-col gap-2 rounded-2xl border border-rule bg-paper-raised p-6">
+        {INTEGRATIONS.map((item, index) => (
+          <li key={item.name} data-reveal style={revealIndex(index)} className="flex flex-col gap-2 rounded-2xl border border-rule bg-paper-raised p-6">
             <div className="flex items-center justify-between gap-3">
               <h3 className="text-lg font-semibold">{item.name}</h3>
               <span
@@ -191,8 +196,8 @@ export function DocsCards() {
           Necesitas tu clave del gateway del reto. Groq es opcional para evaluar un segundo modelo.
         </SectionHeading>
         <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {DOC_LINKS.map((doc) => (
-            <li key={doc.href}>
+          {DOC_LINKS.map((doc, index) => (
+            <li key={doc.href} data-reveal style={revealIndex(index)}>
               <Link
                 href={doc.href}
                 className="flex h-full flex-col gap-2 rounded-2xl border border-rule bg-paper p-6 transition-colors hover:border-violet"

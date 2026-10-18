@@ -20,3 +20,6 @@ Ejecutar desde apps/website con Node.js 24 y pnpm 10.34.7:
 - src/content/install.ts: comandos de instalación vigentes (CL-W01).
 - src/content/docs: páginas de documentación en MDX.
 - public/showcase: capturas reales copiadas de docs/assets.
+- public/brand: logos C4 AI Harness y CLI recortados con fondo transparente del arte entregado por el equipo.
+
+Movimiento: entrada escalonada del hero, vitrina ligada al scroll (CSS scroll-driven, con respaldo estático) y revelado único de secciones con IntersectionObserver. Todo respeta prefers-reduced-motion y sin JavaScript el contenido queda visible.
