@@ -1,6 +1,6 @@
 # 027 — Ampliación del video de Santiago
 
-Estado: validación técnica completada; revisión creativa humana y PR pendientes. Responsable: Deimer/Codex. Revisión creativa: Deimer. Fuente humana: MP4 compartido por Deimer, 71s/1080p/30fps, sin proyecto editable. No atribuir editor por su estética: metadatos y remoto no lo identifican.
+Estado: validación técnica completada; [PR42 en revisión](https://github.com/DEIMER-PY/c4-ai/pull/42). Aceptación creativa humana pendiente. Responsable: Deimer/Codex. Revisión creativa: Deimer. Fuente humana: MP4 compartido por Deimer, 71s/1080p/30fps, sin proyecto editable. No atribuir editor por su estética: metadatos y remoto no lo identifican.
 
 FR001 / AC001: conservar el video fuente inmutable y su dirección clara/minimalista: fondo luminoso con trazas finas, tipografía protagonista, paneles oscuros y evidencia progresiva. Extender a120s/3600frames a30fps, sin ralentizar artificialmente los71s para llenar tiempo. Se pueden reutilizar fragmentos originales y agregar capítulos nuevos con transiciones coherentes.
 
