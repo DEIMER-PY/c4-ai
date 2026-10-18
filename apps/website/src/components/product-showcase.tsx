@@ -66,7 +66,7 @@ function HermesTranscript() {
 
 export function ProductShowcase() {
   return (
-    <section aria-label="El producto en uso" className="relative overflow-hidden rounded-[28px] px-3 pt-6 pb-8 sm:px-10 sm:pt-8 sm:pb-12">
+    <section aria-label="El producto en uso" className="relative overflow-clip rounded-[28px] px-3 pt-6 pb-8 sm:px-10 sm:pt-8 sm:pb-12">
       <TraceBackdrop />
       <div className="relative">
         <Tabs

@@ -18,7 +18,8 @@ const NAV = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-rule/70 bg-paper/85 backdrop-blur">
+    <header className="site-header sticky top-0 z-40 border-b border-rule/70 bg-paper/85 backdrop-blur">
+      <div aria-hidden className="scroll-progress absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#c2246e] via-violet to-cyan" />
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:rounded-md focus:bg-paper-raised focus:px-3 focus:py-2"

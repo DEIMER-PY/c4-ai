@@ -53,63 +53,107 @@ body {
   border-radius: 4px;
 }
 
-/* ---- Movimiento (spec 020): página de marketing, vista ocasional; transform y opacity únicamente. ---- */
+/* ---- Movimiento (spec 020): página de marketing, vista ocasional; transform y opacity únicamente. ----
+   Lo ligado al scroll usa CSS scroll-driven animations (fuera del hilo principal); donde no hay soporte,
+   la página queda estática y completa. Todo se desactiva con prefers-reduced-motion. */
 :root {
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* 1. Entrada única del hero al cargar: una secuencia escalonada, sin repetir. */
+/* 1. Entrada única del hero al cargar: secuencia escalonada. */
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(28px);
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .hero-in > * {
-    animation: rise-in 700ms var(--ease-out-strong) both;
+    animation: rise-in 900ms var(--ease-out-strong) both;
   }
   .hero-in > :nth-child(1) { animation-delay: 0ms; }
-  .hero-in > :nth-child(2) { animation-delay: 70ms; }
-  .hero-in > :nth-child(3) { animation-delay: 140ms; }
-  .hero-in > :nth-child(4) { animation-delay: 210ms; }
-  .hero-in > :nth-child(5) { animation-delay: 280ms; }
+  .hero-in > :nth-child(2) { animation-delay: 90ms; }
+  .hero-in > :nth-child(3) { animation-delay: 180ms; }
+  .hero-in > :nth-child(4) { animation-delay: 270ms; }
+  .hero-in > :nth-child(5) { animation-delay: 360ms; }
+  .showcase-settle {
+    animation: rise-in 1100ms var(--ease-out-strong) 420ms both;
+  }
 }
 
-/* 2. La vitrina se endereza mientras entra en pantalla, ligada al scroll (corre fuera del hilo principal).
-   Sin soporte de scroll-driven animations queda estática y visible. */
+@keyframes progress-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* 2. La vitrina arranca inclinada y se endereza con los primeros 70vh de scroll de la página. */
 @keyframes showcase-settle {
   from {
-    opacity: 0.6;
-    transform: perspective(1400px) rotateX(14deg) scale(0.94) translateY(24px);
+    transform: perspective(1200px) rotateX(28deg) scale(0.88);
   }
   to {
-    opacity: 1;
-    transform: none;
+    transform: perspective(1200px) rotateX(0deg) scale(1);
   }
 }
 
-@supports (animation-timeline: view()) {
+/* 3. Parallax del fondo de trazas: se desplaza más lento que la página. */
+@keyframes trace-drift {
+  from { transform: translateY(-10%) scale(1.15); }
+  to { transform: translateY(10%) scale(1.15); }
+}
+
+/* 4. La cabecera gana sombra al empezar a bajar. */
+@keyframes header-lift {
+  to { box-shadow: 0 10px 30px -18px rgba(40, 20, 110, 0.35); }
+}
+
+/* 5. El número de evidencia crece al entrar en pantalla. */
+@keyframes number-in {
+  from {
+    opacity: 0.15;
+    transform: scale(0.8) translateY(20px);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    .showcase-settle {
+    .scroll-progress {
+      animation: progress-grow linear both;
+      animation-timeline: scroll(root block);
+    }
+    .showcase-settle > * {
       animation: showcase-settle linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 35%;
+      animation-timeline: scroll(root block);
+      animation-range: 0 70vh;
       transform-origin: 50% 0%;
+    }
+    .trace-parallax {
+      animation: trace-drift linear both;
+      animation-timeline: view();
+    }
+    .site-header {
+      animation: header-lift linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 120px;
+    }
+    .number-in {
+      animation: number-in linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
     }
   }
 }
 
-/* 3. Secciones que aparecen una sola vez al entrar en pantalla. Solo se ocultan si el script de
-   movimiento está activo (data-motion lo pone layout antes de pintar); sin JS todo queda visible. */
+/* 6. Bloques que aparecen una sola vez al entrar en pantalla. Solo se ocultan si el script de movimiento
+   está activo (layout lo marca antes de pintar); sin JavaScript todo queda visible. */
 html[data-motion="on"] [data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(48px) scale(0.97);
   transition:
-    opacity 700ms var(--ease-out-strong),
-    transform 700ms var(--ease-out-strong);
-  transition-delay: calc(var(--reveal-index, 0) * 70ms);
+    opacity 900ms var(--ease-out-strong),
+    transform 900ms var(--ease-out-strong);
+  transition-delay: calc(var(--reveal-index, 0) * 90ms);
 }
 
 html[data-motion="on"] [data-reveal][data-visible] {
@@ -117,9 +161,16 @@ html[data-motion="on"] [data-reveal][data-visible] {
   transform: none;
 }
 
-/* Respaldo para lectores que piden menos movimiento: sin desplazamientos, solo el contenido. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+  .scroll-progress {
+    display: none;
+  }
+}
+
+.scroll-progress {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
 }

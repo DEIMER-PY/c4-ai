@@ -64,7 +64,7 @@ export function EvidenceSection() {
             Un agente de soporte aprobaba reembolsos fuera del plazo de 30 días. C4 encontró la causa, corrigió el prompt
             y lo comprobó contra los seis casos del dataset.
           </SectionHeading>
-          <p data-reveal className="text-[clamp(3rem,8vw,5.5rem)] leading-none font-semibold tracking-[-0.04em] tabular-nums">
+          <p className="number-in origin-left text-[clamp(3rem,8vw,5.5rem)] leading-none font-semibold tracking-[-0.04em] tabular-nums">
             <span className="text-ink-soft">
               {S.before.passed}/{S.before.total}
             </span>
@@ -97,7 +97,7 @@ export function EvidenceSection() {
             desconocido porque el gateway no publica tarifas.
           </p>
         </div>
-        <div data-reveal style={revealIndex(1)} className="overflow-hidden rounded-2xl border border-rule">
+        <div className="overflow-hidden rounded-2xl border border-rule">
           <table className="w-full text-left">
             <caption className="sr-only">Resultado de cada caso antes y después de la corrección</caption>
             <thead className="border-b border-rule bg-paper text-sm text-ink-soft">
@@ -108,8 +108,8 @@ export function EvidenceSection() {
               </tr>
             </thead>
             <tbody className="divide-y divide-rule">
-              {REFERENCE_CASES.map((c) => (
-                <tr key={c.id} className={c.target ? "bg-violet/[0.05]" : undefined}>
+              {REFERENCE_CASES.map((c, index) => (
+                <tr key={c.id} data-reveal style={revealIndex(index)} className={c.target ? "bg-violet/[0.05]" : undefined}>
                   <th scope="row" className="px-5 py-4 font-normal">
                     <span className="block text-[15px] font-medium">{c.label}</span>
                     <span className="font-mono text-xs text-ink-soft">

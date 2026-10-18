@@ -30,7 +30,7 @@ export function TraceBackdrop() {
       aria-hidden
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       preserveAspectRatio="xMidYMid slice"
-      className="absolute inset-0 size-full"
+      className="trace-parallax absolute inset-0 size-full"
     >
       <defs>
         <linearGradient id="trace-bg" x1="0" y1="0" x2="1" y2="1">
