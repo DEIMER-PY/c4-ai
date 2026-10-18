@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-17",
+  "purpose": "development_setup_for_hermes_whatsapp_test_number",
+  "server_name": "meta_social_technologies",
+  "endpoint": "https://mcp.facebook.com/devtools",
+  "transport": "streamable_http",
+  "registered": true,
+  "enabled": true,
+  "oauth_cli_result": "Successfully logged in.",
+  "oauth_completed_by_user": true,
+  "tools_exposed_in_current_chat": true,
+  "next_step": "human_creates_or_grants_test_app_then_provide_app_id",
+  "official_docs_app_create_status": "coming_soon_account_availability_not_verified",
+  "meta_app_created": false,
+  "whatsapp_cloud_token_generated": false,
+  "whatsapp_end_to_end_verified": false,
+  "whatsapp_business_tools_second_server": "documented_not_registered",
+  "sources": [
+    "https://developers.facebook.com/documentation/mcp/devtools-mcp",
+    "https://developers.facebook.com/documentation/mcp/whatsapp-business-tools-mcp"
+  ],
+  "privacy": "No OAuth URL, authorization code, token, user identity or business identifiers included.",
+  "tools_count": 11,
+  "app_create_tool_exposed": false,
+  "authenticated_app_list_count": 0,
+  "authenticated_app_list_has_next_page": false,
+  "empty_list_interpretation": "No apps granted to this MCP connection; does not establish absence of apps on account.",
+  "meta_app_setup_by_human": "in_progress"
+}

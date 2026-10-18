@@ -1,0 +1,29 @@
+{
+  "mode": "offline_local_env_inspection",
+  "hermes_executable_present": true,
+  "adapter_source_present": true,
+  "configured": {
+    "WHATSAPP_CLOUD_PHONE_NUMBER_ID": false,
+    "WHATSAPP_CLOUD_ACCESS_TOKEN": false,
+    "WHATSAPP_CLOUD_APP_SECRET": false,
+    "WHATSAPP_CLOUD_VERIFY_TOKEN": false,
+    "WHATSAPP_CLOUD_ALLOWED_USERS": false
+  },
+  "allow_all_users": false,
+  "issues": [
+    "missing:WHATSAPP_CLOUD_PHONE_NUMBER_ID",
+    "missing:WHATSAPP_CLOUD_ACCESS_TOKEN",
+    "missing:WHATSAPP_CLOUD_APP_SECRET",
+    "missing:WHATSAPP_CLOUD_VERIFY_TOKEN",
+    "missing:WHATSAPP_CLOUD_ALLOWED_USERS"
+  ],
+  "local_prerequisites_ready": false,
+  "meta_credentials_verified": false,
+  "webhook_verified": false,
+  "end_to_end_verified": false,
+  "note": "Inspects the local .env and expected native-install layout only; does not inspect YAML overrides, authenticate, send messages or change configuration.",
+  "date": "2026-10-17",
+  "route_selected_by_user": "meta_cloud_api_test_number",
+  "unit_tests_passed": 5,
+  "meta_app_setup_by_human": "in_progress"
+}
