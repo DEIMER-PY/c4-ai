@@ -1,0 +1,29 @@
+# Límites y seguridad
+
+C4 está en desarrollo. Esta página dice con claridad qué hace hoy y qué no.
+
+## Qué hace
+
+- Corrige **prompts y configuración** de agentes de prueba.
+- Evalúa original y candidato sobre **el mismo dataset**, caso por caso.
+- Acepta un candidato solo si mejora el caso objetivo, no baja el total de casos aprobados, no rompe ningún caso que pasaba y aprueba todos los controles obligatorios de seguridad.
+- Si falta evidencia, por ejemplo porque el proveedor cortó la evaluación, la decisión es revisión humana, nunca aceptación.
+
+## Qué no hace
+
+- No aplica cambios en producción.
+- No ejecuta código generado por el modelo.
+- No entrena ni ajusta modelos.
+- Las acciones del agente de prueba son predicciones: no hay reembolsos, exportaciones ni comandos reales.
+
+## Datos y evidencia
+
+El dataset actual tiene seis casos sintéticos de soporte y reembolsos. Las respuestas del modelo son reales, pero un resultado sobre seis casos no demuestra seguridad general fuera de ellos.
+
+## Costos
+
+Las llamadas consumen tus créditos del panel. C4 limita llamadas, tokens y tiempo por sesión, pero no dólares: el gateway no publica tarifas y por eso el costo aparece como "Desconocido", nunca como cero.
+
+## Claves
+
+Las claves viven solo en tu `.env` local. C4 no las imprime, las redacta si aparecen en la consola y no las envía al navegador ni a Hermes.

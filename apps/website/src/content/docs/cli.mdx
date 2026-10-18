@@ -1,0 +1,45 @@
+<img src="/brand/c4-cli-128.png" alt="" width="56" height="55" />
+
+# CLI y consola
+
+Todos los comandos se ejecutan desde la raíz del proyecto con `uv run --locked c4`.
+
+## Ciclo por etapas
+
+`demo` ejecuta todo de una vez. Si prefieres avanzar paso a paso:
+
+```bash
+uv run --locked c4 start          # crea la sesión, ejecuta el baseline e investiga
+uv run --locked c4 patch ID       # materializa el candidato propuesto
+uv run --locked c4 eval ID        # compara original y candidato y decide
+uv run --locked c4 compare ID     # muestra la comparación guardada
+uv run --locked c4 report ID      # muestra el reporte final
+```
+
+`ID` es el identificador `c4_…` que imprime `start`. `compare` y `report` solo leen disco: funcionan sin clave y no consumen llamadas.
+
+## Opciones globales
+
+Van **antes** del comando:
+
+```bash
+uv run --locked c4 --json demo
+uv run --locked c4 --target-provider groq demo
+uv run --locked c4 --store artifacts/runs report ID
+```
+
+- `--json` imprime un único documento JSON al terminar, sin colores ni progreso.
+- `--target-provider groq` evalúa a Qwen en Groq; el diagnóstico sigue a cargo de Grok.
+- `--store` elige otra carpeta de evidencia.
+
+## Consola interactiva
+
+```bash
+uv run --locked c4 tui
+```
+
+Abre una consola con `/help`, `/runs` y `/report last`, que leen evidencia sin hacer solicitudes. Lo que escribas como pregunta sí consume llamadas. La consola no ejecuta comandos del sistema y redacta las claves si aparecen en la salida.
+
+## Cancelar
+
+`Ctrl+C` marca la sesión como cancelada, conserva lo que ya se guardó y termina con código 130. Una solicitud que ya llegó al proveedor puede haber consumido créditos.

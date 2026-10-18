@@ -1,0 +1,40 @@
+# Instalación
+
+C4 se instala desde el repositorio del proyecto y corre en tu equipo con Python. No hay instalador público todavía: durante el reto el repositorio es privado y necesitas una cuenta de GitHub con acceso.
+
+## Requisitos
+
+| Herramienta | Versión | Para qué |
+|---|---|---|
+| Python | 3.12 | Núcleo de C4, CLI y API |
+| uv | reciente | Instala dependencias desde el lockfile |
+| Git | cualquiera | Clonar el repositorio |
+| Node.js y pnpm | 24 y 10.34.7 | Solo si vas a usar el dashboard |
+
+Si no tienes Python 3.12, uv puede instalarlo por ti con `uv python install 3.12`.
+
+## Clonar e instalar
+
+En Windows (PowerShell):
+
+```powershell
+git clone https://github.com/DEIMER-PY/c4-ai.git
+cd c4-ai; uv sync --locked
+```
+
+En Linux o macOS:
+
+```bash
+git clone https://github.com/DEIMER-PY/c4-ai.git
+cd c4-ai && uv sync --locked
+```
+
+`--locked` instala exactamente las versiones del lockfile, así tu entorno es igual al del equipo.
+
+## Comprobar la instalación
+
+```bash
+uv run --locked c4 --help
+```
+
+Si ves la lista de comandos (`doctor`, `demo`, `start`, `tui`…), C4 está instalado. El siguiente paso es [configurar tus claves](/docs/configuracion/).

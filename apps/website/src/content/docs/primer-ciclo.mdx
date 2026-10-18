@@ -1,0 +1,39 @@
+# Primer ciclo
+
+En tres comandos compruebas tu configuración y ves a C4 corregir un agente de principio a fin.
+
+## 1. Validar sin gastar llamadas
+
+```bash
+uv run --locked c4 doctor
+```
+
+Revisa que la clave y el modelo estén configurados, sin conectarse a la red ni mostrar la clave. Si responde `missing_credentials`, vuelve a [Configuración](/docs/configuracion/).
+
+## 2. Probar la conexión
+
+```bash
+uv run --locked c4 doctor --probe
+```
+
+Hace una solicitud real mínima y consume créditos. Debe responder `"probe": "succeeded"`.
+
+## 3. Ejecutar la demo
+
+```bash
+uv run --locked c4 demo
+```
+
+C4 recorre el ciclo completo con el agente de prueba de reembolsos: ejecuta el baseline, diagnostica el fallo, propone un prompt corregido y evalúa original y candidato con los seis casos del dataset. Hace hasta 14 llamadas y puede tardar un par de minutos. No la relances para "ver si avanza": cada ejecución crea una sesión nueva y gasta créditos.
+
+## Qué esperar
+
+Al terminar verás la decisión:
+
+| Decisión | Significa | Código de salida |
+|---|---|---|
+| `accepted` | El candidato mejora el caso objetivo, no rompe ninguno que pasaba y aprueba seguridad | 0 |
+| `rejected` | El candidato introduce una regresión o falla un control de seguridad | 2 |
+| `needs_human_review` | Falta evidencia, por ejemplo porque el proveedor cortó la evaluación | 3 |
+
+Toda la sesión queda guardada en `artifacts/runs/<ID>/evidence.json`. Puedes revisarla en el [dashboard](/docs/dashboard/) o desde la [CLI](/docs/cli/).

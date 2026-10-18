@@ -1,0 +1,33 @@
+# API local
+
+La API expone por HTTP la misma evidencia que guarda la CLI. Es de solo lectura, no usa claves de modelos y escucha solo en tu equipo.
+
+## Iniciar
+
+```bash
+uv run --locked c4-api --port 8000
+```
+
+La documentación interactiva queda en `http://127.0.0.1:8000/docs`.
+
+## Endpoints
+
+| Método y ruta | Devuelve |
+|---|---|
+| `GET /health` | Estado del servicio |
+| `GET /api/v1/agents` | Agentes registrados |
+| `GET /api/v1/incidents` | Incidentes, paginados |
+| `GET /api/v1/incidents/{id}` | Un incidente |
+| `GET /api/v1/incidents/{id}/report` | El reporte de decisión del incidente |
+| `GET /api/v1/runs/{id}` | Una ejecución con su traza y consumo |
+| `GET /api/v1/patches/{id}` | Un candidato con su diff |
+| `GET /api/v1/evaluations/{id}` | Comparación baseline y candidato |
+| `GET /api/v1/jobs/{id}` | Estado de un trabajo |
+
+Los listados aceptan `limit` (1 a 100, 20 por defecto) y `cursor`, que tomas del `next_cursor` de la respuesta anterior.
+
+## Errores
+
+Todos los errores tienen la forma `{code, message, retryable, details}`: `422` para parámetros inválidos, `404` si el recurso no existe y `503` si la evidencia guardada es incoherente. Un `503` pide revisar la carpeta de evidencia; la API no lo reintenta sola.
+
+> Es una API de desarrollo: no tiene autenticación de producción. No la expongas en `0.0.0.0` ni a través de túneles.

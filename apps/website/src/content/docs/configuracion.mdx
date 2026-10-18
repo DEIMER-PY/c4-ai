@@ -1,0 +1,36 @@
+# Configuración
+
+C4 lee su configuración de un archivo `.env` en la raíz del proyecto. Ese archivo es tuyo: está en `.gitignore` y nunca se sube al repositorio.
+
+## Crear el archivo
+
+Copia la plantilla una sola vez:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+En Linux o macOS: `cp .env.example .env`.
+
+## Claves y modelos
+
+| Variable | Obligatoria | Qué poner |
+|---|---|---|
+| `C4_GROK_API_KEY` | Sí | Tu clave del panel del reto |
+| `C4_GROK_MODEL` | Sí | El modelo habilitado en tu panel, por ejemplo `grok-4.7` |
+| `GROQ_API_KEY` | No | Clave de [console.groq.com](https://console.groq.com), para evaluar Qwen |
+| `C4_GROQ_MODEL` | No | Por ejemplo `qwen/qwen3.8-27b` |
+
+Escribe cada valor justo después del `=`, sin espacios ni comillas:
+
+```text
+C4_GROK_API_KEY=tu-clave
+```
+
+> Usa tus propias claves. No las pegues en chats, issues ni prompts. Si una clave llega a un lugar público, revócala en el panel y crea otra.
+
+## Límites por sesión
+
+La plantilla trae límites que puedes ajustar: `C4_MAX_MODEL_CALLS` (16 llamadas), `C4_MAX_OUTPUT_TOKENS` (1024 por respuesta) y `C4_MAX_JOB_SECONDS` (600 segundos). C4 no limita el gasto en dólares porque el gateway no publica tarifas: revisa tus créditos en el panel.
+
+Con las claves listas, sigue con tu [primer ciclo](/docs/primer-ciclo/).

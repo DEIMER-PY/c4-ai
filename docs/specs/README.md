@@ -25,6 +25,8 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Colores y datos simulados del dashboard](023-dashboard-personalization/spec.md)
 - [Teaser de lanzamiento de 15 segundos](026-launch-showcase/spec.md)
 - [Showcase de dos minutos y handoff](025-cinematic-film/spec.md)
+- [Ampliación del video de Santiago](027-santiago-video-extension/spec.md)
+- [Website de producto y documentación](024-website/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
