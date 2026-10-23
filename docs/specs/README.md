@@ -27,6 +27,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Showcase de dos minutos y handoff](025-cinematic-film/spec.md)
 - [Ampliación del video de Santiago](027-santiago-video-extension/spec.md)
 - [Website de producto y documentación](024-website/spec.md)
+- [Escalado de evaluación multimodelo y datasets](028-multimodel-scaling/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
