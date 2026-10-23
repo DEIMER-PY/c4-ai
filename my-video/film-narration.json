@@ -1,0 +1,50 @@
+[
+  {
+    "scene": 1,
+    "start": 0,
+    "duration": 15,
+    "text": "Operar agentes exige más que una buena respuesta. Un reembolso incorrecto puede romper una política. Y un ajuste de prompt que parece resolverlo puede introducir una regresión. ¿Cómo saber si una corrección realmente mejora al agente?"
+  },
+  {
+    "scene": 2,
+    "start": 15,
+    "duration": 15,
+    "text": "Presentamos C cuatro, ingeniería de confiabilidad para agentes de inteligencia artificial. Desde su consola, conversa, consulta evidencia y ejecuta el ciclo completo: detectar, diagnosticar, proponer una corrección, evaluar y decidir."
+  },
+  {
+    "scene": 3,
+    "start": 30,
+    "duration": 15,
+    "text": "Hermes conecta la conversación con las herramientas de C cuatro mediante MCP. Cuatro consultas de lectura permiten inspeccionar ejecuciones, comparaciones y reportes. La integración conserva los límites del núcleo: consultar evidencia no significa ejecutar cambios en producción."
+  },
+  {
+    "scene": 4,
+    "start": 45,
+    "duration": 20,
+    "text": "CLI y dashboard comparten una API y servicios del núcleo. Inspector encuentra el fallo. Diagnoser investiga su causa. Patcher crea un candidato versionado. Evaluator compara las mismas pruebas. Security Sentinel verifica controles. Reporter conserva la decisión y sus referencias. PostgreSQL y workers forman parte de la siguiente fase."
+  },
+  {
+    "scene": 5,
+    "start": 65,
+    "duration": 15,
+    "text": "La decisión no depende de una promesa del modelo. El gate exige evaluación completa, mejora del caso objetivo, cero regresiones y controles de seguridad aprobados. Si la evidencia está incompleta, solicita revisión humana. Aceptar un candidato nunca significa aplicarlo automáticamente en producción."
+  },
+  {
+    "scene": 6,
+    "start": 80,
+    "duration": 15,
+    "text": "Telegram ya conecta al usuario con Hermes y los reportes de C cuatro. Slack será el canal de coordinación y revisión del equipo. WhatsApp Business está en preparación mediante la API oficial de Meta y un número de prueba. Cada canal conserva su estado real."
+  },
+  {
+    "scene": 7,
+    "start": 95,
+    "duration": 15,
+    "text": "El dashboard consulta la misma evidencia de la consola, con comparaciones y estados claros. La visión continúa con una aplicación de escritorio y una app móvil. Santiago desarrollará el website y la documentación, y preparará la migración a desktop y React Native."
+  },
+  {
+    "scene": 8,
+    "start": 110,
+    "duration": 10,
+    "text": "C cuatro. Menos incertidumbre. Más evidencia. Consola y dashboard hoy. Website, documentación profesional, desktop y móvil en el roadmap. Confiabilidad que se puede comprobar."
+  }
+]

@@ -101,6 +101,21 @@ Archivos: futura integración c4/tools y c4/services; docs/producto/JEV.md.
 Aceptación: cliente y respuestas tipadas/validadas; shadow mode sin saltar gate; probabilidades/confianza/latencia/usage reales; comparar rutas con y sin Jev y seleccionar umbrales por evidencia. No prometer rapidez por cifras del proveedor.
 Validación: entradas sintéticas, fallos de proveedor/salida/certeza, evaluación separada de calibración y reporte P50/P95/costos con fuente o null.
 
+## Nuevas superficies — asignación del 17 de octubre
+
+Responsable Santiago/Claude: C4-014/C4-015 implementadas en PR41, **En revisión**; C4-016/C4-017 **Pendientes**. No rehacer lo integrado. [Archivos, dependencias y criterios detallados](HANDOFF_2026-10-17.md).
+
+| ID | Entrega | Prioridad | Dependencia | Aceptación |
+| --- | --- | --- | --- | --- |
+| C4-014 | Website principal, referencia Kiro | P0 | Spec/plan/tasks y estado de producto | Responsive/accesible, instalación real, build/types/lint y PR |
+| C4-015 | Docs profesionales, referencia Kimi Code Docs | P0 | Fuentes actuales y C4-014 | Quickstart comprobado, proveedores/CLI/API/canales, búsqueda e índice |
+| C4-016 | Desktop: ADR y spike Tauri | P1 | C4-014/015 y revisión API local | Build Windows, estados reales, credenciales/permisos mínimos |
+| C4-017 | React Native/Expo | P1 | C4-016 y acceso remoto seguro acordado | Prototipo nativo probado, fixtures explícitos hasta API autenticada |
+
+Deimer continúa API de ejecución, persistencia, workers y WhatsApp. Video spec027 amplía el MP4 preferido de Santiago y conserva su voz original; revisión y alojamiento siguen pendientes.
+
+C4-018 — Runner aislado de pruebas unitarias de repositorios: Pendiente, Deimer/Codex, fase posterior al MVP. Dependencias: spec compartida, aislamiento, límites, evidencia y presupuesto. [Alcance y aceptación](../producto/PRUEBAS_Y_DECISIONES.md). No confundirlo con las evaluaciones controladas actuales.
+
 ## Convención de tablero
 Pendiente, En curso, En revisión, Bloqueado, Hecho.
 Mover a Bloqueado con causa/siguiente acción. Mover a Hecho solo con evidencia de aceptación.

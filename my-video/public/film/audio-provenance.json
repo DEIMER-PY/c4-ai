@@ -1,0 +1,24 @@
+{
+  "voice": "Dylan / ElevenLabs",
+  "complete": false,
+  "missing_scenes": [
+    1,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "clips": [
+    {
+      "file": "film/scene-3.mp3",
+      "startFrame": 918,
+      "durationFrames": 414,
+      "source": "ElevenLabs / Dylan",
+      "tempo": 1.1452
+    }
+  ],
+  "cost_usd": null,
+  "note": "Scene 3 generated via Higgsfield ElevenLabs Dylan; other clips via authorized account when available. No key stored here."
+}

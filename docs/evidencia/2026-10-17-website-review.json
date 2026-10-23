@@ -1,0 +1,19 @@
+{
+  "source_pr": 41,
+  "source_develop": "589e410",
+  "owner": "santiagosanabria-1",
+  "review_date": "2026-10-17",
+  "local_checks": {
+    "tests": {
+      "passed": 15,
+      "files": 3
+    },
+    "typecheck": "passed",
+    "lint": "passed",
+    "static_build": "passed",
+    "generated_pages": 14
+  },
+  "visual_review": "Santiago marked 390/820/1440 review in source tasks; not independently repeated in this check",
+  "deployment": "pending; private repository unchanged",
+  "next": "Review acceptance without rebuilding website/docs, then desktop spike and React Native."
+}

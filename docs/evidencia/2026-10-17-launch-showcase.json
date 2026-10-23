@@ -1,0 +1,43 @@
+{
+  "composition": "C4Launch",
+  "video": {
+    "path": "artifacts\\c4-ai-launch-15s.mp4",
+    "sha256": "3e16bbbaec3b7f95ec04af172fd6a7f6a2abd2658b87af2c586d67596748e047",
+    "duration_seconds": "15.019000",
+    "streams": [
+      {
+        "codec_type": "video",
+        "codec_name": "h264",
+        "width": 1920,
+        "height": 1080,
+        "r_frame_rate": "60/1",
+        "nb_frames": "900",
+        "sample_rate": null,
+        "channels": null
+      },
+      {
+        "codec_type": "audio",
+        "codec_name": "aac",
+        "width": null,
+        "height": null,
+        "r_frame_rate": "0/0",
+        "nb_frames": "706",
+        "sample_rate": "48000",
+        "channels": 2
+      }
+    ]
+  },
+  "audio": {
+    "peak_dbfs": -6.61,
+    "rms_dbfs": -26.82,
+    "clipped_samples": 0,
+    "voice": "Windows Helena provisional, not ElevenLabs"
+  },
+  "visual_review": [
+    "trigger125",
+    "workflow600: six visible log rows",
+    "resolution780: no clipping"
+  ],
+  "source": "my-video/src/C4Launch.tsx",
+  "publication": "Local artifact; YouTube upload pending"
+}

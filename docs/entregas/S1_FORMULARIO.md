@@ -1,15 +1,23 @@
-# Campos de entrega — borrador revisable
+# Campos de entrega S1
 
-**No enviado.** Repo y tablero siguen privados. Las URLs GitHub solo funcionan para personas con acceso; aún falta resolver el requisito oficial de repositorio público. No compartir automáticamente por correo, Drive o Slack.
+**No enviado.** Repo/tablero siguen privados por instrucción de Deimer. Los enlaces GitHub requieren acceso; no se ha cambiado visibilidad ni afirmado aceptación del reto.
 
-Repositorio: https://github.com/DEIMER-PY/c4-ai
+- Repositorio: https://github.com/DEIMER-PY/c4-ai
+- Reporte técnico actualizado de la feature: https://github.com/DEIMER-PY/c4-ai/blob/codex/feat-025-cinematic-film/docs/entregas/S1_REPORTE_TECNICO.md
+- Cambios para revisión: https://github.com/DEIMER-PY/c4-ai/pull/42 (borrador hacia develop).
+- Portada: [PNG listo para subir](../assets/c4-ai-youtube-cover.png),1672×941,1.87MB decimal.
+- Video: URL YouTube pendiente. Subir `artifacts/c4-ai-santiago-brian-120s.mp4` desde la cuenta del propietario y pegar la URL compartible; una ruta de disco no sirve en el formulario.
 
-Rama snapshot creada: codex/release-s1-end-to-end, desde develop integrado (primer snapshot ad1438e). Las features se integran por PR en develop; la rama de entrega fija una versión revisable, no sustituye el flujo de trabajo.
+La rama histórica codex/release-s1-end-to-end conserva un snapshot anterior; no usar su reporte como si incluyera esta revisión sin integrarla. La feature actual conserva SDD y PR→develop.
 
-Reporte técnico: https://github.com/DEIMER-PY/c4-ai/blob/codex/release-s1-end-to-end/docs/entregas/S1_REPORTE_TECNICO.md
+## Notas listas para copiar
 
-Video: archivo local `artifacts/c4-ai-s1-demo.mp4`; URL por definir tras revisar y elegir alojamiento. No colocar una ruta de disco en el campo URL del formulario.
+C4 AI ejecuta detectar→diagnosticar→proponer corrección→evaluar→decidir con evidencia. Grok analiza y propone; evaluación de baseline/candidato sobre seis casos sintéticos con respuestas reales. Resultado:5/6→6/6, cero regresiones y controles obligatorios aprobados;14 llamadas y20.720 tokens reportados. Otra prueba con Groq fue rechazada por regresión. CLI conversacional, dashboard/API local y consultas de evidencia Hermes/Telegram verificados. Costo monetario por tarea desconocido. Solo versiones de prueba; sin aplicación en producción. WhatsApp, JEV, runner unitario general, persistencia/escala, desktop y móvil siguen pendientes. Video de120s: montaje narrado de evidencia guardada y roadmap explícito, no ejecución continua en vivo. Repositorio privado; acceso de evaluación por resolver.
 
-## Notas propuestas
+## Video y crédito
 
-C4 AI completa detectar→diagnosticar→corregir→evaluar→decidir, con Grok como analista y evidencia por ejecución. Demo de soporte/reembolsos sobre seis casos sintéticos: baseline5/6→candidato6/6, cero regresiones y controles obligatorios aprobados, 14 llamadas y20.720 tokens reportados. Costo monetario desconocido. Otra prueba con Groq como target se rechazó por regresión; no se aplica nada a producción. CLI conversacional por streaming, dashboard conectado a API local y cuatro herramientas de consulta MCP para Hermes verificados. Telegram→C4 pendiente de prueba humana. Repo privado por decisión del equipo; publicación/licencia, rotación de credencial histórica, dataset30+, workers y escala pendientes. Video: montaje narrado con capturas de ejecuciones reales guardadas, no una ejecución continua en vivo.
+Título sugerido: C4 AI: cuando tu agente falla, demuestra la corrección | Demo end-to-end
+
+Descripción breve: C4 AI investiga fallos de agentes, propone cambios de prompt/configuración y compara contra el baseline antes de aceptar. Demo con respuestas reales sobre seis casos sintéticos. Incluye aceptación y rechazo por regresión. JEV y pruebas unitarias generales son roadmap. Narración generada con ElevenLabs — Brian: https://elevenlabs.io/ . Voz generada en cuenta Free; revisar derechos aplicables antes de publicación comercial.
+
+No se ha subido el video ni enviado S1 automáticamente. [Source y validación](../../my-video/EXTENSION.md).

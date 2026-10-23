@@ -1,0 +1,9 @@
+[
+  "Un agente puede responder bien en promedio y aun así fallar en una decisión importante. C4 AI investiga esos fallos, propone una corrección y exige evidencia antes de aceptarla. Esta demostración utiliza ejecuciones guardadas y casos sintéticos.",
+  "El núcleo recibe una traza, detecta el incidente y usa Grok para diagnosticar y proponer un candidato. Después ejecuta baseline y candidato sobre el mismo dataset. Una regla determinista acepta, rechaza o solicita revisión humana, conservando la evidencia.",
+  "La consola combina conversación y comandos. Muestra actividad, proveedor y consumo. El chat transmite texto mientras llega. En una muestra con Groq, el primer texto tardó seiscientos veinticinco milisegundos y la respuesta completa novecientos seis. No es una garantía de latencia.",
+  "El dashboard consulta la API local y los mismos archivos producidos por el CLI. Permite navegar incidentes y comparar resultados. Los errores no se ocultan con datos de demostración. El costo permanece desconocido cuando no disponemos de tarifas verificadas.",
+  "En esta ejecución real contra Grok, el baseline aprobó cinco de seis casos y el candidato seis de seis. No hubo regresiones y los controles obligatorios pasaron. El ciclo consumió catorce llamadas y veinte mil setecientos veinte tokens reportados. La corrección afecta únicamente una versión de prueba.",
+  "También probamos Groq como modelo objetivo, con Grok como analista. El candidato corrigió un caso, pero empeoró otro: pidió datos cuando debía permitir el reembolso. El resultado final fue rechazado. Una ejecución terminada no equivale a una mejora aceptada.",
+  "Hermes ya consulta reportes y evaluaciones de C4 desde Telegram. La prueba confirmó una respuesta entregada en diecinueve segundos, con mejora de cinco de seis a seis de seis y cero regresiones. WhatsApp, treinta casos, costos y escala siguen pendientes. Solo se modifican versiones de prueba."
+]

@@ -1,0 +1,138 @@
+{
+  "voice": "Brian - Deep, Resonant and Comforting",
+  "voice_id": "nPczCjzI2devNBz1zQrb",
+  "model": "eleven_multilingual_v2",
+  "language": "es",
+  "complete": true,
+  "duration_seconds": 120,
+  "frames": 3600,
+  "sample_rate": 48000,
+  "usage_before": 1692,
+  "usage_after": 2241,
+  "usage_delta": 549,
+  "cost_usd": null,
+  "peak_dbfs": -2.0,
+  "clipped_samples": 0,
+  "video_sha256": "f56db69b6b85736e0f90b7a8684d31f0ad666a9f17aef144d9bfc3bb5723702e",
+  "mix": "Original audio replaced entirely; complete Brian narration and synthesized local ambient with ducking.",
+  "clips": [
+    {
+      "id": "intro",
+      "start": 0.5,
+      "end": 12.2,
+      "text": "Tu agente falla. Encontrar por qué, corregirlo y comprobar que no rompiste nada lleva tiempo. C cuatro convierte ese proceso en una decisión respaldada por evidencia.",
+      "file": "extension-voice/intro-3bda5868bb29.mp3",
+      "source_seconds": 10.9976,
+      "tempo": 1
+    },
+    {
+      "id": "detect",
+      "start": 12.5,
+      "end": 19,
+      "text": "Detecta el fallo en una ejecución. Un reembolso aprobado fuera de plazo revela un problema de política.",
+      "file": "extension-voice/detect-d27abe2351d7.mp3",
+      "source_seconds": 6.1649,
+      "tempo": 1
+    },
+    {
+      "id": "diagnose",
+      "start": 19.3,
+      "end": 25.7,
+      "text": "Diagnostica la causa: el agente ignoró el plazo que devolvió la herramienta. El diagnóstico queda registrado.",
+      "file": "extension-voice/diagnose-3b01759ce4c7.mp3",
+      "source_seconds": 7.0008,
+      "tempo": 1.093878
+    },
+    {
+      "id": "patch",
+      "start": 26,
+      "end": 30.1,
+      "text": "Propone un candidato de prompt versionado, conservando el original.",
+      "file": "extension-voice/patch-24ce660ba68c.mp3",
+      "source_seconds": 3.9967,
+      "tempo": 1
+    },
+    {
+      "id": "evaluate",
+      "start": 30.4,
+      "end": 36,
+      "text": "Lo evalúa contra el original, con los mismos seis casos. La comparación debe ser reproducible.",
+      "file": "extension-voice/evaluate-8a9b4d1b65b2.mp3",
+      "source_seconds": 6.1127,
+      "tempo": 1.091545
+    },
+    {
+      "id": "result",
+      "start": 36.3,
+      "end": 45.9,
+      "text": "En esta ejecución real: de cinco de seis a seis de seis. Cero regresiones. Controles de seguridad aprobados. Solo se acepta una versión de prueba.",
+      "file": "extension-voice/result-7868568e1875.mp3",
+      "source_seconds": 10.8669,
+      "tempo": 1.131973
+    },
+    {
+      "id": "reject",
+      "start": 46.2,
+      "end": 55.1,
+      "text": "Otro candidato corrigió el objetivo, pero rompió un caso que funcionaba. C cuatro lo rechazó. Mejorar un caso no basta para aceptar una corrección.",
+      "file": "extension-voice/reject-d9141662ad43.mp3",
+      "source_seconds": 10.1616,
+      "tempo": 1.141757
+    },
+    {
+      "id": "interfaces",
+      "start": 55.4,
+      "end": 61.2,
+      "text": "Úsalo desde la terminal, revisa el dashboard o consulta la evidencia con Hermes.",
+      "file": "extension-voice/interfaces-481bae5660ce.mp3",
+      "source_seconds": 4.7804,
+      "tempo": 1
+    },
+    {
+      "id": "tests",
+      "start": 61.7,
+      "end": 76.1,
+      "text": "Cuando tu agente falla, C cuatro reproduce el caso, compara la corrección con el original y detecta regresiones. Hoy evalúa comportamientos controlados. Ejecutar pruebas unitarias de repositorios requerirá un runner aislado.",
+      "file": "extension-voice/tests-540154086583.mp3",
+      "source_seconds": 14.8898,
+      "tempo": 1.034014
+    },
+    {
+      "id": "jev",
+      "start": 76.7,
+      "end": 91.1,
+      "text": "Jev se plantea como una capa probabilística para clasificar incidentes, estimar riesgo y priorizar investigación. Primero se probará en modo sombra. Su recomendación no aceptará correcciones ni sustituirá las pruebas y el gate.",
+      "file": "extension-voice/jev-c1fb79f8de47.mp3",
+      "source_seconds": 14.5763,
+      "tempo": 1.012245
+    },
+    {
+      "id": "impact",
+      "start": 91.7,
+      "end": 102.1,
+      "text": "Menos ajustes a ciegas. Comparaciones reproducibles para calidad. Decisiones explicables para operaciones. El ahorro de tiempo y costo todavía debe medirse.",
+      "file": "extension-voice/impact-95634e5c5271.mp3",
+      "source_seconds": 10.1094,
+      "tempo": 1
+    },
+    {
+      "id": "ecosystem",
+      "start": 102.7,
+      "end": 110.1,
+      "text": "Consola y dashboard disponibles. Website y documentación implementados. Después: aplicación de escritorio y móvil con React Native.",
+      "file": "extension-voice/ecosystem-23e9bce5793b.mp3",
+      "source_seconds": 7.7845,
+      "tempo": 1.051958
+    },
+    {
+      "id": "closing",
+      "start": 111,
+      "end": 119.4,
+      "text": "C cuatro. Cuando tu agente falla, demuestra la corrección. Conversa, compara y decide con evidencia. Empieza desde la consola.",
+      "file": "extension-voice/closing-1b712953b9af.mp3",
+      "source_seconds": 9.6914,
+      "tempo": 1.153742
+    }
+  ],
+  "usage_scope": "before/after/delta refer to latest generation invocation only; previous clips were cached. Account total includes earlier attempts and sample."
+}
