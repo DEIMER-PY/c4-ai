@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/app-shell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DashboardDataLab } from "@/components/dashboard-customizer";
 
 export default function DeliveryPage() {
   return <>
@@ -11,6 +12,7 @@ export default function DeliveryPage() {
       <p className="text-muted-foreground">Las pruebas usan casos sintéticos y respuestas reales de proveedores. No se aplican cambios a producción. El costo sigue desconocido donde no hay tarifas verificadas.</p>
       <Link href="/incidents" className="inline-block rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground">Abrir evidencia</Link>
     </CardContent></Card>
+    <DashboardDataLab />
     <Card><CardHeader><CardTitle>Pendientes de publicación</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">Repositorio y tablero siguen privados. Video, enlace del reporte y envío del formulario se verifican por separado; esta pantalla no implica que ya se hayan enviado.</CardContent></Card>
   </>;
 }

@@ -152,6 +152,13 @@
 .c4-hero { background:radial-gradient(ellipse at 90% 10%,#64409766,transparent 60%),linear-gradient(120deg,#2b203c,#211c30); }
 .c4-kpi { border:1px solid var(--border); border-radius:14px; padding:22px; background:linear-gradient(140deg,#24202f,#1c1a25); }
 .c4-kpi strong { display:block; margin:12px 0 6px; font-size:34px; letter-spacing:-1.3px; font-weight:600; font-variant-numeric:tabular-nums; }
+/* Local preferences replace surfaces too; evidence and API data remain unchanged. */
+html[data-c4-custom-theme] .c4-sidebar,
+html[data-c4-custom-theme] .c4-topbar,
+html[data-c4-custom-theme] .c4-hero,
+html[data-c4-custom-theme] .c4-kpi { background:var(--card); color:var(--card-foreground); }
+html[data-c4-custom-theme] .text-primary { color:var(--c4-accent-text); }
+html[data-c4-custom-theme] .text-muted-foreground { color:inherit; opacity:.8; }
 [id], pre, code { overflow-wrap:anywhere; }
 pre { max-width:100%; }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
