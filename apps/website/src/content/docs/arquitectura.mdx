@@ -37,6 +37,8 @@ C4 AI está diseñado como una plataforma de **Ingeniería de Confiabilidad para
 
 Cada evaluación se sella mediante un árbol de Merkle SHA-256 (`IntegrityProof`):
 
-$$\text{Merkle Root} = \text{SHA256}(\text{DatasetHash} : \text{BaselineHash} : \text{CandidateHash} : \text{VerdictHash})$$
+```text
+Merkle Root = SHA256(DatasetHash : BaselineHash : CandidateHash : VerdictHash)
+```
 
 Ningún resultado puede ser alterado en base de datos o en tránsito sin invalidar la firma criptográfica del nodo emisor.
