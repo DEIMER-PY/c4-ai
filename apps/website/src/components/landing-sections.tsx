@@ -1,3 +1,4 @@
+import { YouTubeIcon } from "@/components/icons";
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
 
@@ -162,21 +163,75 @@ export function Integrations() {
   );
 }
 
-/** FR-007: el video de C4-008 se conecta aquí cuando exista; mientras tanto no se simula. */
+/** Demostración oficial de YouTube integrada en alta definición */
 export function VideoSlot({ src }: { src?: string }) {
+  const youtubeUrl = "https://www.youtube-nocookie.com/embed/DqAuvL8im9M?rel=0&modestbranding=1";
+
   return (
-    <section aria-labelledby="video" className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
-      <h2 id="video" className="sr-only">
-        Video de presentación
-      </h2>
-      {src ? (
-        <video controls preload="metadata" className="aspect-video w-full rounded-2xl bg-window" src={src} />
-      ) : (
-        <div className="flex w-full flex-col items-start gap-1 rounded-2xl border border-dashed border-rule bg-paper-raised px-6 py-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-lg font-semibold">Video de presentación</p>
-          <p className="text-ink-soft">Próximamente: el recorrido completo de C4, de la traza a la decisión.</p>
+    <section id="video" aria-labelledby="video-heading" className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+      <div className="mb-6 flex flex-col items-center text-center">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-rose-400">
+          <YouTubeIcon className="size-3.5" /> Demostración Audiovisual Oficial
+        </span>
+        <h2 id="video-heading" className="mt-3 text-3xl font-semibold tracking-[-0.025em] text-ink sm:text-4xl">
+          El recorrido completo de C4 en acción
+        </h2>
+        <p className="mt-2 max-w-2xl text-base text-ink-soft">
+          Observa en alta definición cómo C4 analiza una traza real con Grok-4.7, genera parches y evalúa la evidencia sin tocar producción.
+        </p>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl border border-rule/80 bg-window shadow-[0_20px_70px_-20px_rgba(139,92,246,0.35)] ring-1 ring-white/10">
+        <div className="flex items-center justify-between border-b border-white/10 bg-window px-4 py-3">
+          <div className="flex items-center gap-2">
+            <span aria-hidden className="flex gap-1.5">
+              <span className="size-3 rounded-full bg-[#ff5f57]" />
+              <span className="size-3 rounded-full bg-[#febc2e]" />
+              <span className="size-3 rounded-full bg-[#28c840]" />
+            </span>
+            <span className="text-xs font-mono text-window-soft ml-2">
+              c4-demo-official.mp4 — YouTube 1080p60
+            </span>
+          </div>
+          <a
+            href="https://www.youtube.com/watch?v=DqAuvL8im9M"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-window-soft hover:text-white transition-colors"
+          >
+            <YouTubeIcon className="size-3.5 text-rose-500" /> Abrir en YouTube
+          </a>
         </div>
-      )}
+
+        <div className="relative aspect-video w-full bg-black">
+          {src ? (
+            <video controls preload="metadata" className="size-full" src={src} />
+          ) : (
+            <iframe
+              className="size-full border-0"
+              src={youtubeUrl}
+              title="C4 AI — Video Oficial de Demostración"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 bg-window/80 px-5 py-3 text-xs text-window-soft">
+          <div className="flex items-center gap-4">
+            <span>⏱️ <strong>Capítulos:</strong></span>
+            <span>0:00 Introducción</span>
+            <span>•</span>
+            <span>1:15 Diagnóstico Forense</span>
+            <span>•</span>
+            <span>2:40 Decision Gate</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="size-2 rounded-full bg-pass animate-pulse" />
+            <span>Verificado: Reproducción sin cookies de terceros</span>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

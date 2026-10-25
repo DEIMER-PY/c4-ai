@@ -7,11 +7,22 @@
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=DqAuvL8im9M"><img src="https://img.shields.io/badge/YouTube-Video%20Demo%20(120s)-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Video Demo en YouTube"></a>
+  <a href="https://www.youtube.com/watch?v=DqAuvL8im9M"><img src="https://img.shields.io/badge/YouTube-Video%20Demo%20(1080p60)-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Video Demo en YouTube"></a>
+  <a href="https://github.com/DEIMER-PY/c4-ai"><img src="https://img.shields.io/badge/GitHub-Repo%20Oficial-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repository"></a>
   <a href="docs/arquitectura/CLI.md"><img src="docs/assets/badges/c4-cli-badge.svg" alt="C4 CLI Badge"></a>
   <a href="apps/desktop/README.md"><img src="docs/assets/badges/c4-desktop-badge.svg" alt="C4 Desktop Badge"></a>
   <a href="apps/website/README.md"><img src="docs/assets/badges/c4-website-badge.svg" alt="C4 Website Badge"></a>
   <a href="apps/website/README.md"><img src="docs/assets/badges/mobile-responsive-badge.svg" alt="C4 Mobile Badge"></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Windows_11-Supported-0078D4?style=flat-square&logo=windows&logoColor=white" alt="Windows">
+  <img src="https://img.shields.io/badge/macOS_Sequoia-Supported-000000?style=flat-square&logo=apple&logoColor=white" alt="macOS">
+  <img src="https://img.shields.io/badge/Linux_Ubuntu-Supported-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Linux">
+  <img src="https://img.shields.io/badge/Python-3.12_%2B_uv-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Next.js-16_Turbopack-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js">
+  <img src="https://img.shields.io/badge/FastAPI-0.143-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/Status-Zero_Regressions-10B981?style=flat-square" alt="Zero Regressions">
 </p>
 
 ---
@@ -136,16 +147,15 @@ El proyecto cuenta con verificación continua y cero regresiones en cada integra
 ======================================================================
 REPORTE DE VERIFICACIÓN GLOBAL — C4 AI (100% PASS)
 ======================================================================
-  [✓] Backend Unit Tests (Python 3.12 / unittest):    109 pruebas (OK)
-  [✓] Integración WhatsApp Business / Hermes:           5 pruebas (OK)
+  [✓] Backend Unit Tests (Python 3.12 / unittest):    146 pruebas (OK)
   [✓] Frontend Website & Simulador (Vitest):           18 pruebas (OK)
   [✓] Frontend Dashboard de Auditoría (Vitest):        40 pruebas (OK)
   --------------------------------------------------------------------
-  TOTAL DE PRUEBAS AUTOMATIZADAS:                     172 pruebas (100% OK)
+  TOTAL DE PRUEBAS AUTOMATIZADAS:                     204 pruebas (100% OK)
   
-  [✓] Integridad Documental (verify_docs.py):         357 archivos Markdown
-  [✓] Esquemas JSON Schema v1:                         57 archivos válidos
-  [✓] Recursos Vectoriales SVG Auditados:              27 archivos nativos
+  [✓] Integridad Documental (verify_docs.py):         396 archivos Markdown
+  [✓] Esquemas JSON Schema v1:                         60 archivos válidos
+  [✓] Recursos Vectoriales SVG Auditados:              29 archivos nativos
   [✓] Cumplimiento de Commits Convencionales:         100% con emojis
 ======================================================================
 ```

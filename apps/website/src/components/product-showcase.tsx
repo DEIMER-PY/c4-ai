@@ -120,6 +120,26 @@ export function ProductShowcase() {
               ),
             },
             {
+              id: "video",
+              label: "Video Demo",
+              content: (
+                <Window title="C4 AI / Demostración oficial en YouTube (1080p60)">
+                  <div className="relative aspect-video w-full bg-black">
+                    <iframe
+                      className="size-full border-0"
+                      src="https://www.youtube-nocookie.com/embed/DqAuvL8im9M?rel=0&modestbranding=1"
+                      title="C4 AI — Demostración Audiovisual en Showcase"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                  <Provenance>
+                    Demostración audiovisual oficial: diagnóstico forense, parches automáticos y gate de decisión en tiempo real.
+                  </Provenance>
+                </Window>
+              ),
+            },
+            {
               id: "hermes",
               label: "Hermes",
               content: (

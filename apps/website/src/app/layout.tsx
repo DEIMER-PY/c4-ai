@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 
+import { C4Chatbot } from "@/components/c4-chatbot";
 import { MOTION_BOOTSTRAP, RevealOnScroll } from "@/components/reveal-on-scroll";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 
@@ -23,16 +24,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${hanken.variable} ${jetbrains.variable} antialiased`} suppressHydrationWarning>
+    <html lang="es" className={`dark ${hanken.variable} ${jetbrains.variable} antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: MOTION_BOOTSTRAP }} />
       </head>
-      <body className="flex min-h-dvh flex-col">
+      <body className="flex min-h-dvh flex-col bg-paper text-ink">
         <SiteHeader />
         <main id="contenido" className="flex-1">
           {children}
         </main>
         <SiteFooter />
+        <C4Chatbot />
         <RevealOnScroll />
       </body>
     </html>
