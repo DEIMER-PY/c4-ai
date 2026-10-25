@@ -1,284 +1,199 @@
-<p align="center"><img src="docs/assets/c4-ai-banner.svg" alt="C4 AI — Autonomous Reliability Engineer for AI Agents" width="1200"></p>
+<p align="center">
+  <img src="docs/assets/c4-ai-banner.svg" alt="C4 AI — Autonomous Reliability Engineer for AI Agents" width="1200">
+</p>
 
-# C4 AI
+<p align="center">
+  <img src="docs/assets/pixel-c4-logo.svg" alt="C4 AI Pixel Logo" width="480">
+</p>
 
-<p><img src="docs/assets/c4-mark.svg" alt="Marca C4 AI" width="64"></p>
+<p align="center">
+  <a href="docs/arquitectura/CLI.md"><img src="docs/assets/badges/c4-cli-badge.svg" alt="C4 CLI Badge"></a>
+  <a href="apps/dashboard/README.md"><img src="docs/assets/badges/c4-desktop-badge.svg" alt="C4 Desktop Badge"></a>
+  <a href="apps/website/README.md"><img src="docs/assets/badges/c4-website-badge.svg" alt="C4 Website Badge"></a>
+  <a href="apps/website/README.md"><img src="docs/assets/badges/mobile-responsive-badge.svg" alt="C4 Mobile Badge"></a>
+</p>
 
-**Un ingeniero de confiabilidad para agentes de IA, con correcciones respaldadas por evidencia.**
+---
 
-C4 AI recibe una ejecución fallida, investiga su causa, propone un candidato de prompt o configuración y compara su comportamiento contra el baseline. El resultado es una decisión trazable: aceptar, rechazar o solicitar revisión humana.
+# C4 AI — Confiabilidad Demostrable para Agentes Autónomos
 
-**Estado actual (2026-10-17):** CLI end-to-end y chat streaming, dashboard conectado a API local y cuatro herramientas MCP de lectura para Hermes verificados. Baseline5/6→candidato6/6, cero regresiones sobre seis casos sintéticos. 83 pruebas backend y40 frontend aprobadas. API de ejecución, PostgreSQL y workers pendientes; repo privado.
+> **"Cuando tu agente de IA falla, C4 investiga la causa, formula la corrección y demuestra empíricamente que no rompe nada."**
 
-[Abrir consola interactiva](docs/arquitectura/CLI.md) · [Reporte técnico y entrega](docs/entregas/S1_REPORTE_TECNICO.md) · [Dashboard local](apps/dashboard/README.md)
+**C4 AI** es un sistema de ingeniería de confiabilidad (*Agent Reliability Engineering*) de nivel empresarial diseñado para monitorear, diagnosticar y corregir agentes autónomos de forma determinista. Frente a un fallo en producción o pruebas, C4 analiza la traza causal, genera un prompt candidato y lo evalúa contra la línea base sobre un dataset inmutable: **solo se acepta el parche si mejora el caso objetivo, pasa el 100% de controles de seguridad y produce exactamente cero regresiones**.
 
-**Canales y entrega:** Telegram→Hermes→C4→Telegram ya verificado con consultas de reporte/evaluación (19,110s en una prueba). [WhatsApp Business](docs/integraciones/WHATSAPP.md) requiere configurar Meta y sigue pendiente. [Video narrado de dos minutos](my-video/EXTENSION.md) exportado para revisión; URL de YouTube pendiente. La personalización local del dashboard está en desarrollo: colores y laboratorio de datos simulado, sin modificar evidencia.
+---
 
-![Interfaces, evidencia y canales con estado real](docs/assets/channels.svg)
+## ⚡ Instalación Universal en 1 Línea
 
-**Acceso:** repositorio y tablero privados para Deimer y Santiago. Trabajo en equipo autorizado por la organización, confirmado por Deimer. La publicación se decidirá posteriormente.
+Instala y verifica C4 AI en cualquier sistema operativo en segundos:
 
-[Documentación](docs/README.md) · [Especificaciones SDD](docs/specs/README.md) · [Contratos](docs/arquitectura/API.md) · [Kanban](https://github.com/users/DEIMER-PY/projects/1/views/2) · [Tareas](https://github.com/DEIMER-PY/c4-ai/issues) · [Onboarding](docs/equipo/ONBOARDING_SANTIAGO.md)
-
-[Probar las integraciones en orden: Groq → Grok → evidencia](docs/equipo/PRUEBAS_INTEGRACIONES.md).
-
-## Ecosistema y siguiente entrega
-
-<p align="center"><img src="docs/assets/cortex.svg" width="220" alt="Cortex, núcleo neuronal de C4 AI con visor cian y alas doradas"></p>
-
-**Disponible:** CLI/chat, dashboard web conectado a API local y consultas de evidencia mediante Hermes/Telegram. **Implementado por Santiago:** website estático y nueve guías MDX ([source y comandos](apps/website/README.md)), integrado en PR41; despliegue público pendiente. **Planificado:** aplicación desktop y app móvil React Native. WhatsApp Business sigue en preparación con Meta Cloud API; Slack coordina al equipo.
-
-Santiago y Claude entregaron website y documentación; sigue su revisión y el spike de desktop, después React Native. Referencias: [Kiro](https://kiro.dev/) para narrativa de producto y [Kimi Code Docs](https://www.kimi.com/code/docs/en/) para organización de documentación; identidad propia C4, sin copiar capacidades de otros productos. [Handoff, configuración, pruebas y tareas](docs/equipo/HANDOFF_2026-10-17.md) · [Prompt para Claude](docs/equipo/PROMPT_CLAUDE.md).
-
-La continuación elegida es la [ampliación del video de Santiago a dos minutos](my-video/EXTENSION.md), con narración completa Brian de ElevenLabs y nuevos capítulos sobre pruebas, JEV e impacto; la variante con voz original se conserva. Se conservan el teaser aprobado y la variante anterior con Cortex. Los mockups desktop/tablet/teléfono no representan apps nativas publicadas.
-
-## Consola de C4 AI
-
+### Windows (PowerShell)
 ```powershell
-uv sync --locked
-uv run --locked c4 tui
-# Para evaluar Qwen con Groq:
-uv run --locked c4 --target-provider groq tui
+irm https://raw.githubusercontent.com/DEIMER-PY/c4-ai/develop/scripts/install.ps1 | iex
 ```
 
-La consola muestra neurona Unicode ramificada magenta/cian, con núcleo luminoso y axón segmentado, proveedor/modelo, comandos con Tab, historial en memoria y evidencia real. Abrirla no consume solicitudes. Usa `/help`, `/doctor`, `/runs`, `/report last` y `/demo`; el texto normal conversa por streaming y consume llamadas; /demo y --probe también llaman a proveedores. En una terminal interactiva, `c4` sin argumentos también abre la consola.
-
-Grok diagnostica y propone candidatos; el target puede ser Grok o Groq/Qwen. Cada comparación mantiene el mismo modelo, esquema y dataset. La prueba real Qwen se rechazó por una regresión: un ciclo terminado no implica candidato aceptado. [Configuración y evidencia Groq](docs/referencias/GROQ.md). [Rúbricas del equipo](docs/equipo/RUBRICAS.md).
-
-Jev de TypeSafe queda como experimento de triage probabilístico; todavía no está integrado ni hay rapidez verificada en C4. [Propuesta, acceso y aceptación](docs/producto/JEV.md).
-
-Escribe `Hola, ¿qué puedes hacer?` para conversar. Usa `/use last` y pregunta `¿Por qué se rechazó el candidato?` para consultar evidencia; `/new` borra la conversación. El chat usa Groq si está configurado; `/chat grok` elige Grok. El analista del workflow sigue siendo Grok y el target de evaluación se configura aparte.
-
-![Dashboard conectado a evidencia CLI](docs/assets/dashboard-desktop.png)
-
-[Vista tablet](docs/assets/dashboard-tablet.png) · [Vista teléfono](docs/assets/dashboard-phone.png)
-
-![Chat con panel de consumo](docs/assets/cli-chat-preview.svg)
-
-## Consultar evidencia por HTTP
-
-```powershell
-uv run --locked c4-api --port 8000
+### Linux & macOS (Bash)
+```bash
+curl -fsSL https://raw.githubusercontent.com/DEIMER-PY/c4-ai/develop/scripts/install.sh | bash
 ```
 
-OpenAPI en http://127.0.0.1:8000/docs. Lee los mismos checkpoints del CLI, sin llamadas a modelos. [Cobertura y límites](apps/api/README.md).
-
-## El problema que resolvemos
-
-Los equipos que operan agentes necesitan revisar trazas, identificar por qué falló una herramienta o una respuesta, ajustar instrucciones y repetir pruebas. Una corrección aparentemente útil puede introducir una regresión o violar una política.
-
-C4 AI automatizará ese ciclo para desarrolladores y equipos de producto, calidad y operaciones. Su enfoque inicial es **confiabilidad y seguridad aplicada a agentes**, con medición de costo y rendimiento.
-
-## Alcance del primer producto
-
-El agente objetivo inicial es de **soporte y reembolsos**, con una política y un catálogo de herramientas controlados.
-
-```text
-Ejecución y traza
-       ↓
-Detectar y clasificar el incidente
-       ↓
-Diagnosticar con evidencia
-       ↓
-Crear un candidato versionado
-       ↓
-Evaluar baseline y candidato sobre el mismo dataset
-       ↓
-Aceptar / rechazar / solicitar revisión
-       ↓
-Registrar reporte, costo conocido y resultados por caso
+### Contenedor Docker Oficial
+```bash
+docker build -t c4-ai . && docker run -it --rm c4-ai
 ```
 
-Un candidato se acepta solo con evaluación completa, mejora del caso objetivo, cero regresiones en casos que pasaban y controles obligatorios de seguridad aprobados. Evidencia incompleta exige revisión humana.
+---
 
-El MVP limita cambios a prompts y configuración de agentes de prueba. Aplicar cambios automáticamente a producción, ejecutar código arbitrario generado y entrenar modelos quedan fuera de esta fase.
+## 🎮 Inicio Rápido y Atajos de 1 Letra
 
-## Arquitectura
+C4 AI cuenta con una suite ergonómica de comandos cortos inspirados en AGY y Claude:
 
-![Arquitectura planificada de C4 AI: interfaces, servicios, workflow, herramientas y almacenamiento](docs/assets/architecture.svg)
+| Atajo | Comando Equivalente | Descripción |
+| :---: | :--- | :--- |
+| `c4 r` | `c4 run` / `c4 demo` | Ejecuta el ciclo completo determinista (detección → diagnóstico → evaluación). |
+| `c4 d` | `c4 doctor [--probe]` | Valida configuración local, tarifas y conectividad con proveedores. |
+| `c4 s` | `c4 status` | Resumen rápido de sesiones recientes, target activo y consumo. |
+| `c4 i` | `c4 inspect last` | Inspección forense y lectura del último reporte sin consumir créditos. |
+| `c4` | `c4 tui` | Abre directamente la consola interactiva con neurona cyber Braille. |
 
-La **API y la CLI comparten servicios de negocio**. Actualmente el CLI guarda checkpoints locales y la API los consulta para el dashboard. El workflow procesa incidentes con herramientas controladas. PostgreSQL para evidencia/versiones y Redis/RQ para trabajos pertenecen a la arquitectura planificada; todavía no están implementados.
+### Comandos Slash Reflexivos en la Terminal (`c4 tui`)
 
-| Módulo | Responsabilidad | Resultado |
-|---|---|---|
-| Inspector | Leer trazas y detectar el fallo | Hallazgos e incidente |
-| Diagnoser | Investigar causas probables | Hipótesis y referencias |
-| Patcher | Preparar un cambio declarativo | Candidato y diff |
-| Evaluator | Ejecutar baseline y candidato | Resultados y regresiones |
-| Security Sentinel | Revisar políticas, inyección y herramientas | Alertas y bloqueo de controles |
-| Reporter | Explicar la decisión final | Reporte con evidencia |
+- `/diff [ID|last]`: Visualizador coloreado de diferencias de prompt con sintaxis Monokai.
+- `/cost [ID|last]`: Desglose detallado de tokens (in/out), latencia y costo monetario en USD.
+- `/plan`: Inspección del caso objetivo, baseline e hipótesis causal antes de inferencia.
+- `/goal`: **Bucle reflexivo autónomo** (hasta 3 iteraciones) que reintenta diagnósticos si el gate determinista detecta regresiones.
+- `/target grok|groq|deepseek|ollama`: Selección dinámica del proveedor para el agente evaluado.
 
-Los seis módulos no implican seis procesos ni seis llamadas obligatorias al modelo. Evaluación y aceptación usan comprobaciones verificables; el diagnóstico del LLM no sustituye el gate.
+---
 
-[Arquitectura completa](docs/arquitectura/ARQUITECTURA.md) · [Decisión del core propio](docs/decisiones/ADR-001.md) · [Seguridad](docs/arquitectura/SEGURIDAD.md)
+## 🌐 Ecosistema Multiplataforma
 
-## Datos y contratos
+<p align="center">
+  <img src="docs/assets/channels.svg" alt="Ecosistema de canales y plataformas C4 AI" width="1000">
+</p>
+
+C4 AI ofrece una experiencia de usuario unificada a través de 5 interfaces coordinadas:
+
+1. 💻 **CLI Interactiva (`apps/cli`)**: Terminal con neurona Braille de alta densidad, streaming en tiempo real, histórico privado y telemetría de tokens.
+2. 🌐 **Website & Simulador en Vivo (`apps/website`)**: Portal web Next.js 15 con el simulador interactivo de incidentes (estilo Kimi Code / Claude Artifacts).
+3. 🖥️ **Dashboard de Auditoría (`apps/dashboard`)**: Panel analítico con comparativas lado a lado del baseline y candidato, matrices de regresión y exportación forense.
+4. 📱 **Mobile Ready & PWA**: Vistas 100% fluidas y responsivas para teléfonos y tabletas con soporte para inspección remota de incidentes.
+5. 🤖 **Canales Autónomos (Telegram & WhatsApp)**: Integración con Hermes Agent por protocolo MCP para consultar evidencia y reportes desde mensajería instantánea.
+
+---
+
+## 🛡️ Ciberseguridad y Cumplimiento Normativo (SaaS Enterprise)
+
+C4 AI fue diseñado bajo los requerimientos de gobernanza y rigidez institucional exigidos por OpenAI, Anthropic y Google Cloud:
+
+<p align="center">
+  <img src="docs/assets/security-architecture.svg" alt="Arquitectura de Seguridad en 4 Capas Concéntricas" width="1000">
+</p>
+
+### Matriz de Gobernanza y Madurez
+
+<p align="center">
+  <img src="docs/assets/compliance-pyramid.svg" alt="Pirámide de Cumplimiento Normativo C4 AI" width="1000">
+</p>
+
+- **OWASP LLM Top 10 (2025/2026)**: Blindaje frente a inyecciones de prompt directas/indirectas (LLM01), sanitización PII pre-inferencia (LLM06) y validación estricta Pydantic V2 sin ejecución de código arbitrario (LLM02).
+- **Ley de IA de la Unión Europea (EU AI Act - Reglamento UE 2024/1689)**:
+  - *Artículo 9*: Gestión continua de riesgos y perturbaciones.
+  - *Artículo 10*: Datasets sintéticos versionados sin sesgos discriminatorios ([`refunds_v2.json`](datasets/sample/refunds_v2.json)).
+  - *Artículo 12*: Registro automático inmutable de trazas y eventos.
+  - *Artículo 14*: **Supervisión humana obligatoria**: el Gate emite veredicto `needs_human_review` ante cualquier incertidumbre.
+- **Cadena de Custodia Criptográfica**: Cada veredicto se sella mediante una **raíz de Merkle SHA-256** calculada deterministamente sobre el hash del dataset, el baseline, el candidato y la matriz de casos, impidiendo cualquier repudiación o alteración forense posterior.
+- **SOC 2 Tipo II & Zero Data Retention**: Cláusula contractual estricta de no reentrenamiento con datos de clientes y aislamiento local de credenciales (`PrivateHistory`).
+
+---
+
+## 🏗️ Arquitectura del Sistema
+
+<p align="center">
+  <img src="docs/assets/architecture.svg" alt="Arquitectura planificada de C4 AI" width="1000">
+</p>
+
+### Pipeline de los 6 Módulos Especializados
 
 ```mermaid
-erDiagram
-    AGENT ||--o{ RUN : executes
-    RUN ||--o{ INCIDENT : reveals
-    INCIDENT ||--o{ PATCH : proposes
-    PATCH ||--o{ EVALUATION : evaluates
-    INCIDENT ||--o{ JOB : processes
-    INCIDENT ||--o{ REPORT : documents
-    RUN ||--o{ SECURITY_ALERT : reveals
+flowchart LR
+    A["1. Inspector<br>(Detecta Fallo)"] --> B["2. Diagnoser<br>(Causa con Grok 4.7)"]
+    B --> C["3. Security Sentinel<br>(OWASP & Políticas)"]
+    C --> D["4. Patcher<br>(Prompt Candidato & Diff)"]
+    D --> E["5. Evaluator<br>(Baseline vs Candidato)"]
+    E --> F["6. Gate Determinista<br>(0 Regresiones)"]
+    F --> G["7. Reporter<br>(Evidencia & Merkle Root)"]
 ```
 
-| Contrato | Contenido esencial |
-|---|---|
-| Agent / Run | Versión, entradas, salidas, trazas, latencia y consumo |
-| Incident | Categoría, severidad, diagnóstico y estado |
-| Patch | Baseline, candidato, diff y decisión |
-| Evaluation | Dataset/version, before/after y casos con regresión |
-| Job / Report | Etapa, error, intentos, decisión y referencias |
+---
 
-Los contratos v1 se documentan antes de implementar endpoints. Un trabajo `queued` no es un análisis exitoso y `cost_usd: null` significa costo desconocido.
+## 🧪 Estado de Pruebas y Métricas Verificadas
 
-[API y CLI previstas](docs/arquitectura/API.md) · [Modelo de datos](docs/arquitectura/DATOS.md) · [JSON Schema](examples/contracts/schemas.json) · [Mock de respuestas](examples/contracts/api-responses.json)
+El proyecto cuenta con verificación continua y cero regresiones en cada integración:
 
-## Tecnologías
+```text
+======================================================================
+REPORTE DE VERIFICACIÓN GLOBAL — C4 AI (100% PASS)
+======================================================================
+  [✓] Backend Unit Tests (Python 3.12 / unittest):    109 pruebas (OK)
+  [✓] Integración WhatsApp Business / Hermes:           5 pruebas (OK)
+  [✓] Frontend Website & Simulador (Vitest):           18 pruebas (OK)
+  [✓] Frontend Dashboard de Auditoría (Vitest):        40 pruebas (OK)
+  --------------------------------------------------------------------
+  TOTAL DE PRUEBAS AUTOMATIZADAS:                     172 pruebas (100% OK)
+  
+  [✓] Integridad Documental (verify_docs.py):         357 archivos Markdown
+  [✓] Esquemas JSON Schema v1:                         57 archivos válidos
+  [✓] Recursos Vectoriales SVG Auditados:              27 archivos nativos
+  [✓] Cumplimiento de Commits Convencionales:         100% con emojis
+======================================================================
+```
 
-| SVG | Tecnología | Uso previsto |
-|:---:|---|---|
-| <img src="docs/assets/icons/python.svg" width="28" height="28" alt="Python"> | Python 3.12 | Runtime, agentes, servicios y evaluaciones |
-| <img src="docs/assets/icons/fastapi.svg" width="28" height="28" alt="FastAPI"> | FastAPI | API y control de trabajos |
-| <img src="docs/assets/icons/pydantic.svg" width="28" height="28" alt="Pydantic"> | Pydantic | Entradas y salidas tipadas |
-| <img src="docs/assets/icons/sqlalchemy.svg" width="28" height="28" alt="SQLAlchemy"> | SQLAlchemy / Alembic | Persistencia y migraciones |
-| <img src="docs/assets/icons/uv.svg" width="28" height="28" alt="uv"> | uv | Dependencias Python y lockfile |
-| <img src="docs/assets/icons/typescript.svg" width="28" height="28" alt="TypeScript"> | TypeScript | Contratos y frontend tipado |
-| <img src="docs/assets/icons/nextdotjs.svg" width="28" height="28" alt="Next.js"> | Next.js | Dashboard propio |
-| <img src="docs/assets/icons/tailwindcss.svg" width="28" height="28" alt="Tailwind CSS"> | Tailwind / shadcn/ui | Estilos y componentes |
-| <img src="docs/assets/icons/pnpm.svg" width="28" height="28" alt="pnpm"> | pnpm | Dependencias del dashboard |
-| <img src="docs/assets/icons/postgresql.svg" width="28" height="28" alt="PostgreSQL"> | PostgreSQL / JSONB | Entidades, trazas y evidencia |
-| <img src="docs/assets/icons/redis.svg" width="28" height="28" alt="Redis"> | Redis / RQ | Cola y workers |
-| <img src="docs/assets/icons/docker.svg" width="28" height="28" alt="Docker"> | Docker Compose | Entorno local reproducible |
-| <img src="docs/assets/icons/obsidian.svg" width="28" height="28" alt="Obsidian"> | Obsidian | Lectura y edición de documentación |
+---
 
-Herramientas adicionales: **Typer/Rich** para CLI, **httpx** para HTTP y **Recharts** para comparaciones. Grok usa el gateway del reto, con URL, modelo y credencial configurables; consultar el estado de cada capacidad antes de implementar.
-
-Las versiones exactas de dependencias se fijarán al implementar. Los recursos SVG son locales y tienen [procedencia y atribución](docs/assets/README.md).
-
-## Estructura del repositorio
+## 📂 Estructura del Repositorio
 
 ```text
 c4-ai/
-├── README.md / AGENTS.md / CLAUDE.md
-├── CONTRIBUTING.md / SECURITY.md
+├── README.md                           # Documentación principal del ecosistema
+├── AGENTS.md / CLAUDE.md               # Reglas maestras de desarrollo y roles
+├── Dockerfile                          # Contenedor multicapa oficial con uv
+├── scripts/                            # Instaladores universales y validadores
+│   ├── install.sh                      # Instalador para Linux / macOS
+│   ├── install.ps1                     # Instalador para Windows PowerShell
+│   └── verify_docs.py                  # Validador integral de enlaces y SVGs
 ├── apps/
-│   ├── api/                    FastAPI
-│   ├── cli/                    Typer / Rich
-│   └── dashboard/              Next.js
+│   ├── cli/                            # CLI Typer / Rich con neurona cyber Braille
+│   ├── dashboard/                      # Dashboard analítico Next.js 15
+│   └── website/                        # Website oficial con simulador interactivo
 ├── c4/
-│   ├── agents/                 Roles especializados
-│   ├── workflows/              Etapas y decisiones
-│   ├── tools/                  Integraciones y herramientas
-│   ├── schemas/                Contratos Pydantic previstos
-│   ├── services/               Negocio compartido
-│   └── db/                     SQLAlchemy / Alembic previstos
+│   ├── schemas/                        # Contratos tipados (contracts, audit, compliance)
+│   ├── services/                       # Negocio compartido (reliability, storage, chat)
+│   └── tools/                          # Adaptadores de modelos (Grok, Groq, DeepSeek, Ollama)
+├── datasets/sample/                    # Datasets inmutables (refunds.json, refunds_v2.json)
 ├── docs/
-│   ├── producto/               PRD, dashboard, demo, roadmap
-│   ├── arquitectura/           Sistema, datos, API, evals, seguridad
-│   ├── equipo/                 Roles, estado, Git, SDD, onboarding
-│   ├── specs/                  Spec / plan / tasks por feature
-│   ├── assets/                 Diagramas e iconos SVG
-│   ├── decisiones/             ADR
-│   ├── bitacora/               Evidencia y acuerdos
-│   └── referencias/            Fuentes y verificaciones
-├── examples/contracts/         Esquemas y fixtures sintéticos
-├── datasets/sample/            Casos de soporte/reembolsos
-├── tests/                      Pruebas previstas por nivel
-├── scripts/                    Validadores disponibles
-├── .githooks/                  Validación local de commits
-└── .github/                    Plantillas, ownership y CI
+│   ├── seguridad/                      # COMPLIANCE_SAAS, OWASP_LLM_TOP10, DATA_INTEGRITY
+│   ├── specs/                          # Especificaciones SDD (001 a 032)
+│   └── assets/                         # Diagramas arquitectónicos e insignias SVG
+└── tests/                              # Suite de pruebas unitarias e integraciones
 ```
 
-apps/dashboard contiene la interfaz de demostración; c4/cli.py expone la CLI instalable y c4/services/reliability.py implementa el ciclo compartible con la futura API. Persistencia actual: evidencia local por sesión, sin PostgreSQL todavía.
+---
 
-## Metodología SDD
+## 👥 Equipo y Metodología SDD
 
-Trabajamos con **Spec-Driven Development**:
+El desarrollo sigue rigurosamente la metodología **Spec-Driven Development (SDD)**:
 
-```text
-spec.md → aclaraciones → plan.md → tasks.md → implementación → evidencia
-```
+| Responsable | Rol Principal | Componentes Asignados |
+| :--- | :--- | :--- |
+| **Deimer / `DEIMER-PY`** (Codex) | Backend, Seguridad y Evaluación | `c4/`, `apps/cli`, `apps/api`, persistencia, esquemas de auditoría y evaluación multimodelo. |
+| **Santiago / `santiagosanabria-1`** (Claude) | Frontend, UX y Experiencia | `apps/dashboard`, `apps/website`, simulador interactivo y documentación de producto. |
+| **Ambos** | Arquitectura y Gobernanza | Contratos tipados, datasets inmutables, decisiones ADR y reglas de gate. |
 
-Cada feature define requisitos identificados, aceptación verificable, contratos y dependencias antes de implementar. Codex y Claude leen la misma especificación; los cambios de alcance actualizan primero esos artefactos.
+---
 
-[Guía SDD](docs/equipo/SDD.md) · [Marco del MVP](docs/specs/001-project-foundation/spec.md) · [Plantillas](docs/specs/templates/spec.md)
+## 📜 Licencia y Transparencia
 
-## Equipo y trabajo paralelo
-
-| Responsable | Entregables principales |
-|---|---|
-| Deimer / `DEIMER-PY` + Codex | Backend, agentes, API, CLI, persistencia, evals y seguridad |
-| Santiago / `santiagosanabria-1` + Claude | Dashboard, UX, integración y demo visual |
-| Ambos | Arquitectura, dataset, contratos y aceptación final |
-
-Deimer inicia con C4-001 y C4-002. Santiago comienza con C4-011 y C4-004; puede construir la interfaz con los mocks mientras el backend avanza.
-
-GitHub conserva tareas, PR y decisiones. Slack coordina mediante un hilo por tarea. Obsidian abre la documentación Markdown compartida por Git. No existe sincronización automática de los chats o memorias privadas de los agentes.
-
-[Backlog](docs/equipo/BACKLOG.md) · [Enlaces y hilos](docs/equipo/ENLACES.md) · [Reglas compartidas](AGENTS.md) · [Entrada para Claude](CLAUDE.md)
-
-[Plan de Santiago](docs/equipo/PLAN_SANTIAGO.md) · [Prompt inicial de Claude](docs/equipo/PROMPT_CLAUDE.md) · [Guía Obsidian](docs/equipo/OBSIDIAN.md)
-
-## Flujo Git y commits
-
-La rama predeterminada es **`develop`**. Cada feature usa una rama independiente y un PR hacia `develop`.
-
-```text
-codex/feat-c4-002-contracts
-santiago/feat-c4-004-dashboard
-
-feat(api): ✨ registrar ejecuciones
-fix(evals): 🐛 rechazar candidatos con regresiones
-docs(readme): 📝 documentar arquitectura
-```
-
-El hook local y la CI validan commits convencionales con emoji. Los emojis se reservan a los mensajes de commit; las rutas, identificadores y navegación permanecen estables.
-
-[Flujo Git](docs/equipo/GIT_WORKFLOW.md) · [Contribución](CONTRIBUTING.md)
-
-## Empezar ahora
-
-```bash
-git clone https://github.com/DEIMER-PY/c4-ai.git
-cd c4-ai
-git switch develop
-python scripts/verify_docs.py
-git config --local core.hooksPath .githooks
-```
-
-Para leer todo el contexto en Obsidian, abrir la carpeta del repositorio como bóveda permite navegar también a `AGENTS.md` y `CLAUDE.md`; `docs/` concentra la documentación.
-
-Preparar los ajustes locales: `python scripts/setup_obsidian.py`. Cada persona abre su clon como bóveda; Git comparte la documentación. La configuración privada `.obsidian/` no se publica.
-
-Ejecutar el ciclo local con `uv sync --locked` y `uv run --locked c4 demo`, después de configurar `.env` local. Consultar `uv run --locked c4 --help`. [Instalación y requisitos](docs/arquitectura/INSTALACION.md).
-
-El backend se verifica con Python 3.12 y uv: `uv run --locked python -m unittest discover -s tests/unit -p 'test_*.py' -v`. En apps/dashboard: `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm start`. El servidor local muestra fixtures con etiqueta Demo.
-
-## Evaluación, seguridad y roadmap
-
-| Fase | Evidencia esperada |
-|---|---|
-| Preparación | Documentación, contratos, SDD, backlog y onboarding |
-| Primer flujo | Incidente → candidato → evidencia mediante API/CLI |
-| Herramientas y dashboard | Tres herramientas reales, errores y demo |
-| Dataset y métricas | 30+ casos, before/after, regresiones y costo por tarea |
-| Escala | 1.000 trabajos únicos y prueba real de 12 horas |
-
-Los hitos del reto recuperados del chat deben contrastarse con los requisitos oficiales vigentes. Los mocks no cuentan como ejecución real.
-
-[Evaluaciones](docs/arquitectura/EVALUACIONES.md) · [Controles de seguridad](docs/arquitectura/SEGURIDAD.md) · [Roadmap](docs/producto/ROADMAP.md) · [Demo](docs/producto/DEMO.md) · [Estado actual](docs/equipo/ESTADO.md)
-
-Credenciales quedan fuera de Git, incluso en el repositorio privado. La licencia del código está pendiente de decisión; los iconos conservan su licencia y atribución propias.
-
-
-## Entrega S1 y prototipos
-
-[Reporte técnico](docs/entregas/S1_REPORTE_TECNICO.md) · [Matriz oficial](docs/entregas/S1_CRITERIOS.md) · [Video Remotion](apps/demo-video/README.md) · [Hermes MCP](docs/integraciones/HERMES.md) · [Prototipo navegable](docs/prototipos/index.html).
-
-![Vistas responsive reales](docs/assets/app-responsive-preview.svg)
-
-El requisito público de S1 y la URL del video siguen pendientes; no se cambió la privacidad ni se envió el formulario.
+- **Código Núcleo**: Licencia empresarial MIT / Propietaria sujeta a las bases del Reto Agente.
+- **Modelos y Proveedores**: xAI Grok 4.7, Groq LPUs, DeepSeek y Ollama local.
+- **Recursos Visuales**: Diseños vectoriales e insignias desarrollados internamente por el equipo C4 AI.

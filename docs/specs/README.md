@@ -31,6 +31,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Ergonomía de CLI e instalación universal](029-cli-ergonomics-universal-install/spec.md)
 - [Ciberseguridad, integridad de datos y cumplimiento SaaS](030-enterprise-security-compliance/spec.md)
 - [Simulador interactivo y documentación enterprise](031-interactive-simulator-and-showcase/spec.md)
+- [Experiencia cyberpunk en CLI y README visual enterprise](032-cyber-cli-and-readme-showcase/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
