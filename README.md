@@ -11,6 +11,7 @@
   <a href="apps/dashboard/README.md"><img src="docs/assets/badges/c4-desktop-badge.svg" alt="C4 Desktop Badge"></a>
   <a href="apps/website/README.md"><img src="docs/assets/badges/c4-website-badge.svg" alt="C4 Website Badge"></a>
   <a href="apps/website/README.md"><img src="docs/assets/badges/mobile-responsive-badge.svg" alt="C4 Mobile Badge"></a>
+  <a href="https://www.youtube.com/watch?v=DqAuvL8im9M"><img src="https://img.shields.io/badge/YouTube-Video%20Demo%20(120s)-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Video Demo en YouTube"></a>
 </p>
 
 ---

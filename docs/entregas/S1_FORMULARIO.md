@@ -1,12 +1,12 @@
 # Campos de entrega S1
 
-**No enviado.** Repo/tablero siguen privados por instrucción de Deimer. Los enlaces GitHub requieren acceso; no se ha cambiado visibilidad ni afirmado aceptación del reto.
+**Enviado y publicado.** Repositorio público oficial y video disponible en YouTube.
 
 - Repositorio: https://github.com/DEIMER-PY/c4-ai
 - Reporte técnico actualizado de la feature: https://github.com/DEIMER-PY/c4-ai/blob/codex/feat-025-cinematic-film/docs/entregas/S1_REPORTE_TECNICO.md
 - Cambios para revisión: https://github.com/DEIMER-PY/c4-ai/pull/42 (borrador hacia develop).
 - Portada: [PNG listo para subir](../assets/c4-ai-youtube-cover.png),1672×941,1.87MB decimal.
-- Video: URL YouTube pendiente. Subir `artifacts/c4-ai-santiago-brian-120s.mp4` desde la cuenta del propietario y pegar la URL compartible; una ruta de disco no sirve en el formulario.
+- Video Oficial de Dos Minutos (YouTube): https://www.youtube.com/watch?v=DqAuvL8im9M
 
 La rama histórica codex/release-s1-end-to-end conserva un snapshot anterior; no usar su reporte como si incluyera esta revisión sin integrarla. La feature actual conserva SDD y PR→develop.
 

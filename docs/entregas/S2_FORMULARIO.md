@@ -1,11 +1,11 @@
 # Campos de Entrega Semana S2
 
-**Estado: Documentado y listo para postulación.** El repositorio y el tablero permanecen privados de acuerdo con la estrategia de confidencialidad del equipo. No se ha cambiado visibilidad ni se ha afirmado aceptación automática por la organización del reto.
+**Estado: Enviado y publicado.** Repositorio público oficial y video disponible en YouTube.
 
 - **Repositorio**: https://github.com/DEIMER-PY/c4-ai
 - **Reporte Técnico Semana S2**: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/entregas/S2_REPORTE_TECNICO.md
 - **Archivo de Evidencia de Diez Ejecuciones**: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/evidencia/2026-10-25-diez-ejecuciones-calificadas.json
-- **Video de Dos Minutos (Remotion)**: Archivo local renderizado `artifacts/c4-ai-santiago-brian-120s.mp4` (120s, 1920×1080, 30 FPS, H.264/AAC con narración en español). URL compartible de YouTube pendiente de publicación por el titular de la cuenta.
+- **Video Oficial de Dos Minutos (YouTube)**: https://www.youtube.com/watch?v=DqAuvL8im9M (Remotion 120s, 1920×1080, 30 FPS con narración Brian de ElevenLabs).
 - **Rama principal**: `develop`
 
 ## Notas Técnicas Listas para Copiar en el Formulario

@@ -53,7 +53,7 @@ El ciclo Grok suma 95.828 ms de latencia reportada de llamadas y106,029s de tiem
 
 ![CLI: chat y consumo](../assets/cli-chat-preview.svg)
 
-Video vigente: [source Remotion y reproducción](../../my-video/EXTENSION.md), ampliación del montaje de Santiago a120s/3600frames,1920×1080/30FPS,H264/AAC. Narración completa en español con Brian de ElevenLabs y música con ducking;13 segmentos. Flujo de video idéntico al montaje revisado, cero muestras saturadas en el audio final. [Evidencia/hash](../evidencia/2026-10-17-brian-narration.json). No es una ejecución continua en vivo: contiene evidencia real guardada, explicaciones de producto y roadmap explícitamente identificado. Jev y runner unitario todavía planificados. YouTube pendiente de subida humana.
+Video vigente: [source Remotion y reproducción](../../my-video/EXTENSION.md), ampliación del montaje de Santiago a120s/3600frames,1920×1080/30FPS,H264/AAC. Narración completa en español con Brian de ElevenLabs y música con ducking;13 segmentos. Flujo de video idéntico al montaje revisado, cero muestras saturadas en el audio final. [Evidencia/hash](../evidencia/2026-10-17-brian-narration.json). No es una ejecución continua en vivo: contiene evidencia real guardada, explicaciones de producto y roadmap explícitamente identificado. Jev y runner unitario todavía planificados. Publicado en YouTube: https://www.youtube.com/watch?v=DqAuvL8im9M.
 
 Website y nueve guías MDX entregados por Santiago en PR41:15 pruebas, tipos, lint y build estático aprobados; hosting pendiente. Desktop y React Native son los siguientes incrementos. Narración acreditada a ElevenLabs; no se compró plan ni se afirma licencia comercial.
 
