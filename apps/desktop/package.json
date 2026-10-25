@@ -1,0 +1,14 @@
+{
+  "name": "c4-desktop",
+  "version": "0.1.0",
+  "description": "C4 AI Native Desktop Application powered by Tauri v2",
+  "private": true,
+  "scripts": {
+    "tauri": "tauri",
+    "desktop:dev": "tauri dev",
+    "desktop:build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}
