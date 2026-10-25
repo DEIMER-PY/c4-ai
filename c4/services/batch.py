@@ -250,7 +250,7 @@ class BatchRunner:
 
         total_toks = sum(r.input_tokens + r.output_tokens for r in results)
         success_rate = (len(succeeded) / len(results) * 100.0) if results else 0.0
-        throughput = (len(results) / elapsed) if elapsed > 0 else 0.0
+        throughput = (len(results) / max(elapsed, 0.0001)) if len(results) > 0 else 0.0
 
         return BatchMetrics(
             total_scheduled=config.total_units,

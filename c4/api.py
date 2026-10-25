@@ -14,6 +14,7 @@ import time
 START_TIME = time.monotonic()
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from c4.schemas import Agent, Error, Evaluation, Incident, Job, Patch, Report, Run
@@ -32,6 +33,7 @@ def create_app(store_root: Path | None = None) -> FastAPI:
                   responses={code:{'model':Error} for code in (404,422,503)},
                   description='Solo consulta de evidencia local. Sin operaciones de generación ni autenticación de producción.')
     app.add_middleware(TrustedHostMiddleware,allowed_hosts=['127.0.0.1','localhost','testserver'])
+    app.add_middleware(CORSMiddleware,allow_origins=['*'],allow_credentials=True,allow_methods=['*'],allow_headers=['*'])
     reader = EvidenceReader(store_root if store_root is not None else Path(os.environ.get('C4_STORE','artifacts/runs')))
 
     def error(status, code, message):
