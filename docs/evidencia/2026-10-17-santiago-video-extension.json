@@ -1,0 +1,31 @@
+{
+  "source_sha256": "38a37eec48a2916da66cd5a44d300f2dac677a4b2534d024ea774d51a62b30fb",
+  "output_sha256": "f74ac37af5e384323ad2028981bda9525d8c776e03f5e1662055c762cf8e660f",
+  "width": 1920,
+  "height": 1080,
+  "frames": 3600,
+  "fps": "30/1",
+  "duration_video_seconds": 120.0,
+  "duration_container_seconds": 120.0,
+  "audio": {
+    "rate": 48000,
+    "peak_dbfs": -4.44,
+    "rms_dbfs": -27.81,
+    "clipped_samples": 0
+  },
+  "voice": "Original source narration preserved; additions subtitled; no replacement or cloning",
+  "original_editor": "unknown; not identifiable from supplied metadata or inspected remote",
+  "source_original_seconds": 71,
+  "added_seconds": 49,
+  "insertion_at_seconds": 61.4,
+  "original_unchanged": true,
+  "publication": "Local final MP4. YouTube URL pending human review.",
+  "reviewed_frame_seconds": [
+    61.2,
+    62.4,
+    86,
+    111.2,
+    115
+  ],
+  "normalized_video_time_base": "1/15360"
+}

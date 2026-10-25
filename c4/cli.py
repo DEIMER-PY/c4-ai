@@ -27,6 +27,8 @@ console = Console()
 class Provider(str, Enum):
     grok = 'grok'
     groq = 'groq'
+    deepseek = 'deepseek'
+    ollama = 'ollama'
 
 
 @app.callback(invoke_without_command=True)
@@ -102,7 +104,9 @@ def emit(ctx: typer.Context, result: dict):
     tokens = sum(c['input_tokens'] + c['output_tokens'] for c in calls
                  if c['input_tokens'] is not None and c['output_tokens'] is not None)
     coverage = sum(c['input_tokens'] is not None and c['output_tokens'] is not None for c in calls)
-    console.print(Text(f'Llamadas: {len(calls)} · tokens reportados: {tokens} (cobertura {coverage}/{len(calls)}) · costo: desconocido'))
+    known_costs = [c['cost_usd'] for c in calls if c.get('cost_usd') is not None]
+    cost_text = f"${sum(known_costs):.4f} USD" if known_costs else "desconocido"
+    console.print(Text(f'Llamadas: {len(calls)} · tokens reportados: {tokens} (cobertura {coverage}/{len(calls)}) · costo: {cost_text}'))
     console.print(Text('Evidencia: ' + str(ctx.obj['store'].path(result['id']).resolve()), style='dim'))
 
 
@@ -181,7 +185,7 @@ def execute(ctx: typer.Context, session_id: str | None, operation: str, dataset:
     try:
         with execution_progress(ctx) as observer:
             gateway = Gateway(Settings.from_env(ctx.obj['env_file']))
-            target_gateway = gateway if ctx.obj['target_provider'] == 'grok' else Gateway(Settings.from_env(ctx.obj['env_file'], 'groq'))
+            target_gateway = gateway if ctx.obj['target_provider'] == 'grok' else Gateway(Settings.from_env(ctx.obj['env_file'], ctx.obj['target_provider']))
             service = ReliabilityService(ctx.obj['store'], gateway, on_checkpoint=observer, target_gateway=target_gateway)
             if session_id is None:
                 state = service.create(read_dataset(dataset), target)
@@ -206,12 +210,12 @@ def doctor(ctx: typer.Context, probe: Annotated[bool, typer.Option(help='Realiza
     gateway = target_gateway = None
     try:
         settings = Settings.from_env(ctx.obj['env_file'])
-        target_settings = settings if ctx.obj['target_provider'] == 'grok' else Settings.from_env(ctx.obj['env_file'], 'groq')
+        target_settings = settings if ctx.obj['target_provider'] == 'grok' else Settings.from_env(ctx.obj['env_file'], ctx.obj['target_provider'])
         result = {'configured': True, 'model': settings.model, 'https': True, 'credential': 'present',
                   'reasoning': {'provider': 'grok', 'model': settings.model},
                   'target': {'provider': target_settings.provider, 'model': target_settings.model},
                   'max_calls': settings.max_calls, 'max_output_tokens': settings.max_tokens,
-                  'max_job_seconds': settings.max_seconds, 'probe': 'not_requested', 'cost_usd': None}
+                  'max_job_seconds': settings.max_seconds, 'probe': 'not_requested', 'cost_usd': (0.0 if target_settings.provider == 'ollama' else None)}
         if probe:
             gateway = Gateway(settings)
             response = gateway.complete('Return {"connected":true}.', {}, 'doctor')

@@ -115,3 +115,41 @@ class ProviderTests(unittest.TestCase):
         self.assertIs(schema['strict'],True)
         self.assertEqual(schema['schema']['required'],['action'])
         self.assertEqual(gateway.records[0]['output_mode'],'json_schema')
+
+    def test_deepseek_settings_from_env(self):
+        env = {'DEEPSEEK_API_KEY': 'deepseek-secret', 'C4_DEEPSEEK_MODEL': 'deepseek-chat'}
+        with patch.dict(os.environ, env, clear=False):
+            settings = Settings.from_env(str(Path(self.tmp.name) / 'absent.env'), 'deepseek')
+            self.assertEqual(settings.provider, 'deepseek')
+            self.assertEqual(settings.model, 'deepseek-chat')
+            self.assertEqual(settings.base_url, 'https://api.deepseek.com/v1')
+
+    def test_ollama_settings_and_zero_cost(self):
+        env = {'C4_OLLAMA_BASE_URL': 'http://127.0.0.1:11434/v1', 'C4_OLLAMA_MODEL': 'qwen2.5:7b'}
+        with patch.dict(os.environ, env, clear=False):
+            settings = Settings.from_env(str(Path(self.tmp.name) / 'absent.env'), 'ollama')
+            self.assertEqual(settings.provider, 'ollama')
+            self.assertEqual(settings.model, 'qwen2.5:7b')
+            self.assertEqual(settings.base_url, 'http://127.0.0.1:11434/v1')
+
+            def handler(request):
+                return httpx.Response(200, json={
+                    'choices': [{'message': {'content': '{"action":"refund_order"}'}}],
+                    'usage': {'prompt_tokens': 500, 'completion_tokens': 100}
+                })
+            gateway = Gateway(settings, httpx.Client(transport=httpx.MockTransport(handler)))
+            self.addCleanup(gateway.close)
+            result = gateway.complete('System', {'customer': {'days_since_purchase': 5}}, 'test')
+            self.assertEqual(result, {'action': 'refund_order'})
+            self.assertEqual(gateway.records[0]['cost_usd'], 0.0)
+
+    def test_ollama_rejects_external_http_url(self):
+        env = {'C4_OLLAMA_BASE_URL': 'http://external-untrusted-server.com/v1', 'C4_OLLAMA_MODEL': 'qwen2.5:7b'}
+        with patch.dict(os.environ, env, clear=False):
+            with self.assertRaisesRegex(WorkflowError, 'URL HTTP/HTTPS local'):
+                Settings.from_env(str(Path(self.tmp.name) / 'absent.env'), 'ollama')
+
+    def test_llama_33_uses_json_schema(self):
+        gateway = Gateway(Settings('https://groq.example/v1', 'llama-3.3-70b-versatile', 'secret', provider='groq'))
+        self.addCleanup(gateway.close)
+        self.assertEqual(gateway.output_mode(schema=True), 'json_schema')

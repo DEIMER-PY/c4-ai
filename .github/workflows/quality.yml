@@ -69,3 +69,36 @@ jobs:
       - run: npm install --global pnpm@10.34.7
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
+  showcase:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: my-video
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - run: npm ci
+      - run: node node_modules/typescript/bin/tsc --noEmit
+      - run: node node_modules/eslint/bin/eslint.js src/C4Launch.tsx src/launch-index.tsx src/film src/film-index.tsx src/extension src/extension-index.tsx
+  website:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/website
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: '24'
+      - run: npm install --global pnpm@10.34.7
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm build

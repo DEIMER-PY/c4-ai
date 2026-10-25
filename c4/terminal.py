@@ -34,7 +34,7 @@ COMMANDS = {
     '/status': 'Ver proveedores y presupuesto de chat',
     '/run': 'Ejecutar el ciclo completo (alias de /demo)',
     '/inspect ID|last': 'Consultar reporte (alias de /report)',
-    '/target grok|groq': 'Elegir proveedor para el próximo trabajo',
+    '/target grok|groq|deepseek|ollama': 'Elegir proveedor para el próximo trabajo',
     '/doctor [--probe]': 'Validar configuración; --probe hace llamadas',
     '/demo': 'Ciclo completo: diagnóstico, candidato y evaluación',
     '/start': 'Crear sesión y diagnosticar; continuar con patch/eval',
@@ -67,7 +67,8 @@ def summaries(store: Store, limit: int = 8) -> list[dict]:
 
 def header(console: Console, store: Store, env_file: str, provider: str):
     env = {**dotenv_values(env_file), **os.environ}
-    target_model = env.get('C4_GROQ_MODEL' if provider=='groq' else 'C4_GROK_MODEL') or 'sin configurar'
+    model_vars = {'groq': 'C4_GROQ_MODEL', 'deepseek': 'C4_DEEPSEEK_MODEL', 'ollama': 'C4_OLLAMA_MODEL'}
+    target_model = env.get(model_vars.get(provider, 'C4_GROK_MODEL')) or ('qwen2.5:7b' if provider == 'ollama' else 'sin configurar')
     status = Table.grid(padding=(0,1))
     status.add_column(style='#94a3b8')
     status.add_column()

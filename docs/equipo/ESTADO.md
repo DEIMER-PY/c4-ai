@@ -1,26 +1,45 @@
 # Estado de C4 AI
-Actualizado: 2026-10-17. Fuente vigente para retomar trabajo; detalles históricos en specs/PR y evidencia. [Reporte actual S1](../entregas/S1_REPORTE_TECNICO.md) · [Criterios oficiales](../entregas/S1_CRITERIOS.md).
+Actualizado: 2026-10-17. Fuente para retomar trabajo; [handoff completo](HANDOFF_2026-10-17.md) y [backlog](BACKLOG.md).
 
-## Verificado
-- CLI end-to-end con Grok: sesión c4_63fb290ce5244c248f0b929120f14df2, baseline5/6→candidato6/6, cero regresiones, controles obligatorios aprobados. 14 llamadas,20.720 tokens,106,029 segundos de pared. Seis inputs sintéticos; respuestas reales. Costo USD desconocido. Solo versiones de prueba, sin aplicar a producción.
-- Target Groq/Qwen separado del analista Grok: candidato rechazado por regresión refund_eligible (PR21). El gate determinista conserva baseline/dataset y no acepta candidatos incompletos.
-- CLI/TUI: neurona magenta/cian, actividad y consumo, comandos con Tab, chat streaming Markdown, historial RAM y entrada multilínea. Una solicitud por turno, hasta16/conversación. Groq predeterminado si tiene clave; /chat grok cambia conversación. Enter envía y Alt+Enter inserta línea. PR30.
-- API local FastAPI de consulta v1 sobre los mismos checkpoints. 48 consultas concurrentes aprobadas; launcher c4-api con SelectorEventLoop para Windows. Escritura/ejecución HTTP pendientes.
-- Dashboard inicial de Santiago (PR18) integrado con API real por PR29: filtro, incidentes, evidencia/comparación, costo desconocido, modo Demo explícito, sin fallback silencioso. Vistas1440/820/390 revisadas. 37 pruebas frontend y build/typecheck/lint aprobados.
-- Hermes v0.22.2: MCP stdio con cuatro consultas de lectura, descubrimiento Hermes y reporte accepted comprobados sin llamadas nuevas. PR31; [guía](../integraciones/HERMES.md). Telegram configurado por Deimer; conversación Telegram→C4 pendiente de prueba humana.
-- 83 pruebas Python aprobadas (contratos, gate, CLI, límites, lectura API, SSE y MCP). Checklists y enlaces documentales verificados por feature.
+## Runtime verificado
 
-## Entrega y siguiente trabajo
-- Entrega019: reporte actual, matriz, video Remotion narrado de120s renderizado y verificado, prototipo responsive probado en navegador y snapshot de entrega. Revisión humana, alojamiento del video y formulario pendientes.
-- C4-002/003 En curso: faltan PostgreSQL/Alembic y API de ejecución del mismo servicio.
-- C4-006 En curso: lectura API ya implementada. Santiago revisa UX y completa jobs/métricas, candidatos sin reporte y actualización de estados con contratos acordados; no inventar endpoints.
-- C4-008 En curso: fuente y video de entrega preparados por Deimer/Codex; Santiago revisa presentación y ensayo con Deimer.
-- Dataset30+, tarifas/costo, Redis/RQ/idempotencia,1.000 unidades/12h, Jev y escritorio/Tauri siguen planificados. El prototipo móvil/tablet es web responsive, no app nativa.
+- CLI end-to-end Grok: sesión c4_63fb290ce5244c248f0b929120f14df2; baseline5/6→candidato6/6, cero regresiones y controles aprobados. Seis casos sintéticos, respuestas reales;14 llamadas,20.720 tokens,106,029s de pared. Costo USD desconocido. Solo versiones de prueba.
+- Target Groq/Qwen separado del analista Grok: prueba completa rechazada por regresión refund_eligible. La mejora de un caso no basta para aceptar.
+- TUI con neurona, chat streaming Markdown, contexto de evidencia, consumo, Tab y multilínea. Una solicitud por turno; límites y proveedor por entorno. Abrir consola no genera llamadas.
+- API FastAPI GET v1 lee los mismos checkpoints para el dashboard. Escritura/ejecución HTTP, métricas globales, PostgreSQL y workers siguen pendientes.
+- Dashboard existente: lectura API real y modo Demo explícito. Personalización local de paleta/datos simulados añadida en PR40;40 pruebas, tipos, lint y build aprobados localmente. Revisión UX de Santiago pendiente; C4-006 no está cerrada.
+- Hermes: cuatro consultas MCP de solo lectura. Telegram→Hermes→C4→respuesta verificado en19,110s en una prueba: get_report/get_evaluation devolvieron accepted,5/6→6/6 y cero regresiones. No es un SLA ni una nueva evaluación.
+- Validación local de esta entrega:83 pruebas unitarias backend y5 del asistente WhatsApp aprobadas. Tests de desarrollo y mocks no sustituyen evidencia de proveedor.
 
-## Trabajo y acceso
-Repositorio/tablero privados y develop predeterminado. Features desde develop, commits type(scope): emoji descripción, PR→develop. Santiago conserva ownership de frontend; cambios frontend solicitados en esta sesión por Deimer. Los contratos HTTP v1 no se cambiaron. Sin mensajes a compañeros ni publicación automática.
+## Entrega de Santiago recibida
 
-## Pendientes humanos
-Publicación/licencia oficial S1 pendientes por decisión de privacidad. Una credencial retirada de .env.example en historial requiere rotación/revocación por su titular; limpiar plantilla no revoca ni elimina historia. Confirmar Slack/Obsidian de Santiago y revisión compartida. Git es fuente de verdad, Obsidian abre la raíz de cada clon y lee docs/; no duplicar documentación en Drive. Branch protection privado devolvió403 en preparación; no se comprobó cambio de plan. No hay vigilancia automática ni prueba de12h en curso.
+PR41 se integró en develop589e410: apps/website estático (Next.js/React/TypeScript/Tailwind), nueve guías MDX, navegación, instalación, vitrina y evidencia con fuente. La copia local integra ese remoto sin sobrescribir sus archivos; se resolvió el índice conservando ambas specs. El teaser se renumeró026 porque024 corresponde al website.
 
-Entrega019 integrada por PR32 con CI quality/dashboard/video aprobada. Rama privada codex/release-s1-end-to-end creada desde develop; snapshot inicial ad1438e. [Campos preparados](../entregas/S1_FORMULARIO.md). Revisión humana y URL del video pendientes.
+Website:15 pruebas, tipos, lint y build estático aprobados localmente. C4-014/C4-015 pasan a En revisión, no a reconstrucción. Hosting y publicación siguen pendientes. Revisar sincronización editorial de Telegram (ya verificado) y WhatsApp (pendiente) antes de publicar.
+
+Siguiente desarrollo de Santiago/Claude: C4-016 desktop, primero ADR/spike Tauri y empaquetado real; después C4-017 React Native con contrato de acceso seguro acordado. Mantener integración/UX C4-006. [Prompt actual](PROMPT_CLAUDE.md).
+
+## Video y presentación
+
+Deimer eligió el MP4 de Santiago de71s como referencia principal. La primera edición preserva su voz, montaje y archivo original; spec027 inserta49s subtitulados sobre pruebas, JEV, impacto y ecosistema, hasta120s. La fuente del editor/voz original no está identificada por metadatos ni por el remoto. El proyecto editable no está disponible. [Source y reproducción](../../my-video/EXTENSION.md).
+
+La variante025 de120s y el teaser026 de15s aprobado se conservan. Dylan/ElevenLabs se intentó antes del cambio de preferencia: una pista previa por Higgsfield, sin créditos para el resto; cuenta propia Free rechazó Dylan de biblioteca con402. No se compraron planes, no se importaron voces ni se presenta otra voz como original. La clave permanece local.
+
+Montaje027 exportado y verificado:120.000s de video,3600frames,1080p30. Revisión humana y alojamiento YouTube pendientes. No se ha enviado el formulario S1 ni cambiado visibilidad. [Campos de entrega](../entregas/S1_FORMULARIO.md).
+
+## Pendientes del producto
+
+- WhatsApp Cloud API: diagnóstico y asistente preparados,5 tests. Adaptador presente; faltan app/credenciales/webhook/prueba real. Deimer creará app y número de prueba. Meta MCP OAuth/11 herramientas comprobados; app_list devuelve0 accesibles y no expone app_create. No equivale a canal conectado.
+- JEV: propuesta para triage probabilístico en shadow mode; no hay integración, credencial, calibración o rapidez/ahorro medidos. No sustituye el gate. [Diseño y aceptación](../producto/JEV.md).
+- Runner unitario de repositorios: nueva propuesta C4-018, fuera del MVP actual; necesita aislamiento, permisos y spec. [Qué prueba C4 hoy](../producto/PRUEBAS_Y_DECISIONES.md).
+- C4-002/003: persistencia y ejecución HTTP. C4-007: dataset30+. C4-009: workers/idempotencia/recuperación. C4-010:1.000 unidades/12h reales. Ninguno se considera terminado por mockups o video.
+
+## Git y coordinación
+
+Repo/tablero privados; develop predeterminado. Commits type(scope): emoji descripción, features y PR→develop. PR38 Telegram, PR39 preparación WhatsApp y PR40 dashboard en borrador, apilados; no se han fusionado. Video/handoff se publica por feature independiente. El bloqueo anterior por cuota fue transitorio; nuevas acciones Git se autorizan.
+
+Git es fuente de verdad. Obsidian abre el clon y sus Markdown; no duplicar documentación en Drive ni exportar chats/memoria privados. Slack coordina, no almacena decisiones. No se enviaron mensajes a Santiago por preparar contexto. Confirmaciones humanas de onboarding y revisión final siguen pendientes.
+
+La decisión sobre publicación/licencia S1 sigue siendo humana. La limpieza de una credencial histórica no la revoca; su titular conserva la acción de rotación pendiente. No se comprobó cambio de plan para branch protection privado. No hay vigilancia ni prueba de12h ejecutándose.
+
+Actualización de voz: Deimer eligió otra voz de ElevenLabs. Brian premade generó muestra HTTP200; nueva edición con narración completa en español de los120s y música con ducking. La variante con voz original permanece disponible. Guion, clips y consumo se registran en my-video/EXTENSION.md; publicación y revisión creativa pendientes.

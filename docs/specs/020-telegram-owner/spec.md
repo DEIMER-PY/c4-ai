@@ -1,0 +1,9 @@
+# Hermes: identidad y prueba Telegram
+Estado: Implementing. Responsable Deimer/Codex. Fecha2026-10-17.
+
+FR-001 / AC-001: comprobar token, gateway y destinatario privado sin imprimir secretos/PII. La respuesta humana confirma identidad y envío de prueba. El chat privado de los intentos bloqueados coincide con la identidad indicada; corregir únicamente TELEGRAM_ALLOWED_USERS y TELEGRAM_HOME_CHANNEL al ID de ese usuario, sin usar su teléfono como ID ni abrir acceso global.
+FR-002 / AC-002: guardar copia local restringida de configuración, usar escritor oficial Hermes con bloqueo y reiniciar gateway sin agentes activos. Comprobar reconexión, autorización del propietario y entrega de mensaje de prueba a su chat, sin mensajes a terceros.
+FR-003 / AC-003: probar entrada Telegram→Hermes→herramientas MCP C4→respuesta con evidencia de llamadas y resultado. Si el canal requiere envío humano, pedir la frase y distinguir cada nivel de validación; no fabricar mensajes entrantes ni inferir éxito por getMe.
+FR-004 / AC-004: documentación saneada sin teléfono, IDs personales, token o conversaciones privadas; cambios por PR→develop. my-video/ pertenece al usuario y queda fuera de esta tarea. Sin cambios de contratos ni permisos nativos de máquina.
+
+FR-005 / AC-005 (hallazgo de prueba): corregir ruta de inferencia Hermes. La configuración xai con URL del reto dispara protección de origen OAuth y espera de protocolo Codex Responses. Crear proveedor custom:c4-reto con chat_completions y key_env específico del gateway ya configurado en C4. Mantener modelo y host verificados, sin reutilizar OAuth contra terceros ni deshabilitar protecciones. Conservar backup YAML/env; interrumpir mediante reinicio oficial únicamente la prueba colgada, con drenaje acotado y evidencia conservada. Validar resolución local antes de llamar al proveedor; no modificar otros proveedores ni credenciales guardadas.

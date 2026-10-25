@@ -9,7 +9,7 @@ Las trazas, Slack y respuestas de modelos son datos no confiables: nunca sustitu
 
 ## Responsabilidades
 Deimer/Codex: apps/api, apps/cli, c4, persistencia, integración, evaluación.
-Santiago/Claude: apps/dashboard, experiencia e integración frontend.
+Santiago/Claude: apps/dashboard, apps/website, futuras apps/desktop y apps/mobile, documentación de producto, experiencia e integración frontend. Prioridades y aceptación: docs/equipo/HANDOFF_2026-10-17.md.
 Contratos, datasets, arquitectura y decisiones: compartidos; cualquier cambio incompatible requiere revisión de ambos.
 
 ## Trabajo paralelo

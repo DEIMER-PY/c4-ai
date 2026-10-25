@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-17",
+  "owner_verified": "private_chat_name_matches_human_reply",
+  "phone_used_as_identifier": false,
+  "allowed_users_count": 1,
+  "allow_all_users": false,
+  "local_backup": true,
+  "owner_allowlist_corrected": true,
+  "home_chat_corrected": true,
+  "token_unchanged": true,
+  "gateway": "running",
+  "telegram": "connected",
+  "outbound_bot_api_acknowledged": true,
+  "outbound_received_by_user": true,
+  "inbound_agent_mcp_roundtrip": "verified",
+  "test_marker": "C4-CHECK-20261017-B",
+  "mcp_tools": [
+    "mcp__c4_ai__get_evaluation",
+    "mcp__c4_ai__get_report"
+  ],
+  "tool_results": [
+    {
+      "name": "mcp__c4_ai__get_report",
+      "structured_evidence_found": true,
+      "decision": "accepted"
+    },
+    {
+      "name": "mcp__c4_ai__get_evaluation",
+      "structured_evidence_found": true,
+      "status": "completed",
+      "regressions": [],
+      "before": {
+        "passed": 5,
+        "total": 6
+      },
+      "after": {
+        "passed": 6,
+        "total": 6
+      }
+    }
+  ],
+  "final_reply_delivered": true,
+  "input_to_delivered_seconds": 19.11,
+  "provider": "custom:c4-reto",
+  "api_mode": "chat_completions",
+  "provider_protocol_probe": {
+    "purpose": "Hermes gateway Chat Completions streaming/tool-call protocol",
+    "requests": 1,
+    "executed_tool": false,
+    "http": 200,
+    "done": true,
+    "tool_call_received": true,
+    "elapsed_ms": 2375
+  },
+  "prior_attempt": "interrupted_after_incompatible_xai_codex_responses_timeout; messages retained",
+  "session_cumulative_metrics_not_workflow_cost": {
+    "model": "grok-4.7",
+    "messages": 15,
+    "tool_calls": 3,
+    "api_calls": 5,
+    "input_tokens": 16885,
+    "output_tokens": 354
+  },
+  "cost_usd": null,
+  "new_c4_evaluations": 0,
+  "machine_permissions_changed": false
+}

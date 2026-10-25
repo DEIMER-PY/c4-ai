@@ -1,0 +1,26 @@
+[
+  {
+    "id": "tests",
+    "start": 0,
+    "duration": 15,
+    "text": "Cuando tu agente falla, C cuatro reproduce el caso, compara la corrección con el original y detecta regresiones. Hoy evalúa comportamientos controlados. Ejecutar pruebas unitarias de repositorios requerirá un runner aislado."
+  },
+  {
+    "id": "jev",
+    "start": 15,
+    "duration": 15,
+    "text": "Jev se plantea como una capa probabilística para clasificar incidentes, estimar riesgo y priorizar investigación. Primero se probará en modo sombra. Su recomendación no aceptará correcciones ni sustituirá las pruebas y el gate."
+  },
+  {
+    "id": "impact",
+    "start": 30,
+    "duration": 11,
+    "text": "El impacto que buscamos es concreto: menos ajustes a ciegas, una comparación reproducible para calidad y decisiones explicables para operaciones. El ahorro de tiempo y costo todavía debe medirse."
+  },
+  {
+    "id": "ecosystem",
+    "start": 41,
+    "duration": 8,
+    "text": "Website y documentación ya implementados. Consola y dashboard disponibles. Desktop y React Native son los siguientes pasos del producto."
+  }
+]
