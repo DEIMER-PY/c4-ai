@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { AppleIcon, BotIcon, LinuxIcon, SparklesIcon, WindowsIcon } from "@/components/icons";
 
 interface Message {
@@ -244,7 +245,15 @@ export function C4Chatbot() {
                 <p className="text-[11px] text-ink-soft">Ingeniería de confiabilidad con xAI Grok-4.7</p>
               </div>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
+              <Link
+                href="/chat"
+                title="Abrir a pantalla completa estilo Kimi.ai"
+                className="flex items-center gap-1 rounded-lg border border-violet/30 bg-violet/10 px-2 py-1 text-[11px] font-medium text-cyan hover:bg-violet/20 hover:border-cyan transition-colors"
+              >
+                <span>⛶</span>
+                <span className="hidden sm:inline">Kimi App</span>
+              </Link>
               <button
                 onClick={handleClear}
                 title="Reiniciar chat"

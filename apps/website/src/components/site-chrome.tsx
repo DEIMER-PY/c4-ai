@@ -16,8 +16,7 @@ export function Logo() {
 const NAV = [
   { href: "/#como-funciona", label: "Cómo funciona" },
   { href: "/#video", label: "Video Demo" },
-  { href: "/#evidencia", label: "Evidencia" },
-  { href: "/docs/", label: "Documentación" },
+  { href: "/docs/", label: "Docs Kimi" },
 ];
 
 export function SiteHeader() {
@@ -42,6 +41,14 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <Link
+            href="/chat"
+            className="flex items-center gap-1.5 rounded-full border border-violet/40 bg-violet/10 px-3.5 py-1.5 text-xs font-semibold text-cyan shadow-[0_0_15px_rgba(139,92,246,0.3)] hover:bg-violet/20 hover:border-cyan transition-all"
+          >
+            <span>💬</span>
+            <span>Chat C4</span>
+            <span className="hidden sm:inline rounded bg-cyan/20 px-1 py-0.2 text-[9px] text-cyan">Kimi</span>
+          </Link>
           <a
             href="https://github.com/DEIMER-PY/c4-ai"
             target="_blank"
@@ -91,18 +98,20 @@ export function SiteFooter() {
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-ink">Documentación</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-ink">Experiencia y Chat</span>
+              <Link className="text-xs font-medium text-cyan hover:underline transition-colors" href="/chat">
+                💬 Chat C4 (Kimi.ai Style)
+              </Link>
               <Link className="text-xs text-ink-soft hover:text-cyan transition-colors" href="/docs/">Índice general</Link>
               <Link className="text-xs text-ink-soft hover:text-cyan transition-colors" href="/docs/instalacion/">Instalación rápida</Link>
               <Link className="text-xs text-ink-soft hover:text-cyan transition-colors" href="/docs/arquitectura/">Arquitectura</Link>
-              <Link className="text-xs text-ink-soft hover:text-cyan transition-colors" href="/docs/modelos/">Modelos y costos</Link>
             </div>
             <div className="flex flex-col gap-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-ink">Escala y Seguridad</span>
+              <Link className="text-xs text-ink-soft hover:text-cyan transition-colors" href="/docs/modelos/">Modelos y costos</Link>
               <Link className="text-xs text-ink-soft hover:text-cyan transition-colors" href="/docs/cli/">CLI interactivo</Link>
               <Link className="text-xs text-ink-soft hover:text-cyan transition-colors" href="/docs/batch/">Benchmark 1.000 (S4)</Link>
               <Link className="text-xs text-ink-soft hover:text-cyan transition-colors" href="/docs/observabilidad/">Métricas Prometheus</Link>
-              <Link className="text-xs text-ink-soft hover:text-cyan transition-colors" href="/docs/limites/">Hardening y seguridad</Link>
             </div>
             <div className="flex flex-col gap-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-ink">Comunidad y Enlaces</span>
