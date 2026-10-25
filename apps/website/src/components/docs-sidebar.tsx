@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { DOCS, type DocEntry } from "@/content/docs";
 
-const GROUPS: DocEntry["group"][] = ["Empezar", "Usar C4", "Referencia"];
+const GROUPS: DocEntry["group"][] = ["Empezar", "Usar C4", "Escala y Observabilidad", "Referencia"];
 
 export function DocsSidebar() {
   const pathname = usePathname();

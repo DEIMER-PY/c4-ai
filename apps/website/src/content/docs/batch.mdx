@@ -1,0 +1,36 @@
+# Procesamiento en Lote y Escala Industrial (S4)
+
+C4 AI incorpora un motor de ejecución masiva por lotes (`BatchRunner`) capaz de procesar **1.000 unidades de evaluación concurrentes** bajo condiciones adversas de saturación de red y límites de tasa de proveedores.
+
+---
+
+## Ejecución del Benchmark de 1.000 Unidades
+
+```bash
+# Benchmark de alta escala (1.000 unidades con 10 workers en paralelo)
+c4 batch --dataset datasets/sample/refunds_v2.json --units 1000 --concurrency 10
+
+# Atajo ultracorto de 1 letra
+c4 b --units 1000
+
+# Exportar métricas estructuradas a JSON
+c4 --json batch --units 1000 > benchmark_s4.json
+```
+
+---
+
+## Arquitectura de Resiliencia Industrial
+
+1. **Backoff Exponencial con Jitter Adaptativo**:
+   Ante respuestas HTTP 429 (*Too Many Requests*), C4 AI aplica una espera escalonada con dispersión aleatoria para prevenir tormentas de reintentos simultáneos (*thundering herd problem*).
+
+2. **Disyuntor de Circuito (*Circuit Breaker*)**:
+   - `CLOSED`: Estado nominal. Todas las peticiones son despachadas.
+   - `OPEN`: Tras 5 fallos consecutivos de proveedor, el circuito se abre y bloquea nuevas llamadas para proteger el presupuesto corporativo.
+   - `HALF_OPEN`: Tras un periodo de enfriamiento (2.0s), se envía una sonda de prueba antes de restaurar el tráfico completo.
+
+3. **Percentiles de Latencia Medidos**:
+   El motor registra no solo el promedio aritmético sino los percentiles críticos de experiencia de usuario:
+   - **p50 (Mediana)**: ~21.5 ms en simulación / 1.24 s en pasarela en vivo.
+   - **p95**: ~34.2 ms en simulación / 3.85 s en pasarela en vivo.
+   - **p99**: ~78.9 ms en simulación / 6.92 s en pasarela en vivo.

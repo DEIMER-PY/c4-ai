@@ -1,0 +1,44 @@
+# Arquitectura y Fundamentos del Sistema
+
+C4 AI está diseñado como una plataforma de **Ingeniería de Confiabilidad para Agentes Autónomos** (*Agent Reliability Engineering*). A diferencia de evaluadores puramente estadísticos que toleran degradaciones sutiles, C4 AI opera bajo el principio de **cero regresiones demostrables**.
+
+---
+
+## El Ciclo de Auto-Reparación en 5 Fases
+
+```
+   ┌───────────┐      ┌──────────────┐      ┌─────────────┐
+   │  DETECT   │ ───► │   DIAGNOSE   │ ───► │    PATCH    │
+   └───────────┘      └──────────────┘      └─────────────┘
+                                                   │
+                                                   ▼
+   ┌───────────┐      ┌──────────────┐      ┌─────────────┐
+   │   GATE    │ ◄─── │   COMPARE    │ ◄─── │  EVALUATE   │
+   └───────────┘      └──────────────┘      └─────────────┘
+```
+
+1. **Detect (Detección)**: Intercepta fallos de políticas o contratos en agentes de soporte o tareas complejas, aislando la traza causal del incidente.
+2. **Diagnose (Diagnóstico)**: Utiliza modelos de razonamiento profundo (ej. xAI Grok-4.7) para aislar la causa raíz sin alucinar explicaciones no fundamentadas.
+3. **Patch (Generación de Parche)**: Sintetiza un cambio atómico de prompt o configuración en formato *unified diff*.
+4. **Evaluate (Evaluación Determinista)**: Ejecuta en paralelo el agente de línea base (*baseline*) y el agente candidato sobre el mismo conjunto de datos inmutable.
+5. **Gate (Decisión Determinista)**: Si el candidato supera el caso objetivo, pasa el 100% de controles de seguridad y causa **cero regresiones**, es aceptado (`accepted`). De lo contrario, se rechaza de inmediato (`rejected`).
+
+---
+
+## Las Tres Herramientas Nucleares
+
+- **`trace_reader`**: Análisis forense de trazas y extracción de discrepancias de política.
+- **`patch_writer`**: Formulación de parches sintácticos y semánticos.
+- **`eval_runner`**: Ejecución en lote paralela bajo condiciones idénticas de temperatura.
+
+---
+
+## Cadena de Custodia Criptográfica
+
+Cada evaluación se sella mediante un árbol de Merkle SHA-256 (`IntegrityProof`):
+
+```text
+Merkle Root = SHA256(DatasetHash : BaselineHash : CandidateHash : VerdictHash)
+```
+
+Ningún resultado puede ser alterado en base de datos o en tránsito sin invalidar la firma criptográfica del nodo emisor.

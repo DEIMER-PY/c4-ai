@@ -1,17 +1,17 @@
 <p align="center">
-  <img src="docs/assets/c4-ai-banner.svg" alt="C4 AI — Autonomous Reliability Engineer for AI Agents" width="1200">
+  <img src="docs/assets/c4-logo-modern.svg" alt="C4 AI Modern Logo" width="560">
 </p>
 
 <p align="center">
-  <img src="docs/assets/pixel-c4-logo.svg" alt="C4 AI Pixel Logo" width="480">
+  <img src="docs/assets/c4-hero-mockup.svg" alt="C4 AI Autonomous Reliability Harness — OpenCode Style Execution" width="1120">
 </p>
 
 <p align="center">
+  <a href="https://www.youtube.com/watch?v=DqAuvL8im9M"><img src="https://img.shields.io/badge/YouTube-Video%20Demo%20(120s)-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Video Demo en YouTube"></a>
   <a href="docs/arquitectura/CLI.md"><img src="docs/assets/badges/c4-cli-badge.svg" alt="C4 CLI Badge"></a>
-  <a href="apps/dashboard/README.md"><img src="docs/assets/badges/c4-desktop-badge.svg" alt="C4 Desktop Badge"></a>
+  <a href="apps/desktop/README.md"><img src="docs/assets/badges/c4-desktop-badge.svg" alt="C4 Desktop Badge"></a>
   <a href="apps/website/README.md"><img src="docs/assets/badges/c4-website-badge.svg" alt="C4 Website Badge"></a>
   <a href="apps/website/README.md"><img src="docs/assets/badges/mobile-responsive-badge.svg" alt="C4 Mobile Badge"></a>
-  <a href="https://www.youtube.com/watch?v=DqAuvL8im9M"><img src="https://img.shields.io/badge/YouTube-Video%20Demo%20(120s)-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Video Demo en YouTube"></a>
 </p>
 
 ---

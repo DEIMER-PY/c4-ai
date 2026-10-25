@@ -38,6 +38,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Observabilidad enterprise, sanitización PII, red teaming y hardening](036-enterprise-observability-and-hardening/spec.md)
 - [Streaming SSE en tiempo real y firmas criptográficas](037-sse-streaming-and-crypto-signatures/spec.md)
 - [Consolidación de enlace oficial de YouTube y guía de experiencia](038-official-submission-and-experience-tour/spec.md)
+- [Rediseño visual OpenCode, web Kiro y docs Kimi Code](039-opencode-kiro-kimi-redesign/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
