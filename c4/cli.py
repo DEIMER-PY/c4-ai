@@ -238,6 +238,50 @@ def doctor(ctx: typer.Context, probe: Annotated[bool, typer.Option(help='Realiza
             gateway.close()
 
 
+@app.command('run')
+def run_cmd(ctx: typer.Context,
+            dataset: Annotated[Path, typer.Option(help='Dataset versionado sintético.')] = Path('datasets/sample/refunds.json'),
+            target: Annotated[str, typer.Option()] = 'refund_expired'):
+    """Ejecutar ciclo completo (alias de demo)."""
+    execute(ctx, None, 'demo', dataset, target)
+
+
+@app.command('r', hidden=True)
+def r_cmd(ctx: typer.Context,
+          dataset: Annotated[Path, typer.Option(help='Dataset versionado sintético.')] = Path('datasets/sample/refunds.json'),
+          target: Annotated[str, typer.Option()] = 'refund_expired'):
+    """Atajo: ejecutar ciclo completo."""
+    execute(ctx, None, 'demo', dataset, target)
+
+
+@app.command('d', hidden=True)
+def d_cmd(ctx: typer.Context, probe: Annotated[bool, typer.Option(help='Realiza una llamada mínima por proveedor distinto.')] = False):
+    """Atajo: validar configuración."""
+    doctor(ctx, probe)
+
+
+@app.command('s', hidden=True)
+def s_cmd(ctx: typer.Context):
+    """Atajo: ver resumen de estado y evidencia."""
+    from c4.terminal import summaries
+    rows = summaries(ctx.obj['store'], 5)
+    result = {'latest_sessions': rows, 'target_provider': ctx.obj['target_provider']}
+    emit(ctx, result)
+
+
+@app.command('i', hidden=True)
+def i_cmd(ctx: typer.Context, session_id: Annotated[str, typer.Argument()] = 'last'):
+    """Atajo: consultar reporte de sesión ('last' o ID)."""
+    target_id = session_id
+    if session_id == 'last':
+        from c4.terminal import summaries
+        rows = summaries(ctx.obj['store'], 1)
+        if not rows:
+            fail(ctx, WorkflowError('missing_session', 'No hay sesiones locales guardadas.'))
+        target_id = rows[0]['id']
+    read(ctx, target_id)
+
+
 @app.command()
 def demo(ctx: typer.Context,
          dataset: Annotated[Path, typer.Option(help='Dataset versionado sintético.')] = Path('datasets/sample/refunds.json'),
