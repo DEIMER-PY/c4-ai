@@ -1,0 +1,48 @@
+# Observabilidad, Métricas Prometheus y Streaming SSE
+
+C4 AI implementa los estándares de observabilidad y telemetría de la industria para sistemas de IA basados en agentes (OpenTelemetry GenAI y Prometheus).
+
+---
+
+## Endpoints de Monitoreo
+
+### 1. `/healthz` (Readiness y Liveness)
+Utilizado por Kubernetes Probes y balanceadores de carga para validar la disponibilidad del almacenamiento local, el motor de tarifas y las reglas de sanitización activas.
+
+```bash
+curl http://127.0.0.1:8000/healthz
+```
+
+### 2. `/metrics` (Métricas Prometheus)
+Exporta métricas de producción en formato de texto plano estándar (`text/plain; version=0.0.4`):
+
+- `c4_evaluations_total{status="accepted|rejected|needs_human_review|failed_budget"}`: Contador de veredictos emitidos.
+- `c4_tokens_total{type="all"}`: Conteo acumulado de tokens procesados.
+- `c4_cost_usd_total`: Gasto financiero consolidado en USD.
+- `c4_circuit_breaker_trips`: Activaciones del disyuntor de seguridad.
+
+```bash
+curl http://127.0.0.1:8000/metrics
+```
+
+---
+
+## Streaming en Tiempo Real vía Server-Sent Events (SSE)
+
+Para interfaces interactivas y paneles de control en caliente, el endpoint `/api/v1/runs/{session_id}/stream` emite eventos continuos:
+
+```typescript
+const stream = new EventSource("http://127.0.0.1:8000/api/v1/runs/c4_session_01/stream");
+
+stream.addEventListener("stage", (e) => {
+  console.log("Fase actual:", JSON.parse(e.data).stage);
+});
+
+stream.addEventListener("case_eval", (e) => {
+  console.log("Caso evaluado en caliente:", JSON.parse(e.data));
+});
+
+stream.addEventListener("verdict", (e) => {
+  console.log("Veredicto firmado con HMAC-SHA256:", JSON.parse(e.data));
+});
+```

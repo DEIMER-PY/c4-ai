@@ -1,0 +1,35 @@
+# Modelos Compatibles y Tarifas de Tokens
+
+C4 AI desacopla el modelo analista (que diagnostica y formula parches) del modelo evaluado (*target agent*). Esto permite auditar agentes basados en modelos locales o comerciales sin alterar la lógica de evaluación.
+
+---
+
+## Catálogo de Proveedores
+
+| Proveedor | Modelo | Rol Típico | Tarifa Entrada (1M) | Tarifa Salida (1M) |
+|---|---|---|---|---|
+| **xAI** | `grok-4.7` | Analista de Diagnóstico | $2,00 USD | $10,00 USD |
+| **xAI** | `grok-beta` | Razonamiento Rápido | $5,00 USD | $15,00 USD |
+| **Groq** | `llama-3.3-70b-versatile` | Agente Evaluado | $0,59 USD | $0,79 USD |
+| **Groq** | `qwen/qwen-2.5-coder-32b` | Agente de Código | $0,59 USD | $0,79 USD |
+| **Groq** | `llama-3.1-8b-instant` | Agente Ultraligero | $0,05 USD | $0,08 USD |
+| **DeepSeek** | `deepseek-chat` | Agente Evaluado | $0,14 USD | $0,28 USD |
+| **DeepSeek** | `deepseek-reasoner` | Razonamiento Lógico | $0,55 USD | $2,19 USD |
+| **Ollama** | Modelos locales | Inferencia Privada | **$0,00 USD** | **$0,00 USD** |
+
+---
+
+## Atribución Determinista de Costos (`cost_usd`)
+
+A diferencia de sistemas que reportan costos "desconocidos" o nulos, el módulo `c4.tools.rates` computa el gasto exacto en microdólares por tarea:
+
+```bash
+# Cambiar el proveedor target dinámicamente en CLI
+c4 run --target llama-3.3-70b-versatile --dataset refunds_v2.json
+
+# Dentro del TUI interactivo
+/target groq
+/cost last
+```
+
+Para inferencia local mediante **Ollama**, la plataforma garantiza un costo estrictamente devuelto de `$0.00` USD, permitiendo pruebas masivas desatendidas con presupuesto cero.
