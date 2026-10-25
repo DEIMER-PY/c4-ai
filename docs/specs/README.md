@@ -32,6 +32,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Ciberseguridad, integridad de datos y cumplimiento SaaS](030-enterprise-security-compliance/spec.md)
 - [Simulador interactivo y documentación enterprise](031-interactive-simulator-and-showcase/spec.md)
 - [Experiencia cyberpunk en CLI y README visual enterprise](032-cyber-cli-and-readme-showcase/spec.md)
+- [Empaquetado desktop multiplataforma y capturas visuales Playwright](033-desktop-tauri-playwright/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
