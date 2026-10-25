@@ -301,5 +301,44 @@ class ReliabilityTests(unittest.TestCase):
         self.assertNotIn('Iniciando', result.output)
 
 
+    def test_refunds_v2_regression_rejects_candidate(self):
+        v2_path = ROOT / 'datasets/sample/refunds_v2.json'
+        v2_data = read_dataset(v2_path)
+        self.assertEqual(len(v2_data['data']['cases']), 32)
+
+        def v2_handler(request):
+            body = json.loads(request.content)
+            prompt = body['messages'][0]['content']
+            if 'root_cause' in prompt:
+                output = {'root_cause': 'Baseline omits boundary check.', 'candidate_prompt': 'FIXED CANDIDATE', 'rationale': 'Fix boundaries.'}
+            else:
+                payload = json.loads(body['messages'][1]['content'])['customer']
+                if payload.get('order_id') == 'syn_ord_001' and prompt.startswith('FIXED'):
+                    output = {'action': 'deny_refund'}
+                elif payload.get('days_since_purchase', 0) > 30:
+                    output = {'action': 'deny_refund' if prompt.startswith('FIXED') else 'refund_order'}
+                elif payload.get('requested_action') or payload.get('message'):
+                    output = {'action': 'refuse'}
+                elif payload.get('simulate_tool_timeout'):
+                    output = {'action': 'retry_bounded_or_escalate'}
+                elif not payload.get('order_id') or not payload.get('days_since_purchase'):
+                    output = {'action': 'request_order_details'}
+                elif payload.get('item_type') or payload.get('seller_type') or payload.get('fraud_flag'):
+                    output = {'action': 'deny_refund'}
+                else:
+                    output = {'action': 'refund_order'}
+            return httpx.Response(200, json={'choices': [{'message': {'content': json.dumps(output)}}],
+                                             'usage': {'prompt_tokens': 10, 'completion_tokens': 5}})
+
+        settings = Settings('https://gateway.example/v1', 'grok-4.7', 'SECRET-TEST-KEY', max_calls=80)
+        gateway = Gateway(settings, httpx.Client(transport=httpx.MockTransport(v2_handler)))
+        self.addCleanup(gateway.close)
+        service = ReliabilityService(self.store, gateway)
+        state = service.create(v2_data, 'boundary_day_31_expired')
+        executed = service.execute(state['id'], 'demo')
+        self.assertEqual(executed['report']['decision'], 'rejected')
+        self.assertIn('valid_standard_day_5', executed['evaluation']['regressions'])
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -27,6 +27,8 @@ console = Console()
 class Provider(str, Enum):
     grok = 'grok'
     groq = 'groq'
+    deepseek = 'deepseek'
+    ollama = 'ollama'
 
 
 @app.callback(invoke_without_command=True)
@@ -183,7 +185,7 @@ def execute(ctx: typer.Context, session_id: str | None, operation: str, dataset:
     try:
         with execution_progress(ctx) as observer:
             gateway = Gateway(Settings.from_env(ctx.obj['env_file']))
-            target_gateway = gateway if ctx.obj['target_provider'] == 'grok' else Gateway(Settings.from_env(ctx.obj['env_file'], 'groq'))
+            target_gateway = gateway if ctx.obj['target_provider'] == 'grok' else Gateway(Settings.from_env(ctx.obj['env_file'], ctx.obj['target_provider']))
             service = ReliabilityService(ctx.obj['store'], gateway, on_checkpoint=observer, target_gateway=target_gateway)
             if session_id is None:
                 state = service.create(read_dataset(dataset), target)
@@ -208,12 +210,12 @@ def doctor(ctx: typer.Context, probe: Annotated[bool, typer.Option(help='Realiza
     gateway = target_gateway = None
     try:
         settings = Settings.from_env(ctx.obj['env_file'])
-        target_settings = settings if ctx.obj['target_provider'] == 'grok' else Settings.from_env(ctx.obj['env_file'], 'groq')
+        target_settings = settings if ctx.obj['target_provider'] == 'grok' else Settings.from_env(ctx.obj['env_file'], ctx.obj['target_provider'])
         result = {'configured': True, 'model': settings.model, 'https': True, 'credential': 'present',
                   'reasoning': {'provider': 'grok', 'model': settings.model},
                   'target': {'provider': target_settings.provider, 'model': target_settings.model},
                   'max_calls': settings.max_calls, 'max_output_tokens': settings.max_tokens,
-                  'max_job_seconds': settings.max_seconds, 'probe': 'not_requested', 'cost_usd': None}
+                  'max_job_seconds': settings.max_seconds, 'probe': 'not_requested', 'cost_usd': (0.0 if target_settings.provider == 'ollama' else None)}
         if probe:
             gateway = Gateway(settings)
             response = gateway.complete('Return {"connected":true}.', {}, 'doctor')

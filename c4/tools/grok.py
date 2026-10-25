@@ -30,11 +30,28 @@ class Settings:
     @classmethod
     def from_env(cls, env_file: str = '.env', provider: str = 'grok') -> 'Settings':
         load_dotenv(env_file, override=False)
-        if provider not in {'grok', 'groq'}:
-            raise WorkflowError('invalid_provider', 'Proveedor permitido: grok o groq.')
-        base = os.environ.get('C4_GROK_BASE_URL', '') if provider == 'grok' else os.environ.get('C4_GROQ_BASE_URL', 'https://api.groq.com/openai/v1')
-        key = os.environ.get('C4_GROK_API_KEY', '') if provider == 'grok' else os.environ.get('GROQ_API_KEY', '')
-        model = os.environ.get('C4_GROK_MODEL' if provider == 'grok' else 'C4_GROQ_MODEL', '')
+        if provider not in {'grok', 'groq', 'deepseek', 'ollama'}:
+            raise WorkflowError('invalid_provider', 'Proveedor permitido: grok, groq, deepseek u ollama.')
+        if provider == 'grok':
+            base = os.environ.get('C4_GROK_BASE_URL', '')
+            key = os.environ.get('C4_GROK_API_KEY', '')
+            model = os.environ.get('C4_GROK_MODEL', '')
+        elif provider == 'groq':
+            base = os.environ.get('C4_GROQ_BASE_URL', 'https://api.groq.com/openai/v1')
+            key = os.environ.get('GROQ_API_KEY', '')
+            model = os.environ.get('C4_GROQ_MODEL', '')
+        elif provider == 'deepseek':
+            base = os.environ.get('C4_DEEPSEEK_BASE_URL', 'https://api.deepseek.com/v1')
+            key = os.environ.get('DEEPSEEK_API_KEY', '')
+            model = os.environ.get('C4_DEEPSEEK_MODEL', 'deepseek-chat')
+        else:
+            base = os.environ.get('C4_OLLAMA_BASE_URL', 'http://127.0.0.1:11434/v1')
+            key = os.environ.get('OLLAMA_API_KEY', 'ollama') or 'ollama'
+            model = os.environ.get('C4_OLLAMA_MODEL', 'qwen2.5:7b')
+
+
+
+
         try:
             settings = cls(
                 base_url=base.rstrip('/'), model=model, api_key=key, provider=provider,
@@ -49,12 +66,19 @@ class Settings:
         return settings
 
     def validate(self) -> None:
-        if self.provider not in {'grok', 'groq'}:
-            raise WorkflowError('invalid_provider', 'Proveedor permitido: grok o groq.')
+        if self.provider not in {'grok', 'groq', 'deepseek', 'ollama'}:
+            raise WorkflowError('invalid_provider', 'Proveedor permitido: grok, groq, deepseek u ollama.')
+
         parsed = urlparse(self.base_url)
-        if (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password
+        if self.provider == 'ollama':
+            allowed_hosts = {'localhost', '127.0.0.1', 'host.docker.internal'}
+            if (parsed.scheme not in {'http', 'https'} or parsed.hostname not in allowed_hosts
+                    or parsed.username or parsed.password or parsed.query or parsed.fragment):
+                raise WorkflowError('invalid_config', 'Configura una URL HTTP/HTTPS local (localhost o 127.0.0.1) sin credenciales.')
+        else:
+            if (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password
                 or parsed.query or parsed.fragment):
-            raise WorkflowError('invalid_config', 'Configura una URL HTTPS sin credenciales, query ni fragmento.')
+                raise WorkflowError('invalid_config', 'Configura una URL HTTPS sin credenciales, query ni fragmento.')
         if not self.api_key.strip() or not self.model.strip():
             raise WorkflowError('missing_credentials', 'Configura clave y modelo localmente en .env.')
         if not (0 < self.timeout <= 120 and 0 < self.max_seconds <= 3600
@@ -108,8 +132,8 @@ class Gateway:
 
     def output_mode(self, schema: bool = False) -> str:
         # Official Groq supported-model list verified 2026-10-17; unknown models retain local validation.
-        strict_models = {'qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'meta-models/muse-spark-open'}
-        if self.settings.provider == 'groq':
+        strict_models = {'qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'meta-models/muse-spark-open', 'llama-3.3-70b-versatile'}
+        if self.settings.provider in {'groq', 'deepseek', 'ollama'}:
             return 'json_schema' if schema and self.settings.model in strict_models else 'json_object'
         return 'prompt_json'
 
