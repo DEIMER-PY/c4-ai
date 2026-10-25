@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 
-import { C4Chatbot } from "@/components/c4-chatbot";
 import { MOTION_BOOTSTRAP, RevealOnScroll } from "@/components/reveal-on-scroll";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 
@@ -34,7 +33,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <SiteFooter />
-        <C4Chatbot />
         <RevealOnScroll />
       </body>
     </html>
