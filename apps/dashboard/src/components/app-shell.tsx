@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Activity, ArrowUpRight, ExternalLink, Search, ShieldCheck, Terminal } from "lucide-react";
+import { Activity, ExternalLink, Search, ShieldCheck, Terminal } from "lucide-react";
 
 import { DemoBadge } from "@/components/demo-badge";
 import { NavLinks } from "@/components/nav-links";
