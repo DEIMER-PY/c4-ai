@@ -137,7 +137,7 @@ class ReliabilityService:
                 status='succeeded', input_payload=case['input'], output_payload=output,
                 trace=[{'tool': 'test_action_prediction', 'case_id': case['id'], 'output': output}],
                 latency_ms=record['latency_ms'], usage=Usage(input_tokens=record['input_tokens'],
-                output_tokens=record['output_tokens'], cost_usd=None), created_at=now()))
+                output_tokens=record['output_tokens'], cost_usd=record.get('cost_usd')), created_at=now()))
         state['inspection'] = trace_reader(state['run'], case['expected'])
         if not state['inspection']['mismatch']:
             raise WorkflowError('no_incident', 'El baseline ya cumple el caso objetivo; no se fabrica una mejora.')

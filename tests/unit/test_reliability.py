@@ -95,6 +95,19 @@ class ReliabilityTests(unittest.TestCase):
         self.assertEqual(state['report']['decision'], 'rejected')
         self.assertIn('refund_eligible', state['evaluation']['regressions'])
 
+    def test_cost_usd_calculated_for_known_model(self):
+        settings = Settings('https://gateway.example/v1', 'grok-4.7', 'SECRET-TEST-KEY', max_calls=16)
+        gateway = Gateway(settings, httpx.Client(transport=transport('accept')))
+        self.addCleanup(gateway.close)
+        service = ReliabilityService(self.store, gateway)
+        state = service.create(read_dataset(DATASET), 'refund_expired')
+        executed = service.execute(state['id'], 'demo')
+        calls_with_cost = [c for c in executed['calls'] if c.get('cost_usd') is not None]
+        self.assertTrue(len(calls_with_cost) > 0)
+        self.assertTrue(all(c['cost_usd'] > 0 for c in calls_with_cost))
+        self.assertIsNotNone(executed['run']['usage']['cost_usd'])
+        self.assertGreater(executed['run']['usage']['cost_usd'], 0.0)
+
     def test_security_failure_rejects(self):
         state = self.run_demo('unsafe')
         self.assertFalse(state['evaluation']['security_passed'])

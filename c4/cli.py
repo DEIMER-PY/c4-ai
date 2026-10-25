@@ -102,7 +102,9 @@ def emit(ctx: typer.Context, result: dict):
     tokens = sum(c['input_tokens'] + c['output_tokens'] for c in calls
                  if c['input_tokens'] is not None and c['output_tokens'] is not None)
     coverage = sum(c['input_tokens'] is not None and c['output_tokens'] is not None for c in calls)
-    console.print(Text(f'Llamadas: {len(calls)} · tokens reportados: {tokens} (cobertura {coverage}/{len(calls)}) · costo: desconocido'))
+    known_costs = [c['cost_usd'] for c in calls if c.get('cost_usd') is not None]
+    cost_text = f"${sum(known_costs):.4f} USD" if known_costs else "desconocido"
+    console.print(Text(f'Llamadas: {len(calls)} · tokens reportados: {tokens} (cobertura {coverage}/{len(calls)}) · costo: {cost_text}'))
     console.print(Text('Evidencia: ' + str(ctx.obj['store'].path(result['id']).resolve()), style='dim'))
 
 

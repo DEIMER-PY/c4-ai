@@ -152,6 +152,8 @@ class Gateway:
             for source, dest in [('prompt_tokens', 'input_tokens'), ('completion_tokens', 'output_tokens')]:
                 value = usage.get(source)
                 record[dest] = value if type(value) is int and value >= 0 else None
+            from c4.tools.rates import calculate_cost_usd
+            record['cost_usd'] = calculate_cost_usd(self.settings.model, record['input_tokens'], record['output_tokens'], self.settings.provider)
             content = body['choices'][0]['message']['content']
             if not isinstance(content, str) or len(content) > 100_000:
                 raise ValueError('invalid content')
