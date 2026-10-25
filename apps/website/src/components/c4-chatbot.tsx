@@ -140,6 +140,17 @@ He analizado tu consulta sobre **"${input}"**. C4 AI es el sistema de ingenierí
 Escribe cualquiera de estos términos o haz una pregunta específica para obtener el comando o explicación exacta.`;
 }
 
+let msgCounter = 0;
+function makeMessage(sender: "user" | "assistant", content: string): Message {
+  msgCounter += 1;
+  return {
+    id: `msg-${msgCounter}`,
+    sender,
+    content,
+    timestamp: "Ahora",
+  };
+}
+
 export function C4Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -165,12 +176,7 @@ export function C4Chatbot() {
     const text = (textToSend ?? inputValue).trim();
     if (!text) return;
 
-    const userMessage: Message = {
-      id: `user-${Date.now()}`,
-      sender: "user",
-      content: text,
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    };
+    const userMessage = makeMessage("user", text);
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
@@ -178,12 +184,7 @@ export function C4Chatbot() {
 
     setTimeout(() => {
       const responseContent = getKnowledgeResponse(text);
-      const assistantMessage: Message = {
-        id: `assistant-${Date.now()}`,
-        sender: "assistant",
-        content: responseContent,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      };
+      const assistantMessage = makeMessage("assistant", responseContent);
       setMessages((prev) => [...prev, assistantMessage]);
       setIsTyping(false);
     }, 450);
