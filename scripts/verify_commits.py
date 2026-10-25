@@ -12,7 +12,7 @@ mode.add_argument("--message")
 mode.add_argument("--base")
 args = parser.parse_args()
 if args.base:
-    subjects = subprocess.check_output(["git", "log", "--format=%s", args.base + "..HEAD"], encoding="utf-8").splitlines()
+    subjects = subprocess.check_output(["git", "log", "--no-merges", "--format=%s", args.base + "..HEAD"], encoding="utf-8").splitlines()
 elif args.message_file:
     lines = Path(args.message_file).read_text(encoding="utf-8").splitlines()
     subjects = [lines[0] if lines else ""]
