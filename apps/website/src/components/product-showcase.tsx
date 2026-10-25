@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
 
+import { InteractiveSimulator } from "@/components/interactive-simulator";
 import { Tabs } from "@/components/tabs";
 import { TraceBackdrop } from "@/components/trace-backdrop";
 import { REFERENCE_SESSION as S } from "@/content/evidence";
@@ -73,6 +74,18 @@ export function ProductShowcase() {
           label="Vista del producto"
           panelClassName="mx-auto max-w-5xl outline-none"
           items={[
+            {
+              id: "simulator",
+              label: "Simulador en vivo",
+              content: (
+                <Window title="C4 AI / simulador determinista interactivo">
+                  <InteractiveSimulator />
+                  <Provenance>
+                    Simulación interactiva basada en trazas reales de C4 AI. Explora las 5 etapas del ciclo sin necesidad de instalación.
+                  </Provenance>
+                </Window>
+              ),
+            },
             {
               id: "terminal",
               label: "Terminal",
