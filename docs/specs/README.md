@@ -29,6 +29,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Website de producto y documentación](024-website/spec.md)
 - [Escalado de evaluación multimodelo y datasets](028-multimodel-scaling/spec.md)
 - [Ergonomía de CLI e instalación universal](029-cli-ergonomics-universal-install/spec.md)
+- [Ciberseguridad, integridad de datos y cumplimiento SaaS](030-enterprise-security-compliance/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
