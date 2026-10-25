@@ -7,16 +7,15 @@ from rich.text import Text
 
 
 ASCII_NEURON = r"""
-       \  . | .  /          .
-   .---.\   |   /.---.    ./
- --..... \ \|/ / ....---./
-   `----. \ * / .----'  /
-  ---=== ( C4 ) ===----'
-   .----' / * \ `----.
-  '---.. / /|\ \ ..---'
-       /  ' | '  \
-            `==.____
-                   `====>
+        .---.  .---.           +----------------------+
+       /     \/     \          | [C4-AI NEURAL CORE]  |
+   .--'   *      *   '--.      | STATUS: ONLINE       |
+  /    \            /    \     | GATE: DETERMINISTIC  |
+ |  === ( C4 ) ===  |          | AUDIT: SHA-256 HMAC  |
+  \    /            \    /     +----------------------+
+   '--.   *      *   .--'          \\
+       \     /\     /               \\====>> [GATEWAY]
+        '---'  '---'                 \\
 """.strip('\n')
 
 
@@ -50,7 +49,7 @@ def _cells(width: int, height: int) -> tuple[tuple[str, str], ...]:
             t = n/18
             a = angle+bend*t
             points.append((x+cos(a)*length*t, y+sin(a)*length*t))
-        stroke(points, 0.85 if depth else 0.5, thickness=depth >= 2)
+        stroke(points, 0.88 if depth else 0.55, thickness=depth >= 2)
         if depth:
             ex, ey = points[-1]
             for offset in (-0.5, 0.42):
@@ -59,10 +58,10 @@ def _cells(width: int, height: int) -> tuple[tuple[str, str], ...]:
                 mx, my = points[11]
                 branch(mx, my, angle-0.85, length*0.48, depth-1)
         else:
-            # Sparse terminal boutons; no random state outside this renderer.
+            # Sparse terminal boutons with electric energy pulses
             ex, ey = points[-1]
             for _ in range(4):
-                point(ex+rng.uniform(-2, 2), ey+rng.uniform(-2, 2), 0.3)
+                point(ex+rng.uniform(-2, 2), ey+rng.uniform(-2, 2), 0.35)
 
     cx, cy = 40, 48
     for n in range(11):
@@ -71,23 +70,23 @@ def _cells(width: int, height: int) -> tuple[tuple[str, str], ...]:
             continue
         branch(cx+cos(angle)*5, cy+sin(angle)*6, angle, rng.uniform(17, 26), 2)
 
-    # Filamented soma and bright nucleus.
+    # Filamented soma and glowing cybernetic nucleus.
     for y in range(34, 63):
         for x in range(26, 55):
             r = hypot((x-cx)/13, (y-cy)/14)
-            if r < 1 and rng.random() < 0.75*(1-r)+0.18:
-                point(x, y, max(0.4, 1-r*0.3))
+            if r < 1 and rng.random() < 0.78*(1-r)+0.20:
+                point(x, y, max(0.45, 1-r*0.28))
     for phase in range(7):
         curve = []
         for n in range(90):
             a = n*0.1+phase
             r = 2+n*0.1
             curve.append((cx+cos(a)*r, cy+sin(a)*r))
-        stroke(curve, 0.65)
+        stroke(curve, 0.72)
     for y in range(44, 53):
         for x in range(36, 45):
-            if hypot(x-cx, y-cy) < 4.4:
-                point(x, y, 1)
+            if hypot(x-cx, y-cy) < 4.5:
+                point(x, y, 1.0)
 
     def axon(t):
         return (cx+57*t, cy+62*t+7*sin(t*pi))
@@ -100,7 +99,7 @@ def _cells(width: int, height: int) -> tuple[tuple[str, str], ...]:
         # Myelin outlines wrap diagonally around the continuous axon.
         ring = [(x+4.4*cos(a)+1.5*sin(a), y-2*cos(a)+3.2*sin(a))
                 for a in (k*pi/24 for k in range(49))]
-        stroke(ring, 0.9)
+        stroke(ring, 0.95)
 
     dots = ((0, 0, 1), (0, 1, 2), (0, 2, 4), (1, 0, 8),
             (1, 1, 16), (1, 2, 32), (0, 3, 64), (1, 3, 128))
@@ -113,14 +112,14 @@ def _cells(width: int, height: int) -> tuple[tuple[str, str], ...]:
                 if value:
                     mask |= bit
                     light = max(light, value)
-            # Blend magenta through violet to cyan with a warm luminous nucleus.
+            # High-voltage neon blend: Electric Magenta through Cyber Violet to Quantum Cyan.
             x, y = col*2/sx, row*4/sy
             mix = max(0, min(1, (x-26)/67))
             nucleus = exp(-((x-cx)**2+(y-cy)**2)/22)
-            rgb = [int((a+(b-a)*mix)*(0.55+light*0.45))
-                   for a, b in zip((245, 65, 207), (35, 220, 255))]
-            rgb = [int(c+(warm-c)*nucleus) for c, warm in zip(rgb, (255, 221, 165))]
-            color = '#'+''.join(f'{c:02x}' for c in rgb)
+            rgb = [int((a+(b-a)*mix)*(0.58+light*0.42))
+                   for a, b in zip((255, 45, 175), (20, 235, 255))]
+            rgb = [int(c+(warm-c)*nucleus) for c, warm in zip(rgb, (255, 238, 170))]
+            color = '#'+''.join(f'{min(255, max(0, c)):02x}' for c in rgb)
             result.append((chr(0x2800+mask) if mask else ' ', color))
         result.append(('\n', ''))
     return tuple(result)
