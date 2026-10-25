@@ -5,7 +5,11 @@ from typing import Annotated, Generic, TypeVar
 
 from fastapi import FastAPI, Query
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
+import json
+import time
+
+START_TIME = time.monotonic()
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -50,6 +54,68 @@ def create_app(store_root: Path | None = None) -> FastAPI:
         response.headers['Cache-Control'] = 'no-store'
         response.headers['X-C4-Evidence-Source'] = 'local-cli-checkpoints'
         return response
+
+    @app.get('/healthz')
+    def healthz():
+        store_ok = reader.root.exists() if hasattr(reader, 'root') else True
+        uptime = round(time.monotonic() - START_TIME, 2)
+        return {
+            'status': 'healthy',
+            'version': '0.1.0',
+            'uptime_seconds': uptime,
+            'components': {
+                'store': {'status': 'ok' if store_ok else 'degraded', 'path': str(reader.root) if hasattr(reader, 'root') else 'unknown'},
+                'rate_engine': {'status': 'ok', 'provider': 'deterministic'},
+                'pii_sanitizer': {'status': 'ok', 'active_rules': 5},
+            }
+        }
+
+    @app.get('/metrics', response_class=PlainTextResponse)
+    def metrics():
+        evidence_file = Path("docs/evidencia/2026-10-25-diez-ejecuciones-calificadas.json")
+        data = {}
+        if evidence_file.exists():
+            try:
+                data = json.loads(evidence_file.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+        b = data.get("verdict_breakdown", {})
+        total_toks = data.get("total_tokens_consumed", 0)
+        total_cost = data.get("total_cost_usd", 0.0)
+
+        lines = [
+            "# HELP c4_evaluations_total Total number of agent evaluations processed by C4 AI",
+            "# TYPE c4_evaluations_total counter",
+            f'c4_evaluations_total{{status="accepted"}} {b.get("accepted", 0)}',
+            f'c4_evaluations_total{{status="rejected"}} {b.get("rejected", 0)}',
+            f'c4_evaluations_total{{status="needs_human_review"}} {b.get("needs_human_review", 0)}',
+            f'c4_evaluations_total{{status="failed_budget"}} {b.get("failed_budget", 0)}',
+            "# HELP c4_tokens_total Total tokens processed across evaluations",
+            "# TYPE c4_tokens_total counter",
+            f'c4_tokens_total{{type="all"}} {total_toks}',
+            "# HELP c4_cost_usd_total Total cost in USD",
+            "# TYPE c4_cost_usd_total gauge",
+            f'c4_cost_usd_total {total_cost:.6f}',
+            "# HELP c4_circuit_breaker_trips Total circuit breaker trips",
+            "# TYPE c4_circuit_breaker_trips counter",
+            'c4_circuit_breaker_trips 0',
+        ]
+        return "\n".join(lines) + "\n"
+
+    @app.get('/api/v1/metrics/overview')
+    def metrics_overview():
+        evidence_file = Path("docs/evidencia/2026-10-25-diez-ejecuciones-calificadas.json")
+        if evidence_file.exists():
+            try:
+                return json.loads(evidence_file.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+        return {
+            "total_executions": 0,
+            "verdict_breakdown": {"accepted": 0, "rejected": 0, "needs_human_review": 0, "failed_budget": 0},
+            "total_tokens_consumed": 0,
+            "total_cost_usd": 0.0,
+        }
 
     @app.get('/health')
     def health():

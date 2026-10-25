@@ -35,6 +35,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Empaquetado desktop multiplataforma y capturas visuales Playwright](033-desktop-tauri-playwright/spec.md)
 - [Hitos S2 y S3: diez ejecuciones calificadas y reportes técnicos](034-s2-s3-milestones-and-evidence/spec.md)
 - [Hito S4: escala de 1.000 unidades, resiliencia y batch runner](035-s4-scale-and-resilience/spec.md)
+- [Observabilidad enterprise, sanitización PII, red teaming y hardening](036-enterprise-observability-and-hardening/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)

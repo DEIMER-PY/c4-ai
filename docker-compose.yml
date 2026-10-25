@@ -1,0 +1,62 @@
+services:
+  c4-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: c4-api
+    ports:
+      - "8000:8000"
+    environment:
+      - C4_STORE=/app/artifacts/runs
+      - C4_DATA_MODE=api
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./artifacts/runs:/app/artifacts/runs
+      - ./datasets:/app/datasets:ro
+      - ./docs/evidencia:/app/docs/evidencia:ro
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://127.0.0.1:8000/healthz\").read()' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - c4-network
+
+  c4-dashboard:
+    image: node:20-alpine
+    container_name: c4-dashboard
+    working_dir: /app
+    volumes:
+      - ./apps/dashboard:/app
+    environment:
+      - NODE_ENV=development
+      - C4_DATA_MODE=api
+      - C4_API_URL=http://c4-api:8000
+    ports:
+      - "3001:3000"
+    command: sh -c "corepack enable && pnpm install && pnpm dev --port 3000 --hostname 0.0.0.0"
+    depends_on:
+      c4-api:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - c4-network
+
+  c4-website:
+    image: node:20-alpine
+    container_name: c4-website
+    working_dir: /app
+    volumes:
+      - ./apps/website:/app
+    ports:
+      - "4321:4321"
+    command: sh -c "corepack enable && pnpm install && pnpm dev --host 0.0.0.0"
+    restart: unless-stopped
+    networks:
+      - c4-network
+
+networks:
+  c4-network:
+    driver: bridge
