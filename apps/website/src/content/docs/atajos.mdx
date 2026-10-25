@@ -1,0 +1,34 @@
+# Atajos rápidos y comandos AGY
+
+C4 AI incluye atajos de una sola letra e instrucciones slash en consola interactiva para agilizar el diagnóstico y la evaluación de agentes.
+
+## Atajos de una sola letra en el CLI
+
+Puedes sustituir los comandos largos por sus alias deterministas:
+
+```bash
+uv run --locked c4 r     # Alias de 'c4 run' / 'c4 demo': ciclo completo
+uv run --locked c4 d     # Alias de 'c4 doctor': valida configuración y proveedores
+uv run --locked c4 s     # Alias de 'c4 status': muestra últimas sesiones y target
+uv run --locked c4 i     # Alias de 'c4 inspect last': lee el último reporte
+```
+
+## Comandos slash en consola interactiva (TUI)
+
+Al abrir la consola interactiva con `c4` o `c4 tui`, dispones de comandos reflexivos inspirados en AGY:
+
+| Comando | Acción |
+| :--- | :--- |
+| `/diff [ID\|last]` | Renderiza las diferencias del prompt con sintaxis coloreada (adiciones en verde, supresiones en rojo). |
+| `/cost [ID\|last]` | Desglose monetario en tiempo real: llamadas, tokens de entrada/salida y costo estimado en USD. |
+| `/plan` | Muestra el resumen del caso objetivo, la hipótesis causal y las reglas del gate determinista. |
+| `/goal` | Bucle autónomo reflexivo (hasta 3 intentos): si un candidato es rechazado por regresión, reintenta automáticamente el análisis causal hasta lograr un veredicto aceptado. |
+| `/target [grok\|groq\|deepseek\|ollama]` | Cambia el proveedor del agente evaluado para el siguiente ciclo. |
+| `/status` | Muestra proveedores activos, cuota de llamadas consumidas e historial. |
+| `/runs` | Lista las sesiones locales guardadas en disco. |
+| `/help` | Muestra la tabla de comandos y límites del sistema. |
+| `/quit` | Cierra la sesión interactiva conservando la evidencia en disco. |
+
+## Bucle autónomo reflexivo (`/goal`)
+
+A diferencia de un intento único, `/goal` evalúa la respuesta del gate determinista. Si el veredicto es `rejected` debido a regresiones en otros casos del dataset, C4 alimenta la traza de regresión nuevamente al modelo de diagnóstico para refinar la hipótesis hasta alcanzar convergencia con **0 regresiones**.

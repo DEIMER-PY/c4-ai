@@ -1,0 +1,39 @@
+# Ciberseguridad y gobernanza
+
+C4 AI aplica estándares de seguridad, confidencialidad e integridad criptográfica en cada fase del ciclo de confiabilidad.
+
+## Mitigación de OWASP LLM Top 10
+
+| Control OWASP | Mitigación Técnica en C4 AI |
+| :--- | :--- |
+| **LLM01 (Prompt Injection)** | Separación estricta de contexto de sistema y datos; inclusión de casos de inyección en datasets obligatorios. |
+| **LLM02 (Insecure Output)** | Contratos tipados Pydantic V2 (`extra="forbid"`); prohibición de ejecución de código o comandos shell. |
+| **LLM03 (Data Poisoning)** | Cero reentrenamiento; datasets de prueba inmutables sellados con hash SHA-256. |
+| **LLM04 (Model DoS)** | Presupuestos de tokens por turno (máximo 16 llamadas por sesión) y límites de tiempo de espera (`timeout=60s`). |
+| **LLM05 (Supply Chain)** | Dependencias completamente bloqueadas con `uv.lock` y `pnpm-lock.yaml`. |
+| **LLM06 (Sensitive Disclosure)** | `PrivateHistory`: las claves API nunca se guardan en el historial del CLI ni se imprimen en reportes. |
+| **LLM07 (Insecure Plugins)** | Herramientas de ciclo cerrado tipadas; adaptadores locales (Ollama) restringidos exclusivamente a loopback local (`localhost`). |
+| **LLM08 (Excessive Agency)** | El agente propone cambios declarativos; únicamente el Gate determinista aprueba o rechaza. |
+| **LLM09 (Overreliance)** | Verificación empírica obligatoria: ningún prompt es aceptado sin superar el dataset con 0 regresiones. |
+| **LLM10 (Model Theft)** | Gateways perimetrales con cifrado TLS 1.3 y autenticación estricta por token. |
+
+## Conformidad con la Ley de IA de la UE (EU AI Act)
+
+Para despliegues de misión crítica en sistemas de alto riesgo (Reglamento UE 2024/1689):
+
+- **Artículo 9 (Gestión de Riesgos)**: Monitoreo continuo de fallos de política y regresiones.
+- **Artículo 10 (Gobernanza de Datos)**: Datasets sintéticos versionados sin sesgos discriminatorios.
+- **Artículo 12 (Registro Automático)**: Auditoría cronológica de cada llamada, consumo de tokens y diffs.
+- **Artículo 14 (Supervisión Humana)**: Ante incertidumbre o ausencia de mejora, el sistema emite el veredicto `needs_human_review`, impidiendo la promoción desatendida.
+- **Artículo 15 (Ciberseguridad)**: Gate determinista con 100% de controles obligatorios de seguridad aprobados.
+
+## Cadena de custodia criptográfica
+
+Cada evaluación genera un comprobante de integridad inmutable combinando:
+
+1. Hash SHA-256 del dataset evaluado.
+2. Hash SHA-256 del prompt original de línea base.
+3. Hash SHA-256 del prompt candidato propuesto.
+4. Hash SHA-256 del veredicto y matriz de casos.
+
+La raíz de Merkle resultante garantiza que nadie pueda alterar los resultados ni repudiar el veredicto con posterioridad.
