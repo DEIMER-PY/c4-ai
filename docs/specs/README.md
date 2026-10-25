@@ -39,6 +39,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Streaming SSE en tiempo real y firmas criptográficas](037-sse-streaming-and-crypto-signatures/spec.md)
 - [Consolidación de enlace oficial de YouTube y guía de experiencia](038-official-submission-and-experience-tour/spec.md)
 - [Rediseño visual OpenCode, web Kiro y docs Kimi Code](039-opencode-kiro-kimi-redesign/spec.md)
+- [Dark theme C4, video YouTube, chatbot ChatGPT-style y dashboard](040-dark-theme-video-dashboard-chatbot/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)

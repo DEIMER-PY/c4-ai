@@ -1,20 +1,20 @@
 @import "tailwindcss";
 
-/* Tokens del sitio (spec 024). Claro y sobrio como las referencias; el producto se muestra en ventanas oscuras. */
+/* Tokens de diseno C4 AI — Dark Mode nativo (#070b14) */
 :root {
-  --paper: #fafafc;
-  --paper-raised: #ffffff;
-  --ink: #1d1b26;
-  --ink-soft: #5b586a;
-  --rule: #e3e1eb;
-  --violet: #6b46f5;
-  --violet-deep: #5432d8;
-  --cyan: #1ba6b8;
-  --pass: #1e7f55;
-  --fail: #b4362f;
-  --window: #16141e;
-  --window-ink: #e9e7f2;
-  --window-soft: #9a96ad;
+  --paper: #070b14;
+  --paper-raised: #0d1322;
+  --ink: #f8fafc;
+  --ink-soft: #94a3b8;
+  --rule: #1e293b;
+  --violet: #8b5cf6;
+  --violet-deep: #7c3aed;
+  --cyan: #06b6d4;
+  --pass: #10b981;
+  --fail: #f43f5e;
+  --window: #030712;
+  --window-ink: #f8fafc;
+  --window-soft: #64748b;
 }
 
 @theme inline {
@@ -56,8 +56,21 @@ body {
 /* ---- Movimiento (spec 024): página de marketing, vista ocasional; transform y opacity únicamente. ----
    Lo ligado al scroll usa CSS scroll-driven animations (fuera del hilo principal); donde no hay soporte,
    la página queda estática y completa. Todo se desactiva con prefers-reduced-motion. */
+/* Tokens de diseno C4 AI — Dark Mode nativo (#070b14) */
 :root {
-  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --paper: #070b14;
+  --paper-raised: #0d1322;
+  --ink: #f8fafc;
+  --ink-soft: #94a3b8;
+  --rule: #1e293b;
+  --violet: #8b5cf6;
+  --violet-deep: #7c3aed;
+  --cyan: #06b6d4;
+  --pass: #10b981;
+  --fail: #f43f5e;
+  --window: #030712;
+  --window-ink: #f8fafc;
+  --window-soft: #64748b;
 }
 
 /* 1. Entrada única del hero al cargar: secuencia escalonada. */
