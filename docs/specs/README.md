@@ -28,6 +28,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Ampliación del video de Santiago](027-santiago-video-extension/spec.md)
 - [Website de producto y documentación](024-website/spec.md)
 - [Escalado de evaluación multimodelo y datasets](028-multimodel-scaling/spec.md)
+- [Ergonomía de CLI e instalación universal](029-cli-ergonomics-universal-install/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)

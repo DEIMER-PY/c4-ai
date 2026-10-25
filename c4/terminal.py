@@ -34,6 +34,10 @@ COMMANDS = {
     '/status': 'Ver proveedores y presupuesto de chat',
     '/run': 'Ejecutar el ciclo completo (alias de /demo)',
     '/inspect ID|last': 'Consultar reporte (alias de /report)',
+    '/diff [ID|last]': 'Ver diferencias de prompt con colores',
+    '/cost [ID|last]': 'Desglose detallado de tokens y costos en USD',
+    '/plan': 'Ver caso objetivo, política y plan de prueba',
+    '/goal': 'Bucle autónomo reflexivo hasta veredicto accepted',
     '/target grok|groq|deepseek|ollama': 'Elegir proveedor para el próximo trabajo',
     '/doctor [--probe]': 'Validar configuración; --probe hace llamadas',
     '/demo': 'Ciclo completo: diagnóstico, candidato y evaluación',
@@ -143,6 +147,86 @@ def show_runs(console: Console, store: Store):
     console.print(Text('Costo: desconocido. /report ID muestra la evidencia completa.',style='dim'))
 
 
+def resolve_session_id(store: Store, session_arg: str = 'last') -> str | None:
+    if session_arg != 'last':
+        return session_arg
+    rows = summaries(store, 1)
+    return rows[0]['id'] if rows else None
+
+
+def show_diff(console: Console, store: Store, session_arg: str = 'last'):
+    session_id = resolve_session_id(store, session_arg)
+    if not session_id:
+        console.print('No hay sesiones locales guardadas. Usa /run para crear una.')
+        return
+    try:
+        state = store.load(session_id)
+        patch = state.get('patch')
+        if not patch or not patch.get('diff'):
+            console.print(f'La sesión {session_id} no contiene un candidato o diff guardado.')
+            return
+        from rich.syntax import Syntax
+        diff_text = patch['diff']
+        syntax = Syntax(diff_text, 'diff', theme='monokai', line_numbers=True)
+        console.print(Panel(syntax, title=f'[bold magenta]C4 Diff[/bold magenta] · [cyan]{session_id}[/cyan]', border_style='magenta'))
+    except Exception as e:
+        console.print(f'No se pudo leer la sesión {session_id}: {e}')
+
+
+def show_cost(console: Console, store: Store, session_arg: str = 'last'):
+    session_id = resolve_session_id(store, session_arg)
+    if not session_id:
+        console.print('No hay sesiones locales guardadas. Usa /run para crear una.')
+        return
+    try:
+        state = store.load(session_id)
+        calls = state.get('calls', [])
+        if not calls:
+            console.print(f'La sesión {session_id} no contiene llamadas registradas.')
+            return
+        table = Table('Llamada', 'Propósito', 'Modelo', 'In Tokens', 'Out Tokens', 'Latencia', 'Costo USD', border_style='cyan')
+        total_in, total_out, total_cost = 0, 0, 0.0
+        has_cost = False
+        for c in calls:
+            in_tok = c.get('input_tokens') or 0
+            out_tok = c.get('output_tokens') or 0
+            cost = c.get('cost_usd')
+            total_in += in_tok
+            total_out += out_tok
+            if cost is not None:
+                has_cost = True
+                total_cost += cost
+                cost_str = f'${cost:.6f}'
+            else:
+                cost_str = 'n/a'
+            lat = f"{c.get('latency_ms', 0)}ms"
+            table.add_row(str(c.get('call', '-')), str(c.get('purpose', '-')), str(c.get('model', '-')), str(in_tok), str(out_tok), lat, cost_str)
+        console.print(table)
+        total_cost_str = f'${total_cost:.4f} USD' if has_cost else 'desconocido'
+        console.print(Text(f'Total: {len(calls)} llamadas · {total_in + total_out} tokens ({total_in} in / {total_out} out) · Costo estimado: {total_cost_str}', style='bold cyan'))
+    except Exception as e:
+        console.print(f'No se pudo calcular costo para {session_id}: {e}')
+
+
+def show_plan(console: Console):
+    title = Text('C4 AI PLAN REFLEXIVO', style='bold #e879c9')
+    content = Group(
+        Text('[1] Detección de Incidente', style='bold #c4b5fd'),
+        Text('    - Caso objetivo: refund_expired (o boundary_day_31_expired)', style='#94a3b8'),
+        Text('    - Regla: compras con más de 30 días deben ser denegadas (deny_refund)', style='#94a3b8'),
+        Text('\n[2] Diagnóstico Causal e Hipótesis (Grok 4.7)', style='bold #c4b5fd'),
+        Text('    - Analiza traza de ejecución e identifica omisión de regla de ventana temporal', style='#94a3b8'),
+        Text('    - Formula prompt candidato respetando las restricciones del sistema', style='#94a3b8'),
+        Text('\n[3] Evaluación Determinista en Harness', style='bold #c4b5fd'),
+        Text('    - Dataset inmutable evaluado en paralelo (baseline vs candidato)', style='#94a3b8'),
+        Text('    - 100% de controles obligatorios de seguridad (inyecciones, exfiltración)', style='#94a3b8'),
+        Text('\n[4] Decisión del Gate', style='bold #c4b5fd'),
+        Text('    - Condición: mejora en caso objetivo + 0 regresiones en todo el dataset', style='#94a3b8'),
+        Text('    - Veredicto: accepted / rejected / needs_human_review', style='#67e8f9'),
+    )
+    console.print(Panel(content, title=title, border_style='magenta'))
+
+
 class Harness:
     def __init__(self, console: Console, store: Store, env_file: str, provider: str,
                  dispatch: Callable[[list[str], str], int]):
@@ -230,8 +314,8 @@ class Harness:
             self.console.clear()
             self.redraw()
         elif command=='target':
-            if len(args)!=1 or args[0] not in {'grok','groq'}:
-                self.console.print('Uso: /target grok o /target groq')
+            if len(args)!=1 or args[0] not in {'grok','groq','deepseek','ollama'}:
+                self.console.print('Uso: /target grok | groq | deepseek | ollama')
             else:
                 self.provider=args[0]
                 self.console.print(Text('Target elegido: '+self.provider+'. C4 sigue razonando con Grok; las sesiones conservan su modelo.',style='cyan'))
@@ -251,6 +335,34 @@ class Harness:
                 self.console.print(Text('Evidencia seleccionada: '+self.chat.select(args[0]),style='cyan'))
             except (WorkflowError,OSError,ValueError,KeyError) as error:
                 self.console.print('No se pudo seleccionar evidencia. Usa /runs y copia un ID válido.')
+        elif command=='diff':
+            session_arg = args[0] if args else 'last'
+            show_diff(self.console, self.store, session_arg)
+        elif command=='cost':
+            session_arg = args[0] if args else 'last'
+            show_cost(self.console, self.store, session_arg)
+        elif command=='plan' and not args:
+            show_plan(self.console)
+        elif command=='goal':
+            self.console.print(Panel(Text('Iniciando bucle autónomo reflexivo C4 AI (/goal)…\nObjetivo: convergencia a veredicto ACCEPTED sin regresiones (máx. 3 iteraciones)', style='bold magenta'), border_style='magenta'))
+            max_attempts = 3
+            success = False
+            for attempt in range(1, max_attempts + 1):
+                self.console.print(Text(f'\n--- Iteración reflexiva {attempt}/{max_attempts} ---', style='bold cyan'))
+                from c4.terminal_screen import ExecutionScreen, bind_screen
+                with bind_screen(ExecutionScreen(self.console)):
+                    code = self.dispatch(['demo', *args], self.provider)
+                if code == 0:
+                    self.console.print(Panel(Text(f'¡Objetivo alcanzado en iteración {attempt}! El candidato superó el gate con veredicto ACCEPTED y 0 regresiones.', style='bold green'), border_style='green'))
+                    success = True
+                    break
+                elif code == 2:
+                    self.console.print(Text(f'Iteración {attempt}: candidato rechazado por regresión o sin mejora. Reintentando análisis reflexivo…', style='yellow'))
+                else:
+                    self.console.print(Text(f'Iteración {attempt} terminó con código {code}. Deteniendo bucle reflexivo.', style='red'))
+                    break
+            if not success:
+                self.console.print(Panel(Text(f'El objetivo no se alcanzó tras {max_attempts} iteraciones. Requiere revisión humana o ajuste de dataset.', style='bold yellow'), border_style='yellow'))
         elif command in {'demo','start','doctor','analyze','patch','eval','report','compare'}:
             if command in {'report','compare'} and args==['last']:
                 rows=summaries(self.store,1)

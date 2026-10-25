@@ -137,4 +137,54 @@ class TerminalTests(unittest.TestCase):
         self.assertNotIn('groq-secret',text)
 
 
+    def test_diff_shows_syntax_diff(self):
+        sid = 'c4_' + 'c' * 32
+        self.store.save({
+            'id': sid,
+            'provider': {'base_url': 'https://grok.example/v1', 'model': 'grok-test'},
+            'job': {'status': 'succeeded', 'stage': 'report'},
+            'report': {'decision': 'accepted'},
+            'calls': [{}],
+            'patch': {'diff': '--- a/prompt.txt\n+++ b/prompt.txt\n-old rule\n+new rule\n'}
+        })
+        self.harness.handle('/diff last')
+        out = self.output.getvalue()
+        self.assertIn('C4 Diff', out)
+        self.assertIn(sid, out)
+
+    def test_cost_shows_token_and_usd_table(self):
+        sid = 'c4_' + 'd' * 32
+        self.store.save({
+            'id': sid,
+            'provider': {'base_url': 'https://grok.example/v1', 'model': 'grok-test'},
+            'job': {'status': 'succeeded', 'stage': 'report'},
+            'report': {'decision': 'accepted'},
+            'calls': [{'call': 1, 'purpose': 'diagnose', 'model': 'grok-4.7', 'input_tokens': 1200, 'output_tokens': 300, 'latency_ms': 450, 'cost_usd': 0.0075}]
+        })
+        self.harness.handle('/cost last')
+        out = self.output.getvalue()
+        self.assertIn('1500 tokens', out)
+        self.assertIn('$0.0075', out)
+
+    def test_plan_renders_reflexive_pipeline(self):
+        self.harness.handle('/plan')
+        out = self.output.getvalue()
+        self.assertIn('C4 AI PLAN REFLEXIVO', out)
+        self.assertIn('Detecci', out)
+
+    def test_goal_loop_succeeds_on_first_try(self):
+        self.dispatch.return_value = 0
+        self.harness.handle('/goal')
+        out = self.output.getvalue()
+        self.assertIn('¡Objetivo alcanzado en iteración 1!', out)
+
+    def test_goal_loop_retries_on_rejection(self):
+        self.dispatch.side_effect = [2, 0]
+        self.harness.handle('/goal')
+        out = self.output.getvalue()
+        self.assertIn('Iteración reflexiva 1/3', out)
+        self.assertIn('Iteración reflexiva 2/3', out)
+        self.assertIn('¡Objetivo alcanzado en iteración 2!', out)
+
+
 if __name__=='__main__':unittest.main()
