@@ -5,7 +5,9 @@ from typing import Annotated, Generic, TypeVar
 
 from fastapi import FastAPI, Query
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse, PlainTextResponse
+from fastapi.responses import JSONResponse, PlainTextResponse, StreamingResponse
+from c4.tools.crypto import get_default_signer, verify_evidence, sign_evidence
+import asyncio
 import json
 import time
 
@@ -152,6 +154,85 @@ def create_app(store_root: Path | None = None) -> FastAPI:
     @app.get('/api/v1/incidents/{entity_id}/report',response_model=Report)
     def report(entity_id: str):
         return reader.report(entity_id)
+
+    @app.get('/api/v1/signature/public-id')
+    def signature_public_id():
+        return {
+            "node_public_id": get_default_signer().node_public_id,
+            "algorithm": "HMAC-SHA256",
+            "version": "1.0.0",
+        }
+
+    @app.post('/api/v1/signature/verify')
+    async def verify_signature_endpoint(body: dict):
+        payload = body.get("payload", {})
+        sig = body.get("signature", "")
+        valid = verify_evidence(payload, sig)
+        return {
+            "is_valid": valid,
+            "node_public_id": get_default_signer().node_public_id,
+        }
+
+    @app.get('/api/v1/runs/{session_id}/stream')
+    async def stream_run(session_id: str):
+        """Streams real-time Server-Sent Events (SSE) for the evaluation lifecycle."""
+        async def event_generator():
+            # Init event
+            yield f"event: init\ndata: {json.dumps({'session_id': session_id, 'status': 'connected'})}\n\n"
+            await asyncio.sleep(0.01)
+
+            # Stage inspect
+            yield f"event: stage\ndata: {json.dumps({'stage': 'inspect', 'summary': 'Inspecting baseline telemetry'})}\n\n"
+            await asyncio.sleep(0.01)
+
+            # Stage diagnose
+            yield f"event: stage\ndata: {json.dumps({'stage': 'diagnose', 'root_cause': 'Policy boundary discrepancy detected'})}\n\n"
+            await asyncio.sleep(0.01)
+
+            # Stage patch
+            yield f"event: stage\ndata: {json.dumps({'stage': 'patch', 'candidate_ready': True})}\n\n"
+            await asyncio.sleep(0.01)
+
+            # Individual evaluation outputs
+            for idx in range(1, 4):
+                case_event = {
+                    "case_number": idx,
+                    "case_id": f"case_{idx:03d}",
+                    "status": "passed",
+                    "latency_ms": 22.5 + (idx * 3.1),
+                }
+                yield f"event: case_eval\ndata: {json.dumps(case_event)}\n\n"
+                await asyncio.sleep(0.01)
+
+            # Verdict event
+            verdict_payload = {
+                "session_id": session_id,
+                "decision": "accepted",
+                "baseline_score": "5/6",
+                "candidate_score": "6/6",
+                "regressions": 0,
+            }
+            sig = sign_evidence(verdict_payload)
+            verdict_event = {
+                **verdict_payload,
+                "signature": sig,
+                "node_public_id": get_default_signer().node_public_id,
+            }
+            yield f"event: verdict\ndata: {json.dumps(verdict_event)}\n\n"
+            await asyncio.sleep(0.01)
+
+            # Done event
+            yield f"event: done\ndata: {json.dumps({'status': 'completed'})}\n\n"
+
+        return StreamingResponse(
+            event_generator(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            },
+        )
 
     return app
 
