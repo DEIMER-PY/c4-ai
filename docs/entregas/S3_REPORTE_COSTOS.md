@@ -8,17 +8,17 @@ Cada ejecución es una sesión real de C4 AI contra Grok. Los casos del dataset 
 
 | Métrica | Valor |
 |---|---|
-| Ejecuciones reales | 30 |
-| Aceptadas / rechazadas / revisión humana / fallidas / incompletas | 10 / 9 / 0 / 7 / 4 |
-| Llamadas al proveedor | 1024 |
-| Tokens reportados | 1463510 |
-| Costo total | $3.0637 USD |
+| Ejecuciones reales | 31 |
+| Aceptadas / rechazadas / revisión humana / fallidas / incompletas | 11 / 9 / 0 / 7 / 4 |
+| Llamadas al proveedor | 1038 |
+| Tokens reportados | 1485622 |
+| Costo total | $3.1132 USD |
 
 ## Costo por dataset
 
 | Dataset | Casos | Sesiones | Evaluaciones completas | Llamadas | Costo total | Costo por tarea (sesión) | Costo por caso evaluado |
 |---|---|---|---|---|---|---|---|
-| `refunds_demo@1.0.0` | 6 | 12 | 10 | 159 | $0.3751 | $0.0313 | $0.00521 |
+| `refunds_demo@1.0.0` | 6 | 13 | 11 | 173 | $0.4246 | $0.0327 | $0.00544 |
 | `refunds_v2@2.0.0` | 32 | 3 | 1 | 150 | $0.4586 | $0.1529 | $0.00478 |
 | `refunds_v2@2.1.0` | 32 | 15 | 8 | 715 | $2.2300 | $0.1487 | $0.00465 |
 
@@ -64,6 +64,7 @@ Cada ejecución es una sesión real de C4 AI contra Grok. Los casos del dataset 
 | `c4_f1d949886a48405ba0322c74a16c36cb` | 2026-11-07 16:38 | refunds_v2@2.1.0 | `legal_fraud_investigation_hold` | failed: `provider_timeout` | — | 1 | 70 | 102972 | $0.2150 | 60000 |
 | `c4_3d69db37c7784215b9704079924d2a3b` | 2026-11-07 16:52 | refunds_v2@2.1.0 | `policy_service_already_rendered` | failed: `provider_timeout` | — | — | 4 | 1404 | $0.0029 | 60344 |
 | `c4_1a21a6b2b4684f5886ff5331607d9c13` | 2026-11-07 16:55 | refunds_v2@2.1.0 | `policy_customer_damaged_abuse` | failed: `provider_timeout` | — | — | 4 | 1401 | $0.0029 | 60328 |
+| `c4_75aac87433974f239db1bb6edd5035c2` | 2026-11-07 17:46 | refunds_demo@1.0.0 | `refund_expired` | accepted | 5/6 → 6/6 | 1 | 14 | 22112 | $0.0494 | 4672 |
 
 ## Método de costo
 

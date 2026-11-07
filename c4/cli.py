@@ -109,6 +109,15 @@ def emit(ctx: typer.Context, result: dict):
     if result.get('repair_stopped'):
         console.print(Text('Reparación detenida: ' + result['repair_stopped'], style='yellow'))
     calls = result['calls']
+    recovered = [(c, nxt) for c, nxt in zip(calls, calls[1:])
+                 if c.get('status') == 'failed' and nxt.get('purpose') == c.get('purpose') and nxt.get('attempt', 1) > c.get('attempt', 1)]
+    if recovered:
+        retries = Table('Llamada', 'Etapa', 'Fallo', 'Reintento', 'Resultado', border_style='yellow', title='Errores del proveedor y recuperación')
+        for failed, retry in recovered:
+            cause = f"HTTP {failed['http_status']}" if failed.get('http_status') else 'timeout/conexión'
+            retries.add_row(str(failed['call']), failed['purpose'], cause, f"intento {retry['attempt']}",
+                            'OK' if retry.get('status') == 'succeeded' else 'falló')
+        console.print(retries)
     tokens = sum(c['input_tokens'] + c['output_tokens'] for c in calls
                  if c['input_tokens'] is not None and c['output_tokens'] is not None)
     coverage = sum(c['input_tokens'] is not None and c['output_tokens'] is not None for c in calls)

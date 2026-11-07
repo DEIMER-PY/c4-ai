@@ -30,4 +30,4 @@ En la versión 2.1.0 hubo:
 - 4 fallidas por timeouts o HTTP 503 del proveedor;
 - 3 incompletas por cortes locales.
 
-El reporte se genera desde 30 sesiones reales (USD 3,06 en total) y cada una se verifica por hash.
+El reporte se genera desde 31 sesiones reales (USD 3,11 en total) y cada una se verifica por hash.

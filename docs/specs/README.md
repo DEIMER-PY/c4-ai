@@ -44,6 +44,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Chat funcional independiente y desacoplado del sitio web](042-standalone-functional-chat/spec.md)
 - [Evidencia real y verificable S2/S3 y E2E del agente](043-real-evidence-s2-s3/spec.md)
 - [Reparación iterativa con retroalimentación de la evaluación](044-iterative-repair/spec.md)
+- [Video S2 con ejecución en vivo y recuperación de errores](046-s2-video/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)
