@@ -1,23 +1,30 @@
-# Campos de entrega S1
+# Entrega S1
 
-**Enviado y publicado.** Repositorio público oficial y video disponible en YouTube.
+**Estado:** enviada. El 2026-11-03 el equipo del reto respondió: "No se pudo revisar: el repo y el reporte (en el mismo repo) dan 404. […] Hagan público el repo para poder revisarlo."
 
+El 2026-11-07 se comprobó sin sesión iniciada que el repositorio y el reporte responden HTTP 200. El reporte enviado apuntaba a una rama de feature; ahora se usa `develop`, que es la rama por defecto.
+
+## Enlaces para la re-revisión
 - Repositorio: https://github.com/DEIMER-PY/c4-ai
-- Reporte técnico actualizado de la feature: https://github.com/DEIMER-PY/c4-ai/blob/codex/feat-025-cinematic-film/docs/entregas/S1_REPORTE_TECNICO.md
-- Cambios para revisión: https://github.com/DEIMER-PY/c4-ai/pull/42 (borrador hacia develop).
-- Portada: [PNG listo para subir](../assets/c4-ai-youtube-cover.png),1672×941,1.87MB decimal.
-- Video Oficial de Dos Minutos (YouTube): https://www.youtube.com/watch?v=DqAuvL8im9M
+- Reporte S1: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/entregas/S1_REPORTE_TECNICO.md
+- README (problema y cómo correrlo): https://github.com/DEIMER-PY/c4-ai/blob/develop/README.md
+- Video de 2 minutos: https://www.youtube.com/watch?v=DqAuvL8im9M
+- Licencia MIT: https://github.com/DEIMER-PY/c4-ai/blob/develop/LICENSE
 
-La rama histórica codex/release-s1-end-to-end conserva un snapshot anterior; no usar su reporte como si incluyera esta revisión sin integrarla. La feature actual conserva SDD y PR→develop.
+## Respuesta al comentario (lista para copiar)
 
-## Notas listas para copiar
+> Gracias por la retroalimentación. El repositorio ya es público, con licencia MIT, y lo verificamos sin sesión iniciada: https://github.com/DEIMER-PY/c4-ai. El reporte S1 está en https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/entregas/S1_REPORTE_TECNICO.md. El README explica el problema (un agente de reembolsos que falla y cómo C4 AI lo diagnostica, propone una corrección y la evalúa contra el original antes de aceptarla) y cómo correrlo de punta a punta contra Grok con `uv sync` y `uv run c4 demo`. La llave no está en el repositorio: se lee de `.env`, que está ignorado. ¿Podrían revisarlo de nuevo?
 
-C4 AI ejecuta detectar→diagnosticar→proponer corrección→evaluar→decidir con evidencia. Grok analiza y propone; evaluación de baseline/candidato sobre seis casos sintéticos con respuestas reales. Resultado:5/6→6/6, cero regresiones y controles obligatorios aprobados;14 llamadas y20.720 tokens reportados. Otra prueba con Groq fue rechazada por regresión. CLI conversacional, dashboard/API local y consultas de evidencia Hermes/Telegram verificados. Costo monetario por tarea desconocido. Solo versiones de prueba; sin aplicación en producción. WhatsApp, JEV, runner unitario general, persistencia/escala, desktop y móvil siguen pendientes. Video de120s: montaje narrado de evidencia guardada y roadmap explícito, no ejecución continua en vivo. Repositorio privado; acceso de evaluación por resolver.
+## Qué cumple S1
+
+| Requisito | Dónde se ve |
+|---|---|
+| Repositorio público | https://github.com/DEIMER-PY/c4-ai |
+| Corre de punta a punta contra Grok | `uv run c4 demo`; sesión real `c4_43b81508dd4a47ba93b27db27b6e74c7` (17-oct, 5/6 → 6/6, 14 llamadas, USD 0,045) en el [reporte de costos](S3_REPORTE_COSTOS.md) |
+| README con el problema y cómo correrlo | [README](../../README.md) |
+| La llave no está en el repo | `.env` en `.gitignore`; se revisó el historial de git el 2026-11-07 |
 
 ## Video y crédito
+Título: C4 AI: cuando tu agente falla, demuestra la corrección | Demo end-to-end
 
-Título sugerido: C4 AI: cuando tu agente falla, demuestra la corrección | Demo end-to-end
-
-Descripción breve: C4 AI investiga fallos de agentes, propone cambios de prompt/configuración y compara contra el baseline antes de aceptar. Demo con respuestas reales sobre seis casos sintéticos. Incluye aceptación y rechazo por regresión. JEV y pruebas unitarias generales son roadmap. Narración generada con ElevenLabs — Brian: https://elevenlabs.io/ . Voz generada en cuenta Free; revisar derechos aplicables antes de publicación comercial.
-
-No se ha subido el video ni enviado S1 automáticamente. [Source y validación](../../my-video/EXTENSION.md).
+Narración generada con ElevenLabs (voz Brian, cuenta gratuita): https://elevenlabs.io/
