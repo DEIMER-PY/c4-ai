@@ -1,5 +1,14 @@
 # Estado de C4 AI
-Actualizado: 2026-10-17. Fuente para retomar trabajo; [handoff completo](HANDOFF_2026-10-17.md) y [backlog](BACKLOG.md).
+Actualizado: 2026-11-07 (sección de auditoría); el resto refleja el 2026-10-17. Fuente para retomar trabajo; [handoff completo](HANDOFF_2026-10-17.md) y [backlog](BACKLOG.md).
+
+## Auditoría del 2026-11-07 (S2/S3) — [spec 043](../specs/043-real-evidence-s2-s3/spec.md)
+
+- **Evidencia corregida.** `2026-10-25-diez-ejecuciones-calificadas.json` no correspondía a sesiones reales; se archivó en `docs/evidencia/archivo/`. La evidencia válida es [`2026-11-07-ejecuciones-reales.json`](../evidencia/2026-11-07-ejecuciones-reales.json), generada desde `artifacts/runs` y verificable con `--check`. La API `/metrics` y la de overview ahora se calculan en vivo desde el almacén.
+- **Licencia MIT** agregada. El repositorio es público.
+- **Gateway.** Hasta 2 reintentos con backoff para timeout, conexión y 5xx, cada intento registrado y con presupuesto; el 429 no se reintenta. En corridas reales Grok devolvió timeouts de 60 s y HTTP 503.
+- **Dataset v2.1.0.** La política declara las reglas que los casos esperaban. En la sesión real `c4_8f258ebcdefe4009b03edef1310bca26` el candidato mejoró de 20/32 a 26/32 sin regresiones, pero el gate lo rechazó porque fallaban casos de seguridad obligatorios que la política no describía.
+- **E2E.** `tests/integration/test_agent_e2e.py` cubre CLI → almacén → API → exportación, y `tests/evals/` el contrato del dataset. Ambos corren en CI.
+- **Pendiente.** Dataset con políticas públicas reales (15 pts de "datos reales"), reparación iterativa con la retroalimentación de la evaluación, S4 real de 1.000 unidades y 12 h, y actualizar el formulario S2 ya enviado con el enlace de evidencia corregido.
 
 ## Runtime verificado
 

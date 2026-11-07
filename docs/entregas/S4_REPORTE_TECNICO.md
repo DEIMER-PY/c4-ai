@@ -1,5 +1,7 @@
 # C4 AI — Reporte Técnico Semana S4
 
+> **Aviso del 2026-11-07:** las métricas de este reporte vienen de `c4 batch` en **modo simulado** (`--mock`, sin llamadas al proveedor). No son una corrida real de 1.000 unidades ni de 12 h; esa corrida sigue pendiente.
+
 Fecha: 25 de octubre de 2026. Responsables: DEIMER-PY (Core, motor batch, resiliencia distribuida, circuit breaker y CLI), Santiago/Claude (Diseño de telemetría, métricas de carga y visualización). Repositorio y tablero privados por instrucción del equipo. Este documento describe capacidades técnicas verificadas con evidencia reproducible; no autoasigna calificaciones del jurado.
 
 ## Resumen Ejecutivo

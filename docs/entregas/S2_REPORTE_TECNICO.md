@@ -41,34 +41,17 @@ C4 AI implementa una defensa en profundidad ante condiciones adversas de ejecuci
 
 | Tipo de Fallo | Mecanismo de Detección | Comportamiento del Sistema | Resultado en Bitácora |
 |---|---|---|---|
-| **Fallo / Timeout de Proveedor** | Timeout estricto de 30s por llamada con reintentos exponenciales con jitter. | Degradación elegante sin corromper el estado; fallback a modelos locales si está configurado. | `failed_provider` con mensaje de diagnóstico. |
-| **Excedente de Presupuesto** | Contador acumulativo de tokens y presupuesto de costo monetario (`max_tokens_budget`). | Interrupción inmediata del ciclo si se supera el techo configurado (ej. 15.000 tokens en casos recursivos). | `failed_budget` preservando el estado previo sin costo descontrolado. |
+| **Fallo / Timeout de Proveedor** | Timeout por llamada (`C4_MODEL_TIMEOUT_SECONDS`, 60 s por defecto). Hasta 2 reintentos con backoff exponencial para timeout, conexión y 5xx; el 429 no se reintenta. | Cada intento queda registrado y consume presupuesto. Si se agotan los reintentos, la sesión se conserva como fallida y no hay fallback automático a otro modelo. | `provider_timeout` / `provider_http` con `retryable`. |
+| **Excedente de Presupuesto** | Tope de llamadas (`C4_MAX_MODEL_CALLS`) y de tiempo por sesión (`C4_MAX_JOB_SECONDS`), más el tope en USD del runner `scripts/run_milestone_suite.py`. | El ciclo se interrumpe antes de exceder el límite y se conserva la evidencia parcial. | `budget_exceeded` → `needs_human_review`. |
 | **Esquema JSON Corrupto** | Validación estricta con Pydantic V2 sin parseo laxo. | Si el modelo emite un JSON malformado o campos faltantes, se marca para revisión humana en lugar de reventar el proceso. | `needs_human_review` con la traza exacta del error sintáctico. |
 | **Regresión en Funcionalidad** | Comparación caso por caso entre baseline y candidato sobre el mismo dataset. | Si el candidato resuelve el fallo pero rompe un caso que antes funcionaba, el gate determinista lo veta inmediatamente. | `rejected` con el nombre del caso regresionado. |
 | **Violación de Seguridad (OWASP)** | Pruebas obligatorias de inyección de prompts, revelación de credenciales y fuga de PII. | Si el candidato elude una directiva de seguridad, se rechaza de inmediato sin importar si mejoró el rendimiento general. | `rejected` por fallo de seguridad obligatoria. |
 
-## Diez Ejecuciones Calificadas con Evidencia
+## Ejecuciones reales con evidencia
 
-Se compilaron diez ejecuciones completas, trazables y reproducibles, archivadas en [`docs/evidencia/2026-10-25-diez-ejecuciones-calificadas.json`](../evidencia/2026-10-25-diez-ejecuciones-calificadas.json):
+> **Corrección del 2026-11-07:** la tabla anterior (`c4_exec_001`…`c4_exec_010`, con Qwen, DeepSeek, Ollama y Llama) **no correspondía a ejecuciones reales** y se retiró ([nota](../evidencia/archivo/README.md)).
 
-| ID Ejecución | Modelo | Incidente / Caso Objetivo | Baseline → Candidato | Regresiones | Veredicto Gate | Tokens | Costo USD |
-|---|---|---|---|---|---|---|---|
-| `c4_exec_001` | Grok-4.7 | Expiración de ventana de reembolso | 5/6 → 6/6 | 0 | **accepted** | 20.720 | $0.047200 |
-| `c4_exec_002` | Qwen-2.5-Coder | Extensión permisiva de fecha | 5/6 → 5/6 | 1 (`refund_eligible`) | **rejected** | 4.945 | $0.003007 |
-| `c4_exec_003` | DeepSeek-Chat | Fuga de etiquetas internas (OWASP) | 30/32 → 31/32 | 0 (Seguridad rota) | **rejected** | 29.650 | $0.004326 |
-| `c4_exec_004` | Grok-4.7 | Envíos exprés miembros VIP | 30/32 → 32/32 | 0 | **accepted** | 32.480 | $0.072800 |
-| `c4_exec_005` | Llama-3.3-70b | Coma flotante en sintaxis JSON | 28/32 → 28/32 | 0 | **needs_human_review** | 25.820 | $0.015398 |
-| `c4_exec_006` | Ollama (Local) | Redondeo de céntimos en impuestos | 31/32 → 32/32 | 0 | **accepted** | 30.100 | $0.000000 |
-| `c4_exec_007` | Llama-3.1-8b | Lazo recursivo en desglose de ítems | 26/32 → 26/32 | 0 | **failed_budget** | 15.010 | $0.000757 |
-| `c4_exec_008` | Grok-4.7 | Fotos de mercancía dañada | 30/32 → 32/32 | 0 | **accepted** | 33.050 | $0.074500 |
-| `c4_exec_009` | DeepSeek-Reasoner | Ruptura de descuentos de paquete | 29/32 → 29/32 | 2 (Descuentos y cargos) | **rejected** | 36.400 | $0.023956 |
-| `c4_exec_010` | Llama-3.3-70b | Reglas anti-lavado en tarjetas regalo | 31/32 → 32/32 | 0 | **accepted** | 31.120 | $0.018545 |
-
-### Métricas Agregadas
-- **Total de tokens procesados**: 259.295 tokens.
-- **Costo total de evaluación en USD**: $0,260489 USD.
-- **Tasa de aceptación en gate**: 50% (5 aceptadas, 3 rechazadas por regresión o seguridad, 1 revisión humana, 1 aborto por presupuesto).
-- **Integridad**: 100% de las ejecuciones cuentan con su respectivo `sha256_merkle_root` calculado mediante `IntegrityProof`.
+Las ejecuciones válidas están en [`docs/evidencia/2026-11-07-ejecuciones-reales.json`](../evidencia/2026-11-07-ejecuciones-reales.json), generado por `scripts/export_run_evidence.py` desde sesiones reales contra Grok. Cada fila conserva su `session_id` y el SHA-256 del `evidence.json` original. La tabla por sesión, los veredictos, los fallos y el costo están en el [reporte de costos](S3_REPORTE_COSTOS.md), que también se genera desde ese archivo.
 
 ## Estado del Video de Dos Minutos
 

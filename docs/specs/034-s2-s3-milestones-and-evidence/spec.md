@@ -1,5 +1,5 @@
 # Hitos S2 y S3: Diez Ejecuciones Calificadas, Reportes Técnicos y Formularios
-ID: C4-CORE-034. Estado: Draft. Responsable: DEIMER-PY. Revisores: Santiago/Claude.
+ID: C4-CORE-034. Estado: Superseded por [043](../043-real-evidence-s2-s3/spec.md) (2026-11-07): su evidencia de 10 ejecuciones era ilustrativa, no real. Responsable: DEIMER-PY. Revisores: Santiago/Claude.
 
 ## Problema y Contexto
 El Reto Agente 2026 establece hitos progresivos para evaluar la madurez técnica, autonomía y rigor de los sistemas participantes:
