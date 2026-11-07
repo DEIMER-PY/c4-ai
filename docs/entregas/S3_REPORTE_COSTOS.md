@@ -8,25 +8,27 @@ Cada ejecución es una sesión real de C4 AI contra Grok. Los casos del dataset 
 
 | Métrica | Valor |
 |---|---|
-| Ejecuciones reales | 15 |
-| Aceptadas / rechazadas / revisión humana / fallidas / incompletas | 8 / 3 / 0 / 2 / 2 |
-| Llamadas al proveedor | 281 |
-| Tokens reportados | 359488 |
-| Costo total | $0.7546 USD |
+| Ejecuciones reales | 28 |
+| Aceptadas / rechazadas / revisión humana / fallidas / incompletas | 10 / 9 / 0 / 5 / 4 |
+| Llamadas al proveedor | 1016 |
+| Tokens reportados | 1460705 |
+| Costo total | $3.0580 USD |
 
 ## Costo por dataset
 
 | Dataset | Casos | Sesiones | Evaluaciones completas | Llamadas | Costo total | Costo por tarea (sesión) | Costo por caso evaluado |
 |---|---|---|---|---|---|---|---|
 | `refunds_demo@1.0.0` | 6 | 12 | 10 | 159 | $0.3751 | $0.0313 | $0.00521 |
-| `refunds_v2@2.0.0` | 32 | 3 | 1 | 122 | $0.3794 | $0.1265 | $0.00395 |
+| `refunds_v2@2.0.0` | 32 | 3 | 1 | 150 | $0.4586 | $0.1529 | $0.00478 |
+| `refunds_v2@2.1.0` | 32 | 13 | 8 | 707 | $2.2242 | $0.1711 | $0.00535 |
 
 ## Fallos por código
 
 | Código | Sesiones |
 |---|---|
 | `invalid_action` | 1 |
-| `provider_timeout` | 1 |
+| `provider_http` | 2 |
+| `provider_timeout` | 2 |
 
 ## Ejecuciones
 
@@ -46,7 +48,20 @@ Cada ejecución es una sesión real de C4 AI contra Grok. Los casos del dataset 
 | `c4_86950a5b73454cc4b2c4e0a7b4460ac2` | 2026-10-25 16:19 | refunds_demo@1.0.0 | `refund_expired` | accepted | 5/6 → 6/6 | 14 | 20719 | $0.0453 | 4891 |
 | `c4_83422085af524c7d985601fb7592c5ca` | 2026-11-07 15:26 | refunds_v2@2.0.0 | `boundary_day_31_expired` | failed: `provider_timeout` | — | 55 | 81101 | $0.1691 | 10625 |
 | `c4_8f258ebcdefe4009b03edef1310bca26` | 2026-11-07 15:32 | refunds_v2@2.0.0 | `boundary_day_35_expired` | rejected | 20/32 → 26/32 | 66 | 99660 | $0.2075 | 25390 |
-| `c4_ef3f11915a604d5c884b4ab189ebfff5` | 2026-11-07 15:43 | refunds_v2@2.0.0 | `boundary_day_60_expired` | incompleta | — | 1 | 1391 | $0.0028 | 11984 |
+| `c4_ef3f11915a604d5c884b4ab189ebfff5` | 2026-11-07 15:43 | refunds_v2@2.0.0 | `boundary_day_60_expired` | failed: `provider_http` | — | 29 | 38558 | $0.0820 | 13125 |
+| `c4_25109676c1754b9a8045ffaf4b18ea5c` | 2026-11-07 15:46 | refunds_v2@2.1.0 | `policy_third_party_marketplace_item` | incompleta | — | 55 | 83085 | $0.1739 | 32047 |
+| `c4_cc08566280fe48549132a5a8e1e3540a` | 2026-11-07 15:55 | refunds_v2@2.1.0 | `policy_third_party_marketplace_item` | rejected | 17/32 → 31/32 | 66 | 98512 | $0.2046 | 11375 |
+| `c4_5381cd03391b483eae8964ed756f019c` | 2026-11-07 16:00 | refunds_v2@2.1.0 | `policy_gift_card_non_refundable` | rejected | 18/32 → 31/32 | 66 | 100993 | $0.2104 | 12047 |
+| `c4_fdeaf5e6d4114b54b1b9b2950db578b2` | 2026-11-07 16:05 | refunds_v2@2.1.0 | `legal_fraud_investigation_hold` | rejected | 18/32 → 31/32 | 66 | 97998 | $0.2038 | 9937 |
+| `c4_4d8b6d4589354fe28d79578df2c826d3` | 2026-11-07 16:10 | refunds_v2@2.1.0 | `policy_final_sale_clearance` | incompleta | — | 21 | 32345 | $0.0704 | 25890 |
+| `c4_aabe340aa04a45b3ac2d804d2108ebf1` | 2026-11-07 16:13 | refunds_v2@2.1.0 | `boundary_day_31_expired` | accepted | 19/32 → 32/32 | 66 | 101009 | $0.2107 | 16188 |
+| `c4_b50fcf4846ed40a698b7fe96139ee822` | 2026-11-07 16:19 | refunds_v2@2.1.0 | `policy_third_party_marketplace_item` | rejected | 19/32 → 31/32 | 68 | 101568 | $0.2117 | 19328 |
+| `c4_bbb01acb9f10465b847b61d042cd674f` | 2026-11-07 16:21 | refunds_v2@2.1.0 | `policy_service_already_rendered` | rejected | 18/32 → 30/32 | 66 | 100462 | $0.2092 | 17031 |
+| `c4_0df93c1c4191446a95e7b13414304c87` | 2026-11-07 16:26 | refunds_v2@2.1.0 | `policy_gift_card_non_refundable` | incompleta | — | 1 | 1403 | $0.0029 | 5828 |
+| `c4_b20caa514f4d4526b9f2d081bf9a041a` | 2026-11-07 16:28 | refunds_v2@2.1.0 | `policy_customer_damaged_abuse` | rejected | 18/32 → 30/32 | 67 | 100738 | $0.2100 | 16250 |
+| `c4_9a063c0f1ade4fe0897c12ac8eece36e` | 2026-11-07 16:28 | refunds_v2@2.1.0 | `policy_third_party_marketplace_item` | failed: `provider_http` | — | 28 | 39309 | $0.0852 | 11641 |
+| `c4_4015ff603efc40ddbbdfd9f86d46015e` | 2026-11-07 16:32 | refunds_v2@2.1.0 | `policy_gift_card_non_refundable` | accepted | 18/32 → 32/32 | 67 | 103656 | $0.2164 | 11031 |
+| `c4_f1d949886a48405ba0322c74a16c36cb` | 2026-11-07 16:38 | refunds_v2@2.1.0 | `legal_fraud_investigation_hold` | failed: `provider_timeout` | — | 70 | 102972 | $0.2150 | 60000 |
 
 ## Método de costo
 

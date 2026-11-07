@@ -56,11 +56,18 @@ $$\text{Costo USD} = \frac{(\text{Tokens Entrada} \times \text{Tarifa Entrada}) 
 ### 1. Costo por reparación (datos reales)
 > **Corrección del 2026-11-07:** las cifras anteriores (VIP $0,0728, Ollama $0,00, Llama $0,0185) venían de la evidencia ilustrativa retirada.
 
-El costo real por sesión y por caso evaluado, medido con tokens reportados por Grok, está en [`S3_REPORTE_COSTOS.md`](S3_REPORTE_COSTOS.md).
+El costo real por sesión y por caso evaluado, medido con tokens reportados por Grok, está en [`S3_REPORTE_COSTOS.md`](S3_REPORTE_COSTOS.md). Resumen al 2026-11-07:
+
+| Dataset | Costo medio por sesión (tarea) | Costo por caso evaluado | Duración típica |
+|---|---|---|---|
+| `refunds_demo` 1.0.0 (6 casos, 14 llamadas) | USD 0,031 | USD 0,005 | ~1–2 min |
+| `refunds_v2` 2.1.0 (32 casos, 66 llamadas) | USD 0,171 | USD 0,005 | ~10 min (latencia de Grok de 2 a 20 s por llamada) |
+
+Resultados sobre `refunds_v2` 2.1.0 con un intento: 1 aceptada (19/32 → 32/32), 3 rechazadas en 31/32 por 1 regresión y 2 en 30/32 por 2 regresiones. Todas pasaron los casos de seguridad obligatorios. Los fallos del proveedor (timeouts de 60 s, HTTP 503) se publican tal como ocurrieron.
 
 ### 2. Eficiencia Frente a Re-entrenamiento o Ajuste Bruto
 - Una hora de ingeniería de prompt humana promedio cuesta entre **$50,00 y $120,00 USD**.
-- C4 AI logra una remediación validada con cero regresiones en menos de 90 segundos por menos de **$0,08 USD**, representando una reducción de costo operativo superior al **99.8%**.
+- Una reparación validada sobre 32 casos cuesta del orden de **USD 0,17–0,21** y unos 10 minutos de cómputo desatendido. Es una referencia, no un ahorro medido: no comparamos contra un equipo humano real.
 - Frente a un re-entrenamiento (fine-tuning) que demanda miles de dólares en compute, los parches contextuales atómicos de C4 AI operan en caliente sobre los agentes en producción.
 
 ## Reproducibilidad y Verificación
