@@ -117,6 +117,8 @@ function createMessage(
   };
 }
 
+const C4_API_URL = process.env.NEXT_PUBLIC_C4_API_URL ?? "http://127.0.0.1:8000";
+
 export function ChatInterface() {
   const [incidents, setIncidents] = useState<IncidentItem[]>(FALLBACK_INCIDENTS);
   const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(null);
@@ -145,7 +147,7 @@ export function ChatInterface() {
   useEffect(() => {
     async function fetchFromC4Api() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/v1/incidents");
+        const res = await fetch(`${C4_API_URL}/api/v1/incidents`);
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data.items) && data.items.length > 0) {
@@ -187,11 +189,11 @@ export function ChatInterface() {
       let patchData: { diff?: string; rationale?: string } | null = null;
 
       try {
-        const reportRes = await fetch(`http://127.0.0.1:8000/api/v1/incidents/${targetInc.id}/report`);
+        const reportRes = await fetch(`${C4_API_URL}/api/v1/incidents/${targetInc.id}/report`);
         if (reportRes.ok) {
           reportData = await reportRes.json();
           if (reportData?.patch_id) {
-            const patchRes = await fetch(`http://127.0.0.1:8000/api/v1/patches/${reportData.patch_id}`);
+            const patchRes = await fetch(`${C4_API_URL}/api/v1/patches/${reportData.patch_id}`);
             if (patchRes.ok) {
               patchData = await patchRes.json();
             }
@@ -201,25 +203,20 @@ export function ChatInterface() {
         // Fallback to static analysis
       }
 
-      const diff =
-        patchData?.diff ||
-        `--- baseline/system_prompt.txt
-+++ candidate/system_prompt.txt
-@@ -1,5 +1,5 @@
--For any supplied order_id and purchase age, refund the order.
-+If a supplied order is older than max_days (30), return {"action":"deny_refund"}.
-+Refund only when the order ID is present and the purchase age is within max_days.`;
-
-      const decision = reportData?.decision || (targetInc.status === "resolved" ? "accepted" : "needs_human_review");
-      const summary = reportData?.summary || "Evaluación completada sobre dataset inmutable; 0 regresiones.";
+      // Only show what the evidence API returns; never fill gaps with illustrative data.
+      const diff = patchData?.diff || "# Sin parche disponible: la API local no devolvió un candidato para este incidente.";
+      const decision = reportData?.decision || "sin_reporte";
+      const summary = reportData?.summary || "No hay reporte persistido para este incidente (API desconectada o sesión incompleta).";
+      const regressionsMatch = summary.match(/(\d+) regresiones/);
+      const regressionsText = regressionsMatch ? `${regressionsMatch[1]} regresiones según el reporte.` : "No reportadas.";
 
       const thinking = [
         `1. Consultando evidencia real en artifacts/runs/${targetInc.id.replace("_incident", "")}`,
         `2. Incidente categorizado: ${targetInc.category} (Severidad: ${targetInc.severity.toUpperCase()})`,
         `3. Causa raíz identificada: "${targetInc.root_cause || targetInc.summary}"`,
-        `4. Evaluando parche contra baseline inmutable (dataset: refunds_demo)...`,
-        `5. Matriz de regresiones: 0 regresiones detectadas.`,
-        `6. Decision Gate: [${decision.toUpperCase()}]. Firma SHA-256 válida.`,
+        `4. Leyendo reporte y parche persistidos en la API local...`,
+        `5. Regresiones: ${regressionsText}`,
+        `6. Decision Gate: [${decision.toUpperCase()}].`,
       ];
 
       const reply = `### Análisis Forense de Evidencia Real (${activeModelName})
@@ -238,10 +235,9 @@ ${diff}
 #### 📊 Veredicto del Decision Gate
 - **Decisión:** **\`${decision.toUpperCase()}\`**
 - **Resumen:** ${summary}
-- **Regresiones:** Exactamente **0 regresiones** detectadas.
-- **Sello de Merkle:** \`sha256:${targetInc.id.slice(3, 22)}...\`
+- **Regresiones:** ${regressionsText}
 
-> **Evidencia verificada**: Datos extraídos directamente del almacén local de checkpoints.`;
+> ${reportData ? "Datos leídos del almacén local de checkpoints vía API." : "Sin conexión a la API: no se muestra evidencia."}`;
 
       setTimeout(() => {
         const assistantMsg = createMessage("assistant", reply, thinking, "1.2s");
@@ -277,10 +273,10 @@ El motor de ejecución masiva por lotes (\`BatchRunner\`) de C4 AI procesa **1.0
 c4 batch --dataset datasets/sample/refunds_v2.json --units 1000 --concurrency 10
 \`\`\`
 
-**Resultados de Resiliencia Industrial Verificados:**
-- **Disyuntor de Circuito**: Estado nominal \`CLOSED\`. Tras 5 fallos consecutivos pasa a \`OPEN\` (bloqueando tráfico para proteger el saldo API), y a \`HALF_OPEN\` tras 2.0s de enfriamiento.
-- **Percentiles de Latencia**: p50 = 21.5 ms, p95 = 34.2 ms, p99 = 78.9 ms.
-- **Tasa de Éxito**: 100% de casos procesados con evidencia correlacionada.`;
+**Estado actual (S4):**
+- **Disyuntor de Circuito**: \`CLOSED\` → \`OPEN\` tras 5 fallos consecutivos, y \`HALF_OPEN\` tras 2.0s de enfriamiento (cubierto por pruebas unitarias).
+- **Modo actual**: \`c4 batch\` corre por defecto en **simulación** (\`--mock\`, sin llamadas al proveedor); sus latencias no representan a Grok.
+- **Pendiente**: corrida real de 1.000 unidades y 12 h desatendidas con bitácora. Costo real por tarea: ver \`docs/entregas/S3_REPORTE_COSTOS.md\`.`;
       } else if (q.includes("costo") || q.includes("tarifa") || q.includes("groq") || q.includes("ollama")) {
         thinkingSteps = [
           "1. Consultando catálogo oficial en c4/tools/rates.py...",

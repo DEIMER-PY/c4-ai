@@ -1,100 +1,83 @@
-"""Unit tests for the 10 qualified executions milestone evidence and integrity proofs."""
-import hashlib
+"""Published S2/S3 evidence must be a faithful projection of real sessions (spec 043)."""
 import json
+import re
+import tempfile
 import unittest
 from pathlib import Path
 
-from c4.schemas.audit import IntegrityProof
-from c4.tools.rates import calculate_cost_usd
+from c4.services import run_evidence
 
-EVIDENCE_PATH = Path("docs/evidencia/2026-10-25-diez-ejecuciones-calificadas.json")
+ROOT = Path(__file__).resolve().parents[2]
+EVIDENCE = ROOT / 'docs/evidencia/2026-11-07-ejecuciones-reales.json'
+ARCHIVED = ROOT / 'docs/evidencia/archivo/2026-10-25-diez-ejecuciones-ilustrativas.json'
 
 
-class TestMilestoneEvidence(unittest.TestCase):
+class PublishedEvidenceTests(unittest.TestCase):
     def setUp(self):
-        self.assertTrue(EVIDENCE_PATH.exists(), f"Evidence file missing at {EVIDENCE_PATH}")
-        self.data = json.loads(EVIDENCE_PATH.read_text(encoding="utf-8"))
+        self.data = json.loads(EVIDENCE.read_text(encoding='utf-8'))
 
-    def test_evidence_file_structure(self):
-        self.assertEqual(self.data["schema_version"], "1.0.0")
-        self.assertEqual(self.data["total_executions"], 10)
-        self.assertEqual(len(self.data["executions"]), 10)
+    def test_schema_and_minimum_executions(self):
+        self.assertEqual(self.data['schema_version'], run_evidence.SCHEMA)
+        self.assertEqual(self.data['generator'], 'scripts/export_run_evidence.py')
+        self.assertGreaterEqual(self.data['total_executions'], 10)
+        self.assertEqual(len(self.data['executions']), self.data['total_executions'])
 
-    def test_evidence_has_valid_verdict_distribution(self):
-        verdicts = [e["gate_verdict"]["decision"] for e in self.data["executions"]]
-        self.assertIn("accepted", verdicts)
-        self.assertIn("rejected", verdicts)
-        self.assertIn("needs_human_review", verdicts)
-        self.assertIn("failed_budget", verdicts)
+    def test_every_execution_is_a_real_session_id_with_hash(self):
+        for row in self.data['executions']:
+            self.assertRegex(row['session_id'], r'^c4_[0-9a-f]{32}$')
+            self.assertRegex(row['evidence_sha256'], r'^[0-9a-f]{64}$')
+            self.assertEqual(row['reasoning']['provider'], 'grok')
+            self.assertGreater(row['usage']['succeeded_calls'], 0)
 
-        breakdown = self.data["verdict_breakdown"]
-        self.assertGreaterEqual(breakdown["accepted"], 4)
-        self.assertGreaterEqual(breakdown["rejected"], 3)
-        self.assertGreaterEqual(breakdown["needs_human_review"], 1)
-        self.assertGreaterEqual(breakdown["failed_budget"], 1)
+    def test_totals_are_consistent(self):
+        rows = self.data['executions']
+        self.assertEqual(sum(self.data['verdict_breakdown'].values()), len(rows))
+        self.assertAlmostEqual(sum(r['usage']['cost_usd'] for r in rows), self.data['total_cost_usd'], places=5)
+        self.assertEqual(sum(r['usage']['calls'] for r in rows), self.data['total_calls'])
 
-    def test_each_execution_has_cryptographic_integrity_and_merkle_root(self):
-        for ex in self.data["executions"]:
-            proof = ex["integrity_proof"]
-            self.assertTrue(proof["is_valid"])
+    def test_s3_has_completed_evaluation_on_32_case_set(self):
+        v2 = [b for key, b in self.data['by_dataset'].items() if key.startswith('refunds_v2@')]
+        self.assertTrue(v2)
+        self.assertTrue(all(b['cases'] >= 30 for b in v2))
+        self.assertGreaterEqual(sum(b['completed_evaluations'] for b in v2), 1)
+        self.assertTrue(all(b['cost_usd_per_session'] > 0 for b in v2))
 
-            # Verify Merkle Root derivation
-            computed_root = IntegrityProof.compute_root(
-                proof["dataset_hash"],
-                proof["baseline_prompt_hash"],
-                proof["candidate_prompt_hash"],
-                proof["verdict_hash"],
-            )
-            self.assertEqual(
-                proof["sha256_merkle_root"],
-                computed_root,
-                f"Merkle root mismatch for execution {ex['execution_id']}",
-            )
-
-    def test_each_execution_telemetry_and_deterministic_cost(self):
-        for ex in self.data["executions"]:
-            telemetry = ex["telemetry"]
-            model = ex["model"]
-            provider = ex["provider"]
-            prompt_tokens = telemetry["prompt_tokens"]
-            comp_tokens = telemetry["completion_tokens"]
-
-            self.assertEqual(telemetry["total_tokens"], prompt_tokens + comp_tokens)
-            self.assertGreater(telemetry["latency_ms"], 0)
-
-            expected_cost = calculate_cost_usd(
-                model=model,
-                input_tokens=prompt_tokens,
-                output_tokens=comp_tokens,
-                provider=provider,
-            )
-
-            self.assertEqual(telemetry["cost_usd"], expected_cost)
-
-            if provider == "ollama":
-                self.assertEqual(telemetry["cost_usd"], 0.0)
-
-    def test_gate_verdict_zero_regressions_rule(self):
-        for ex in self.data["executions"]:
-            decision = ex["gate_verdict"]["decision"]
-            eval_data = ex["evaluation"]
-
-            if decision == "accepted":
-                self.assertEqual(
-                    eval_data["regressions_count"],
-                    0,
-                    f"Execution {ex['execution_id']} accepted despite {eval_data['regressions_count']} regressions",
-                )
-                self.assertTrue(eval_data["mandatory_security_passed"])
-                self.assertGreaterEqual(eval_data["candidate_score"], eval_data["baseline_score"])
-
-            if eval_data["regressions_count"] > 0:
-                self.assertEqual(
-                    decision,
-                    "rejected",
-                    f"Execution {ex['execution_id']} with regressions must be rejected",
-                )
+    def test_illustrative_ids_never_leak_into_real_evidence(self):
+        archived = json.loads(ARCHIVED.read_text(encoding='utf-8'))
+        fake_ids = {e['execution_id'] for e in archived['executions']}
+        text = EVIDENCE.read_text(encoding='utf-8')
+        self.assertFalse(any(fake in text for fake in fake_ids))
+        self.assertIsNone(re.search(r'(?i)\b(sk|gsk|xai)-[A-Za-z0-9]{20,}', text))
 
 
-if __name__ == "__main__":
+class RunEvidenceProjectionTests(unittest.TestCase):
+    def write(self, root: Path, sid: str, state: dict):
+        (root / sid).mkdir(parents=True)
+        (root / sid / 'evidence.json').write_text(json.dumps(state), encoding='utf-8')
+
+    def base(self, sid, calls):
+        return {'id': sid, 'provenance': 'synthetic_cases_real_provider', 'created_at': '2026-11-07T00:00:00+00:00',
+                'dataset': {'data': {'id': 'd', 'version': '1', 'cases': [{}]}, 'sha256': 'a' * 64},
+                'target_case_id': 't', 'provider': {'base_url': 'https://x', 'model': 'grok-4.7'},
+                'job': {'status': 'succeeded', 'stage': 'report', 'error': None}, 'calls': calls,
+                'report': {'decision': 'accepted'}}
+
+    def test_legacy_sessions_recompute_cost_from_real_tokens_and_label_it(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            call = {'status': 'succeeded', 'model': 'grok-4.7', 'provider': 'grok', 'input_tokens': 1_000_000,
+                    'output_tokens': 0, 'cost_usd': None, 'latency_ms': 10}
+            self.write(root, 'c4_' + 'a' * 32, self.base('c4_' + 'a' * 32, [call]))
+            self.write(root, 'c4_' + 'b' * 32, self.base('c4_' + 'b' * 32, []))  # no provider calls
+            (root / ('c4_' + 'c' * 32)).mkdir()
+            (root / ('c4_' + 'c' * 32) / 'evidence.json').write_text('{corrupt', encoding='utf-8')
+            report = run_evidence.build(root)
+        self.assertEqual(report['total_executions'], 1)
+        self.assertEqual(report['skipped_sessions_without_provider_calls'], 2)
+        usage = report['executions'][0]['usage']
+        self.assertEqual(usage['cost_usd'], 2.0)
+        self.assertEqual(usage['cost_source'], 'recomputed_from_reported_tokens')
+
+
+if __name__ == '__main__':
     unittest.main()

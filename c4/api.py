@@ -19,6 +19,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from c4.schemas import Agent, Error, Evaluation, Incident, Job, Patch, Report, Run
 from c4.services.evidence import EvidenceError, EvidenceReader
+from c4.services.run_evidence import build as build_run_evidence
 
 T = TypeVar('T')
 
@@ -74,32 +75,26 @@ def create_app(store_root: Path | None = None) -> FastAPI:
             }
         }
 
+    def overview() -> dict:
+        # Computed live from persisted sessions with real provider usage; never from a static file.
+        report = build_run_evidence(reader.store.root)
+        report.pop('executions')
+        return report
+
     @app.get('/metrics', response_class=PlainTextResponse)
     def metrics():
-        evidence_file = Path("docs/evidencia/2026-10-25-diez-ejecuciones-calificadas.json")
-        data = {}
-        if evidence_file.exists():
-            try:
-                data = json.loads(evidence_file.read_text(encoding="utf-8"))
-            except Exception:
-                pass
-        b = data.get("verdict_breakdown", {})
-        total_toks = data.get("total_tokens_consumed", 0)
-        total_cost = data.get("total_cost_usd", 0.0)
-
+        data = overview()
+        b = data['verdict_breakdown']
         lines = [
-            "# HELP c4_evaluations_total Total number of agent evaluations processed by C4 AI",
+            "# HELP c4_evaluations_total Real C4 AI sessions by final status",
             "# TYPE c4_evaluations_total counter",
-            f'c4_evaluations_total{{status="accepted"}} {b.get("accepted", 0)}',
-            f'c4_evaluations_total{{status="rejected"}} {b.get("rejected", 0)}',
-            f'c4_evaluations_total{{status="needs_human_review"}} {b.get("needs_human_review", 0)}',
-            f'c4_evaluations_total{{status="failed_budget"}} {b.get("failed_budget", 0)}',
-            "# HELP c4_tokens_total Total tokens processed across evaluations",
+            *[f'c4_evaluations_total{{status="{status}"}} {count}' for status, count in b.items()],
+            "# HELP c4_tokens_total Tokens reported by providers across real sessions",
             "# TYPE c4_tokens_total counter",
-            f'c4_tokens_total{{type="all"}} {total_toks}',
-            "# HELP c4_cost_usd_total Total cost in USD",
+            f'c4_tokens_total{{type="all"}} {data["total_tokens_consumed"]}',
+            "# HELP c4_cost_usd_total Total cost in USD across real sessions",
             "# TYPE c4_cost_usd_total gauge",
-            f'c4_cost_usd_total {total_cost:.6f}',
+            f'c4_cost_usd_total {data["total_cost_usd"]:.6f}',
             "# HELP c4_circuit_breaker_trips Total circuit breaker trips",
             "# TYPE c4_circuit_breaker_trips counter",
             'c4_circuit_breaker_trips 0',
@@ -108,18 +103,7 @@ def create_app(store_root: Path | None = None) -> FastAPI:
 
     @app.get('/api/v1/metrics/overview')
     def metrics_overview():
-        evidence_file = Path("docs/evidencia/2026-10-25-diez-ejecuciones-calificadas.json")
-        if evidence_file.exists():
-            try:
-                return json.loads(evidence_file.read_text(encoding="utf-8"))
-            except Exception:
-                pass
-        return {
-            "total_executions": 0,
-            "verdict_breakdown": {"accepted": 0, "rejected": 0, "needs_human_review": 0, "failed_budget": 0},
-            "total_tokens_consumed": 0,
-            "total_cost_usd": 0.0,
-        }
+        return overview()
 
     @app.get('/health')
     def health():

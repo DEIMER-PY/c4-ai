@@ -2,7 +2,7 @@
 import json
 import os
 from dataclasses import dataclass, field
-from time import monotonic
+from time import monotonic, sleep
 from typing import Any
 from urllib.parse import urlparse
 
@@ -26,6 +26,8 @@ class Settings:
     max_tokens: int = 1024
     max_seconds: float = 600
     provider: str = 'grok'
+    max_retries: int = 2
+    retry_backoff_seconds: float = 1.0
 
     @classmethod
     def from_env(cls, env_file: str = '.env', provider: str = 'grok') -> 'Settings':
@@ -59,6 +61,7 @@ class Settings:
                 max_calls=int(os.environ.get('C4_MAX_MODEL_CALLS', '16')),
                 max_tokens=int(os.environ.get('C4_MAX_OUTPUT_TOKENS', '1024')),
                 max_seconds=float(os.environ.get('C4_MAX_JOB_SECONDS', '600')),
+                max_retries=int(os.environ.get('C4_MAX_PROVIDER_RETRIES', '2')),
             )
         except ValueError:
             raise WorkflowError('invalid_config', 'Los límites de entorno deben ser numéricos.') from None
@@ -82,8 +85,9 @@ class Settings:
         if not self.api_key.strip() or not self.model.strip():
             raise WorkflowError('missing_credentials', 'Configura clave y modelo localmente en .env.')
         if not (0 < self.timeout <= 120 and 0 < self.max_seconds <= 3600
-                and 1 <= self.max_calls <= 100 and 64 <= self.max_tokens <= 4096):
-            raise WorkflowError('invalid_config', 'Límites fuera de rango: timeout≤120, job≤3600, llamadas≤100, tokens 64..4096.')
+                and 1 <= self.max_calls <= 100 and 64 <= self.max_tokens <= 4096
+                and 0 <= self.max_retries <= 5 and 0 <= self.retry_backoff_seconds <= 10):
+            raise WorkflowError('invalid_config', 'Límites fuera de rango: timeout≤120, job≤3600, llamadas≤100, tokens 64..4096, reintentos≤5.')
 
 
 @dataclass
@@ -138,6 +142,28 @@ class Gateway:
         return 'prompt_json'
 
     def complete(self, system: str, payload: dict, purpose: str, schema: dict | None = None) -> dict:
+        """Bounded retries for transient failures (timeout, connection, HTTP 5xx).
+
+        HTTP 429 is deliberately not retried: it stays retryable for the operator but the
+        session stops instead of spending against a rate limit. Every attempt is a separate
+        budgeted call with its own evidence record, so retries are visible and can never
+        exceed max_calls or the job deadline.
+        """
+        for attempt in range(self.settings.max_retries + 1):
+            try:
+                return self._attempt(system, payload, purpose, schema, attempt)
+            except WorkflowError as error:
+                delay = self.settings.retry_backoff_seconds * (2 ** attempt)
+                remaining = self.budget.max_seconds - (monotonic() - self.started)
+                transient = error.code in {'provider_timeout', 'provider_connection'} or (
+                    error.code == 'provider_http' and (self.records[-1].get('http_status') or 0) >= 500)
+                if (not transient or attempt == self.settings.max_retries
+                        or self.calls >= self.budget.max_calls or remaining <= delay + 1):
+                    raise
+                sleep(delay)
+        raise AssertionError('unreachable')
+
+    def _attempt(self, system: str, payload: dict, purpose: str, schema: dict | None, attempt: int) -> dict:
         remaining = self.budget.max_seconds - (monotonic() - self.started)
         if self.calls >= self.budget.max_calls or remaining <= 0:
             raise WorkflowError('budget_exceeded', 'Se alcanzó el límite de llamadas o tiempo; revisar evidencia.')
@@ -146,7 +172,7 @@ class Gateway:
         record = {'call': self.calls, 'purpose': purpose, 'model': self.settings.model, 'provider': self.settings.provider,
                   'output_mode': self.output_mode(schema is not None),
                   'status': 'failed', 'input_tokens': None, 'output_tokens': None,
-                  'cost_usd': None}
+                  'cost_usd': None, 'attempt': attempt + 1}
         self.records.append(record)
         try:
             request_body = {'model': self.settings.model, 'messages': [
