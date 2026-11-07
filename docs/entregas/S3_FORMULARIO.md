@@ -1,6 +1,6 @@
 # Entrega S3
 
-**Estado:** lista para enviar.
+**Estado:** enviada el 2026-11-07 a las 13:21 (hora local) en el panel del reto. En revisión. Las notas declaran que los casos son sintéticos y que el gasto del panel (USD 7,75 en grok-4.7) no está conciliado con el registrado (USD 3,11).
 
 - Repositorio: https://github.com/DEIMER-PY/c4-ai
 - Reporte técnico S3: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/entregas/S3_REPORTE_TECNICO.md

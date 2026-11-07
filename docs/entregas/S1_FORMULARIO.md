@@ -1,6 +1,6 @@
 # Entrega S1
 
-**Estado:** enviada. El 2026-11-03 el equipo del reto respondió: "No se pudo revisar: el repo y el reporte (en el mismo repo) dan 404. […] Hagan público el repo para poder revisarlo."
+**Estado:** reenviada el 2026-11-07 a las 13:22 (hora local) en el panel del reto, con el reporte apuntando a `develop` y la respuesta al comentario del 2026-11-03. En revisión.
 
 El 2026-11-07 se comprobó sin sesión iniciada que el repositorio y el reporte responden HTTP 200. El reporte enviado apuntaba a una rama de feature; ahora se usa `develop`, que es la rama por defecto.
 

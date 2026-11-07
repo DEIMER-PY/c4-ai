@@ -1,6 +1,6 @@
 # Campos de Entrega Semana S2
 
-**Estado:** pendiente de enviar en el panel (el panel la muestra como "Pendiente" el 2026-11-07; nunca se envió con la evidencia retirada).
+**Estado:** enviada el 2026-11-07 a las 13:20 (hora local) en el panel del reto, con el video https://youtu.be/F17pAO6cEm8. En revisión.
 
 - **Repositorio**: https://github.com/DEIMER-PY/c4-ai
 - **Reporte Técnico Semana S2**: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/entregas/S2_REPORTE_TECNICO.md
