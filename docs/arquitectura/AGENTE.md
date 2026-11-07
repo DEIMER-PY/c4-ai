@@ -91,12 +91,20 @@ sequenceDiagram
             RS->>ST: checkpoint
         end
         RS->>RS: decide()
-        RS->>ST: save(report)
+        loop mientras rejected, intentos < C4_MAX_FIX_ATTEMPTS y quedan 1+N llamadas
+            RS->>GW: patch_writer(..., previous_attempt = casos fallidos, regresiones)
+            GW->>G: POST /chat/completions
+            loop cada caso (sin volver a correr el baseline)
+                RS->>GW: candidato(caso)
+            end
+            RS->>RS: decide()
+        end
+        RS->>ST: save(report + repair_attempts)
     end
     CLI-->>Op: tabla PASS/FAIL, llamadas, tokens y costo. Código de salida: 0, 2 o 3
 ```
 
-Una sesión sobre `refunds_v2` hace `1 + 1 + 2 × 32 = 66` llamadas, sin contar los reintentos.
+Una sesión sobre `refunds_v2` hace `1 + 1 + 2 × 32 = 66` llamadas en el primer intento. Cada reparación adicional suma `1 + 32 = 33`, porque el baseline ya está medido. Los reintentos del gateway se cuentan aparte.
 
 ## 4. Estados
 
@@ -209,11 +217,21 @@ Las tres capturas son salida de `c4 report <id>` sobre sesiones reales. No llama
 
 ![c4 report de una sesión fallida por 503](../assets/cli/report-failed-503.svg)
 
+**Reparación sin margen de llamadas.** `refunds_v2` 2.1.0: el primer intento quedó en 31/32 con 1 regresión (`missing_purchase_age_context`) y el gate lo rechazó. Con `C4_MAX_MODEL_CALLS=100` y 2 reintentos del gateway quedaban 32 llamadas y el segundo intento necesitaba 33, así que el bucle se detuvo antes de exceder el presupuesto (`insufficient_call_budget`). 68 llamadas, USD 0,2117.
+
+![c4 report de una reparación detenida por presupuesto](../assets/cli/report-repair-budget.svg)
+
+**Reparación cortada por el proveedor.** El primer intento quedó en 27/32 con 5 regresiones. El bucle envió la retroalimentación a `patch_writer` (`repair_patch:1`) y Grok agotó el tiempo tres veces seguidas. La sesión terminó como `failed` y conserva el primer intento completo. 70 llamadas, USD 0,2150.
+
+![c4 report de una reparación cortada por timeout](../assets/cli/report-repair-timeout.svg)
+
+Todavía no hay una sesión real que haya completado un segundo intento. El comportamiento del bucle (rechazo → retroalimentación → aceptación) está cubierto por las pruebas E2E con un proveedor simulado.
+
 Todas las sesiones, con su costo, están en el [reporte de costos](../entregas/S3_REPORTE_COSTOS.md).
 
 ## 8. Límites actuales
 
 - Los casos son sintéticos y las llamadas reales.
-- Hay un solo intento de reparación por sesión: `patch_writer` no recibe los casos que fallaron en la evaluación. `/goal` en la TUI repite sesiones completas, pero sin pasarles esa retroalimentación.
+- La reparación iterativa ([spec 044](../specs/044-iterative-repair/spec.md)) está limitada por `C4_MAX_FIX_ATTEMPTS` y `C4_MAX_MODEL_CALLS` (tope 200). La sesión real `c4_b50fcf4846ed40a698b7fe96139ee822` mostró por qué hace falta margen: con 100 llamadas, 2 reintentos del gateway dejaron 32 cuando se necesitaban 33, y el segundo intento no arrancó (`repair_stopped`).
 - `c4 batch` corre en modo simulado por defecto, así que S4 (1.000 unidades, 12 h) sigue pendiente.
 - La API es local, de solo lectura y sin autenticación. No debe exponerse a internet.

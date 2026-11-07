@@ -28,6 +28,7 @@ class Settings:
     provider: str = 'grok'
     max_retries: int = 2
     retry_backoff_seconds: float = 1.0
+    max_fix_attempts: int = 2
 
     @classmethod
     def from_env(cls, env_file: str = '.env', provider: str = 'grok') -> 'Settings':
@@ -62,6 +63,7 @@ class Settings:
                 max_tokens=int(os.environ.get('C4_MAX_OUTPUT_TOKENS', '1024')),
                 max_seconds=float(os.environ.get('C4_MAX_JOB_SECONDS', '600')),
                 max_retries=int(os.environ.get('C4_MAX_PROVIDER_RETRIES', '2')),
+                max_fix_attempts=int(os.environ.get('C4_MAX_FIX_ATTEMPTS', '2')),
             )
         except ValueError:
             raise WorkflowError('invalid_config', 'Los límites de entorno deben ser numéricos.') from None
@@ -85,9 +87,10 @@ class Settings:
         if not self.api_key.strip() or not self.model.strip():
             raise WorkflowError('missing_credentials', 'Configura clave y modelo localmente en .env.')
         if not (0 < self.timeout <= 120 and 0 < self.max_seconds <= 3600
-                and 1 <= self.max_calls <= 100 and 64 <= self.max_tokens <= 4096
-                and 0 <= self.max_retries <= 5 and 0 <= self.retry_backoff_seconds <= 10):
-            raise WorkflowError('invalid_config', 'Límites fuera de rango: timeout≤120, job≤3600, llamadas≤100, tokens 64..4096, reintentos≤5.')
+                and 1 <= self.max_calls <= 200 and 64 <= self.max_tokens <= 4096
+                and 0 <= self.max_retries <= 5 and 0 <= self.retry_backoff_seconds <= 10
+                and 1 <= self.max_fix_attempts <= 5):
+            raise WorkflowError('invalid_config', 'Límites fuera de rango: timeout≤120, job≤3600, llamadas≤200, tokens 64..4096, reintentos≤5, intentos de reparación 1..5.')
 
 
 @dataclass

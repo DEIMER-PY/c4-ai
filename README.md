@@ -17,6 +17,7 @@ Cuando un agente con LLM falla en producción, lo habitual es editar el prompt a
 | ¿Qué falló? | `trace_reader` compara la acción observada con la esperada (determinista). |
 | ¿Por qué falló y cómo se corrige? | `patch_writer` envía a Grok la traza, la política y el prompt, y recibe la causa raíz, el prompt candidato y la justificación. |
 | ¿La corrección rompe algo? | `eval_runner` ejecuta baseline y candidato en todos los casos y `decide()` aplica el gate. |
+| ¿Y si el gate rechaza? | C4 vuelve a llamar a `patch_writer` con los casos que fallaron y las regresiones, y evalúa el nuevo candidato (hasta `C4_MAX_FIX_ATTEMPTS`). |
 | ¿Cuánto costó? | Cada llamada registra los tokens que reporta el proveedor, `cost_usd` y la latencia. |
 
 ## Cómo funciona
@@ -86,7 +87,7 @@ La llave de Grok vive solo en `.env`, que está en `.gitignore`. El gateway nunc
 
 Códigos de salida: `0` accepted, `2` rejected, `3` needs_human_review, `1` fallo, con la evidencia conservada.
 
-Límites configurables en `.env`: `C4_MAX_MODEL_CALLS` (hasta 100), `C4_MAX_JOB_SECONDS` (hasta 3600), `C4_MODEL_TIMEOUT_SECONDS` y `C4_MAX_PROVIDER_RETRIES` (por defecto 2).
+Límites configurables en `.env`: `C4_MAX_MODEL_CALLS` (hasta 200), `C4_MAX_JOB_SECONDS` (hasta 3600), `C4_MODEL_TIMEOUT_SECONDS` y `C4_MAX_PROVIDER_RETRIES` (por defecto 2).
 
 Para correr varias sesiones reales con un tope de gasto:
 
@@ -129,7 +130,7 @@ tests/                   unit, integration (E2E), evals
 ## Límites conocidos
 
 - Los casos del dataset son sintéticos. Las llamadas, tokens y latencias son reales.
-- Hay un intento de reparación por sesión. La reparación iterativa con la retroalimentación de la evaluación está pendiente.
+- La reparación iterativa está limitada por `C4_MAX_FIX_ATTEMPTS` y `C4_MAX_MODEL_CALLS` (tope 200). Con 32 casos, 2 intentos necesitan unas 99 llamadas más los reintentos: se recomiendan 120.
 - S4 (escala real y 12 h) está pendiente.
 - La API local no tiene autenticación y no debe exponerse.
 

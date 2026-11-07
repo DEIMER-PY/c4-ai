@@ -100,6 +100,14 @@ def emit(ctx: typer.Context, result: dict):
         for row in evaluation['case_results']:
             table.add_row(row['case_id'], 'PASS' if row['before_passed'] else 'FAIL', 'PASS' if row['after_passed'] else 'FAIL')
         console.print(table)
+    if result.get('repair_attempts'):
+        repairs = Table('Intento', 'Candidato', 'Regresiones', 'Seguridad', 'Decisión', border_style='cyan')
+        for item in result['repair_attempts']:
+            repairs.add_row(str(item['attempt']), f"{item['after']['passed']}/{item['after']['total']}",
+                            str(len(item['regressions'])), 'PASS' if item['security_passed'] else 'FAIL', item['decision'])
+        console.print(repairs)
+    if result.get('repair_stopped'):
+        console.print(Text('Reparación detenida: ' + result['repair_stopped'], style='yellow'))
     calls = result['calls']
     tokens = sum(c['input_tokens'] + c['output_tokens'] for c in calls
                  if c['input_tokens'] is not None and c['output_tokens'] is not None)

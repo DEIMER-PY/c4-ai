@@ -32,6 +32,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--dataset', default='datasets/sample/refunds_v2.json')
     parser.add_argument('--store', default='artifacts/runs')
+    parser.add_argument('--env-file', default='.env')
     parser.add_argument('--target', action='append', dest='targets')
     parser.add_argument('--budget-usd', type=float, required=True, help='Hard ceiling for the whole suite.')
     parser.add_argument('--per-run-usd', type=float, default=0.5, help='Worst-case spend reserved per session.')
@@ -45,7 +46,7 @@ def main(argv: list[str] | None = None) -> int:
         if spent + args.per_run_usd > args.budget_usd:
             print(json.dumps({'stopped': 'budget_ceiling', 'spent_usd': round(spent, 6)}), flush=True)
             break
-        proc = subprocess.run([sys.executable, '-m', 'c4.cli', '--json', '--store', str(store), 'demo',
+        proc = subprocess.run([sys.executable, '-m', 'c4.cli', '--json', '--store', str(store), '--env-file', args.env_file, 'demo',
                                '--dataset', args.dataset, '--target', target],
                               capture_output=True, text=True, encoding='utf-8', errors='replace', env=env)
         try:
