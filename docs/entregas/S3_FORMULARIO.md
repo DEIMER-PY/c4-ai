@@ -1,24 +1,33 @@
-# Campos de Entrega Semana S3
+# Entrega S3
 
-**Estado: listo para enviar tras regenerar el reporte de costos.** El repositorio es público con licencia MIT; el tablero sigue privado.
+**Estado:** lista para enviar.
 
-- **Repositorio**: https://github.com/DEIMER-PY/c4-ai
-- **Reporte Técnico Semana S3**: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/entregas/S3_REPORTE_TECNICO.md
-- **Dataset de 32 Casos (`refunds_v2.json`)**: https://github.com/DEIMER-PY/c4-ai/blob/develop/datasets/sample/refunds_v2.json
-  - **Checksum SHA-256**: `b0485acfa301e310491df9443bc1e32c6e3d44b843c0050d2037e42fb77a78fd`
-- **Reporte de costo por tarea (generado desde sesiones reales)**: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/entregas/S3_REPORTE_COSTOS.md
-- **Evidencia real**: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/evidencia/2026-11-07-ejecuciones-reales.json
-- **Módulo de Tarifas y Costo**: https://github.com/DEIMER-PY/c4-ai/blob/develop/c4/tools/rates.py
-- **Rama principal**: `develop`
+- Repositorio: https://github.com/DEIMER-PY/c4-ai
+- Reporte técnico S3: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/entregas/S3_REPORTE_TECNICO.md
+- Dataset de 32 casos: https://github.com/DEIMER-PY/c4-ai/blob/develop/datasets/sample/refunds_v2.json (v2.1.0, SHA-256 `b0485acfa301e310491df9443bc1e32c6e3d44b843c0050d2037e42fb77a78fd`)
+- Reporte de costo por tarea: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/entregas/S3_REPORTE_COSTOS.md
+- Evidencia real: https://github.com/DEIMER-PY/c4-ai/blob/develop/docs/evidencia/2026-11-07-ejecuciones-reales.json
+- Cálculo de costo: https://github.com/DEIMER-PY/c4-ai/blob/develop/c4/tools/rates.py
 
-## Notas Técnicas Listas para Copiar en el Formulario
+## Notas (listas para copiar)
 
-C4 AI formaliza la entrega de la Semana S3 resolviendo la escala de evaluación estadística y la cuantificación económica exacta de las intervenciones del agente:
+Dataset propio `refunds_v2` con 32 casos para un agente de reembolsos, 15 de ellos de seguridad obligatoria:
+- 5 reembolsos válidos;
+- 4 fuera de la ventana de 30 días;
+- 4 con datos faltantes;
+- 8 ataques (inyección, jailbreak, exfiltración, fuga del prompt, SQL, XSS, shell, PII);
+- 5 artículos no reembolsables;
+- 4 fallos de herramienta;
+- 2 casos de fraude o garantía.
 
-1. **Dataset Propio de 32 Casos (`refunds_v2.json`)**: Evolución completa respecto al set sintético inicial de 6 casos. El nuevo benchmark de 32 casos (versión 2.1.0, SHA-256 del archivo en el checkout local: `b0485acfa301e310491df9443bc1e32c6e3d44b843c0050d2037e42fb77a78fd`) tipifica 12 políticas estándar de reembolso, 8 casos de borde temporales, 6 casos adversariales de inyección y elusión de controles (OWASP LLM Top 10) y 6 cálculos complejos de paquetes y devoluciones fraccionarias. Procedencia sintética estructurada que salvaguarda la privacidad de datos reales (RGPD / CCPA).
+Los casos son sintéticos y las respuestas del agente son llamadas reales a Grok.
 
-2. **Atribución Determinista de Costo Monetario (`cost_usd`)**: Eliminamos la incertidumbre de tarifas. Nuestro motor calcula en microdólares el gasto real por tarea basándose en tokens de entrada y salida medidos. Se dispone de un catálogo de precios para xAI Grok ($2/$10), Groq Llama y Qwen ($0,59/$0,79), DeepSeek ($0,14/$0,28) e inferencia local con Ollama a costo $0,00 garantizado.
+El costo por tarea sale de los tokens que reporta Grok en cada llamada, a USD 2 y USD 10 por millón de tokens de entrada y salida. Una tarea completa sobre los 32 casos son 66 llamadas: diagnóstico, propuesta de corrección, el agente original y el candidato en cada caso. Cuesta entre USD 0,20 y 0,22, unos USD 0,005 por caso evaluado, y tarda de 6 a 10 minutos.
 
-3. **Costo real medido**: el costo por sesión completa sobre los 32 casos y por caso evaluado sale de tokens reales reportados por Grok. Ver `S3_REPORTE_COSTOS.md`, que se genera automáticamente y no se edita a mano.
+En la versión 2.1.0 hubo:
+- 2 sesiones aceptadas (19/32 → 32/32 y 18/32 → 32/32);
+- 6 rechazadas por el gate por 1 o 2 regresiones, todas pasando los casos de seguridad;
+- 4 fallidas por timeouts o HTTP 503 del proveedor;
+- 3 incompletas por cortes locales.
 
-Procedencia: casos sintéticos, llamadas reales. Contrato del dataset en `tests/evals/test_dataset_contract.py`.
+El reporte se genera desde 30 sesiones reales (USD 3,06 en total) y cada una se verifica por hash.
