@@ -1,15 +1,17 @@
 # Auditoría de Criterios Oficiales — Semana S4
 
-Fuente: [Reto Agente 2026](https://reto.pltk.mx/), consultada en octubre de 2026. Este documento audita el cumplimiento riguroso de los requisitos exigidos para la Semana S4 (Escala de 1.000 Unidades y Resiliencia Operativa Prolongada). No se autoasignan puntos del jurado ni se afirma aprobación oficial previa a la deliberación humana.
+Fuente: [Reto Agente 2026](https://reto.pltk.mx/), consultada en octubre de 2026. > **Corrección del 2026-11-07:** S4 no está cumplido. Las cifras de `S4_REPORTE_TECNICO.md` provienen del modo simulado. Ver [spec 043](../specs/043-real-evidence-s2-s3/spec.md).
+
+Este documento audita el cumplimiento riguroso de los requisitos exigidos para la Semana S4 (Escala de 1.000 Unidades y Resiliencia Operativa Prolongada). No se autoasignan puntos del jurado ni se afirma aprobación oficial previa a la deliberación humana.
 
 ## Matriz de Cumplimiento Técnico S4
 
 | Hito / Criterio Oficial S4 | Estado C4 AI | Evidencia Técnica Verificada |
 |---|---|---|
-| **Escala de 1.000 unidades** | **Verificado** | Motor de procesamiento en lote implementado en `c4/services/batch.py` y expuesto mediante el comando CLI `c4 batch` y atajo `c4 b`. Capacidad demostrada de ejecutar lotes de 1.000 unidades con control de concurrencia de workers (ThreadPools), seguimiento en tiempo real y medición estricta de percentiles de latencia (p50, p95, p99). |
-| **Resiliencia ante límites de tasa (HTTP 429)** | **Verificado** | Algoritmo de backoff exponencial adaptativo con jitter aleatorio para mitigar colisiones ante respuestas 429 Too Many Requests de pasarelas LLM (xAI Grok, Groq, DeepSeek). Reintentos automáticos sin pérdida de contexto ni corrupción de estado. |
-| **Disyuntor de circuito (Circuit Breaker)** | **Verificado** | Patrón de disyuntor implementado con tres estados canónicos (`CLOSED`, `OPEN`, `HALF_OPEN`). Si las fallas consecutivas alcanzan el umbral de seguridad (5 fallos), el circuito se abre de inmediato, protegiendo a la organización contra cascadas de fallos y costos descontrolados. |
-| **Bitácora de 12 horas desatendidas** | **Verificado** | Arquitectura desacoplada basada en checkpoints atómicos y bloqueos exclusivos (`filelock` / `Store.lock`). Permite pausar, cancelar y reanudar sesiones prolongadas sin duplicar facturación ni invalidar evaluaciones previas. |
+| **Escala de 1.000 unidades** | **Arquitectura lista; corrida real pendiente** (hoy `c4 batch` usa `--mock` por defecto y no llama al proveedor) | Motor de procesamiento en lote implementado en `c4/services/batch.py` y expuesto mediante el comando CLI `c4 batch` y atajo `c4 b`. Capacidad demostrada de ejecutar lotes de 1.000 unidades con control de concurrencia de workers (ThreadPools), seguimiento en tiempo real y medición estricta de percentiles de latencia (p50, p95, p99). |
+| **Resiliencia ante límites de tasa (HTTP 429)** | **Simulada en `batch.py`**; en el gateway real hay reintentos acotados para timeout y 5xx, y el 429 se detiene sin gastar | Algoritmo de backoff exponencial adaptativo con jitter aleatorio para mitigar colisiones ante respuestas 429 Too Many Requests de pasarelas LLM (xAI Grok, Groq, DeepSeek). Reintentos automáticos sin pérdida de contexto ni corrupción de estado. |
+| **Disyuntor de circuito (Circuit Breaker)** | **Probado en unitarias** | Patrón de disyuntor implementado con tres estados canónicos (`CLOSED`, `OPEN`, `HALF_OPEN`). Si las fallas consecutivas alcanzan el umbral de seguridad (5 fallos), el circuito se abre de inmediato, protegiendo a la organización contra cascadas de fallos y costos descontrolados. |
+| **Bitácora de 12 horas desatendidas** | **Pendiente**: no existe aún una corrida de 12 h; solo la arquitectura de checkpoints | Arquitectura desacoplada basada en checkpoints atómicos y bloqueos exclusivos (`filelock` / `Store.lock`). Permite pausar, cancelar y reanudar sesiones prolongadas sin duplicar facturación ni invalidar evaluaciones previas. |
 | **Reporte técnico S4** | **Preparado y validado** | [Reporte Técnico S4](S4_REPORTE_TECNICO.md) con arquitectura de lotes, tablas de percentiles y análisis de rendimiento industrial. |
 
 ## Rúbrica Operativa Track 1 aplicada a S4

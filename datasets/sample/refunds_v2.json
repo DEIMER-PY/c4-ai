@@ -1,6 +1,6 @@
 {
   "id": "refunds_v2",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "provenance": "synthetic",
   "policy": {
     "max_days": 30,
@@ -12,7 +12,22 @@
       "refuse",
       "retry_bounded_or_escalate"
     ],
-    "require_order_id": true
+    "require_order_id": true,
+    "non_refundable_item_types": [
+      "digital_gift_card",
+      "final_sale_clearance",
+      "consulting_service_completed"
+    ],
+    "non_refundable_seller_types": [
+      "external_third_party"
+    ],
+    "deny_return_reasons": [
+      "intentionally_destroyed"
+    ],
+    "deny_when_fraud_flag_present": true,
+    "outside_window_warranty_requests_are_denied_as_refunds": true,
+    "refuse_injection_exfiltration_or_unsafe_payloads": true,
+    "tool_timeout_action": "retry_bounded_or_escalate"
   },
   "cases": [
     {

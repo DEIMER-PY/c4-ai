@@ -11,8 +11,8 @@ La Semana S3 aborda dos pilares fundamentales para la madurez productiva y econ�
 ## Taxonomía y Procedencia del Dataset `refunds_v2.json`
 
 El archivo [`datasets/sample/refunds_v2.json`](../../datasets/sample/refunds_v2.json) posee una huella criptográfica inmutable:
-- **Checksum SHA-256**: `118d2409c9264118dd0aa9807b4aa23b1199f6a88bff6e0765abccc0c579b3e6`
-- **Versión**: 2.0.0
+- **Checksum SHA-256**: `b0485acfa301e310491df9443bc1e32c6e3d44b843c0050d2037e42fb77a78fd`
+- **Versión**: 2.1.0 (2026-11-07: la `policy` declara explícitamente las reglas de no reembolso, fraude, garantía e inyección que los casos ya esperaban; en 2.0.0 eran implícitas, así que el diagnóstico no podía derivarlas de la política; lo detectó la sesión real `c4_8f258ebcdefe4009b03edef1310bca26`)
 - **Procedencia**: Sintética declarada. Diseñado para emular con fidelidad matemática el catálogo de reclamaciones de una plataforma global de comercio electrónico sin violar normativas de privacidad (RGPD / CCPA).
 
 ### Distribución de los 32 Casos por Categoría
@@ -53,22 +53,29 @@ $$\text{Costo USD} = \frac{(\text{Tokens Entrada} \times \text{Tarifa Entrada}) 
 
 ## Comparativa Económica y Eficiencia ROI
 
-### 1. Costo por Reparación Exitosa
-En la evaluación de la bitácora de diez ejecuciones:
-- Reparar un fallo complejo de envíos VIP con Grok-4.7 costó **$0,0728 USD** (88,4 segundos de cómputo).
-- Reparar una discrepancia contable de impuestos en Ollama local costó **$0,00 USD** (45,2 segundos de GPU local).
-- Reparar una vulnerabilidad AML en tarjetas de regalo con Llama-3.3-70b costó **$0,0185 USD** (19,8 segundos).
+### 1. Costo por reparación (datos reales)
+> **Corrección del 2026-11-07:** las cifras anteriores (VIP $0,0728, Ollama $0,00, Llama $0,0185) venían de la evidencia ilustrativa retirada.
+
+El costo real por sesión y por caso evaluado, medido con tokens reportados por Grok, está en [`S3_REPORTE_COSTOS.md`](S3_REPORTE_COSTOS.md). Resumen al 2026-11-07:
+
+| Dataset | Costo medio por sesión (tarea) | Costo por caso evaluado | Duración típica |
+|---|---|---|---|
+| `refunds_demo` 1.0.0 (6 casos, 14 llamadas) | USD 0,031 | USD 0,005 | ~1–2 min |
+| `refunds_v2` 2.1.0 (32 casos, 66 llamadas) | USD 0,171 | USD 0,005 | ~10 min (latencia de Grok de 2 a 20 s por llamada) |
+
+Resultados sobre `refunds_v2` 2.1.0 con un intento: 1 aceptada (19/32 → 32/32), 3 rechazadas en 31/32 por 1 regresión y 2 en 30/32 por 2 regresiones. Todas pasaron los casos de seguridad obligatorios. Los fallos del proveedor (timeouts de 60 s, HTTP 503) se publican tal como ocurrieron.
 
 ### 2. Eficiencia Frente a Re-entrenamiento o Ajuste Bruto
 - Una hora de ingeniería de prompt humana promedio cuesta entre **$50,00 y $120,00 USD**.
-- C4 AI logra una remediación validada con cero regresiones en menos de 90 segundos por menos de **$0,08 USD**, representando una reducción de costo operativo superior al **99.8%**.
+- Una reparación validada sobre 32 casos cuesta del orden de **USD 0,17–0,21** y unos 10 minutos de cómputo desatendido. Es una referencia, no un ahorro medido: no comparamos contra un equipo humano real.
 - Frente a un re-entrenamiento (fine-tuning) que demanda miles de dólares en compute, los parches contextuales atómicos de C4 AI operan en caliente sobre los agentes en producción.
 
 ## Reproducibilidad y Verificación
 
 ```powershell
 # Ejecutar verificación de tarifas y cálculo multimodelo
-uv run pytest tests/unit/test_multimodel_scaling.py tests/unit/test_milestone_evidence.py -v
+uv run --locked python -m unittest tests.unit.test_rates tests.unit.test_milestone_evidence -v
+uv run --locked python -m unittest discover -s tests/evals -v
 
 # Validar integridad del dataset v2 y enlaces
 python scripts/verify_docs.py

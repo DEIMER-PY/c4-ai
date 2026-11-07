@@ -42,6 +42,7 @@ Cada feature debe tener spec.md → plan.md → tasks.md → evidencia.
 - [Dark theme C4, video YouTube, chatbot ChatGPT-style y dashboard](040-dark-theme-video-dashboard-chatbot/spec.md)
 - [Aplicación web de chat conversacional C4 AI (estilo Kimi.ai)](041-kimi-style-chat-app/spec.md)
 - [Chat funcional independiente y desacoplado del sitio web](042-standalone-functional-chat/spec.md)
+- [Evidencia real y verificable S2/S3 y E2E del agente](043-real-evidence-s2-s3/spec.md)
 - [Plantilla de especificación](templates/spec.md)
 - [Plantilla de plan](templates/plan.md)
 - [Plantilla de tareas](templates/tasks.md)

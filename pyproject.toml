@@ -6,6 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "c4-ai"
 version = "0.1.0"
 description = "CLI and typed contracts for the C4 AI reliability workflow"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.143.3",
