@@ -1,0 +1,22 @@
+[
+  {
+    "id": "problema",
+    "file": "s2/problema.mp3",
+    "seconds": 12.8
+  },
+  {
+    "id": "vivo",
+    "file": "s2/vivo.mp3",
+    "seconds": 39.184
+  },
+  {
+    "id": "error",
+    "file": "s2/error.mp3",
+    "seconds": 26.828
+  },
+  {
+    "id": "resultado",
+    "file": "s2/resultado.mp3",
+    "seconds": 18.991
+  }
+]

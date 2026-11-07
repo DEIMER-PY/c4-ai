@@ -53,17 +53,22 @@ C4 AI implementa una defensa en profundidad ante condiciones adversas de ejecuci
 
 Las ejecuciones válidas están en [`docs/evidencia/2026-11-07-ejecuciones-reales.json`](../evidencia/2026-11-07-ejecuciones-reales.json), generado por `scripts/export_run_evidence.py` desde sesiones reales contra Grok. Cada fila conserva su `session_id` y el SHA-256 del `evidence.json` original. La tabla por sesión, los veredictos, los fallos y el costo están en el [reporte de costos](S3_REPORTE_COSTOS.md), que también se genera desde ese archivo.
 
-## Estado del Video de Dos Minutos
+## Video de dos minutos
 
-- **Formato**: 120 segundos continuos (3.600 frames exactos a 30 FPS), resolución Full HD (1920×1080), codificación H.264/AAC.
-- **Tecnología**: Motor de composición programática Remotion (`apps/showcase/`).
-- **Narración**: Guion en español sincronizado escena por escena utilizando voz de alta fidelidad neuronal de ElevenLabs (Brian).
-- **Contenido**: 13 escenas que abarcan detección del incidente, diagnóstico con Grok, rechazo determinista por regresión, aceptación sin regresiones, dashboard en vivo y arquitectura de seguridad.
-- **Evidencia**: Documentación en [`my-video/EXTENSION.md`](../../my-video/EXTENSION.md) y sellado de audio en [`docs/evidencia/2026-10-17-brian-narration.json`](../evidencia/2026-10-17-brian-narration.json).
+Video del hito: https://youtu.be/F17pAO6cEm8 (1:54, 1920×1080, no listado). Fuente reproducible: [`my-video/src/s2/`](../../my-video/src/s2/S2Video.tsx).
+
+| Tramo | Contenido | Origen |
+|---|---|---|
+| 0–14 s | El problema en una frase | Tarjeta de texto |
+| 14–62 s | `c4 demo` corriendo en vivo contra Grok: inspección, diagnóstico, evaluación y decisión | Grabación de pantalla de la sesión `c4_75aac87433974f239db1bb6edd5035c2` (5/6 → 6/6, aceptada, 14 llamadas, USD 0,049). Las esperas están aceleradas x6 y x2, y la velocidad se indica en pantalla. |
+| 62–92 s | Error y recuperación: HTTP 503 en la primera llamada, reintento automático y sesión aceptada (18/32 → 32/32) | `c4 report c4_4015ff603efc40ddbbdfd9f86d46015e` ([captura](../assets/cli/report-retry-503-recovered.svg)) |
+| 92–114 s | Resultado: ejecuciones registradas y costo por tarea | [Evidencia real](../evidencia/2026-11-07-ejecuciones-reales.json) |
+
+Narración: ElevenLabs, voz Brian. El video de S1 (https://www.youtube.com/watch?v=DqAuvL8im9M) se conserva como antecedente.
 
 ## Reproducibilidad
 
-Para verificar la bitácora de 10 ejecuciones y los contratos de integridad:
+Para verificar la evidencia y los contratos de integridad:
 
 ```powershell
 uv sync --locked
