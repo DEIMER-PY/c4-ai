@@ -57,6 +57,10 @@ def summarize(path: Path) -> dict | None:
         'stage': state['job']['stage'],
         'error_code': error.get('code'),
         'decision': (state.get('report') or {}).get('decision'),
+        'repair_attempts': [{'attempt': a['attempt'], 'after': a['after'], 'regressions': a['regressions'],
+                             'security_passed': a['security_passed'], 'decision': a['decision']}
+                            for a in state.get('repair_attempts', [])],
+        'repair_stopped': state.get('repair_stopped'),
         'evaluation': None if not evaluation or evaluation.get('status') != 'completed' else {
             'before': evaluation['before'], 'after': evaluation['after'],
             'regressions': evaluation['regressions'], 'security_passed': evaluation['security_passed']},
@@ -171,14 +175,14 @@ def markdown(report: dict, evidence_path: str) -> str:
         lines += ['', '## Fallos por código', '', '| Código | Sesiones |', '|---|---|']
         lines += [f'| `{code}` | {count} |' for code, count in sorted(report['failed_by_error_code'].items())]
     lines += ['', '## Ejecuciones', '',
-              '| Sesión | Fecha (UTC) | Dataset | Caso objetivo | Resultado | Antes → Después | Llamadas | Tokens | Costo | p95 ms |',
-              '|---|---|---|---|---|---|---|---|---|---|']
+              '| Sesión | Fecha (UTC) | Dataset | Caso objetivo | Resultado | Antes → Después | Intentos | Llamadas | Tokens | Costo | p95 ms |',
+              '|---|---|---|---|---|---|---|---|---|---|---|']
     for r in report['executions']:
         u, ev = r['usage'], r['evaluation']
         result = {'failed': f"failed: `{r['error_code']}`", 'succeeded': r['decision']}.get(r['job_status'], 'incompleta')
         score = f"{ev['before']['passed']}/{ev['before']['total']} → {ev['after']['passed']}/{ev['after']['total']}" if ev else '—'
         lines.append(f"| `{r['session_id']}` | {r['created_at'][:16].replace('T', ' ')} | {r['dataset']['id']}@{r['dataset']['version']} | "
-                     f"`{r['target_case_id']}` | {result} | {score} | {u['calls']} | {u['input_tokens'] + u['output_tokens']} | "
+                     f"`{r['target_case_id']}` | {result} | {score} | {len(r['repair_attempts']) or (1 if ev else '—')} | {u['calls']} | {u['input_tokens'] + u['output_tokens']} | "
                      f"${u['cost_usd']:.4f} | {u['latency_ms_p95']} |")
     method = report['cost_method']
     lines += ['', '## Método de costo', '', f"`{method['formula']}`. Tarifas: {method['source']}. "

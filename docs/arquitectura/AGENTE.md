@@ -91,12 +91,20 @@ sequenceDiagram
             RS->>ST: checkpoint
         end
         RS->>RS: decide()
-        RS->>ST: save(report)
+        loop mientras rejected, intentos < C4_MAX_FIX_ATTEMPTS y quedan 1+N llamadas
+            RS->>GW: patch_writer(..., previous_attempt = casos fallidos, regresiones)
+            GW->>G: POST /chat/completions
+            loop cada caso (sin volver a correr el baseline)
+                RS->>GW: candidato(caso)
+            end
+            RS->>RS: decide()
+        end
+        RS->>ST: save(report + repair_attempts)
     end
     CLI-->>Op: tabla PASS/FAIL, llamadas, tokens y costo. Código de salida: 0, 2 o 3
 ```
 
-Una sesión sobre `refunds_v2` hace `1 + 1 + 2 × 32 = 66` llamadas, sin contar los reintentos.
+Una sesión sobre `refunds_v2` hace `1 + 1 + 2 × 32 = 66` llamadas en el primer intento. Cada reparación adicional suma `1 + 32 = 33`, porque el baseline ya está medido. Los reintentos del gateway se cuentan aparte.
 
 ## 4. Estados
 
@@ -214,6 +222,6 @@ Todas las sesiones, con su costo, están en el [reporte de costos](../entregas/S
 ## 8. Límites actuales
 
 - Los casos son sintéticos y las llamadas reales.
-- Hay un solo intento de reparación por sesión: `patch_writer` no recibe los casos que fallaron en la evaluación. `/goal` en la TUI repite sesiones completas, pero sin pasarles esa retroalimentación.
+- La reparación iterativa ([spec 044](../specs/044-iterative-repair/spec.md)) está limitada por `C4_MAX_FIX_ATTEMPTS` y por el tope de 100 llamadas por sesión: con 32 casos caben 2 intentos.
 - `c4 batch` corre en modo simulado por defecto, así que S4 (1.000 unidades, 12 h) sigue pendiente.
 - La API es local, de solo lectura y sin autenticación. No debe exponerse a internet.

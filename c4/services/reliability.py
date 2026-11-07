@@ -49,7 +49,8 @@ class ReliabilityService:
             'target_provider': self.target_identity(),
             'target_output_mode': self.target_gateway.output_mode(schema=True),
             'limits': {'max_calls': self.gateway.budget.max_calls, 'max_tokens': self.gateway.settings.max_tokens,
-                       'max_seconds': self.gateway.budget.max_seconds},
+                       'max_seconds': self.gateway.budget.max_seconds,
+                       'max_fix_attempts': self.gateway.settings.max_fix_attempts},
             'baseline_prompt': BASELINE_PROMPT, 'baseline_sha256': hashlib.sha256(BASELINE_PROMPT.encode()).hexdigest(),
             'calls': [], 'evaluation_outputs': [],
         }
@@ -153,47 +154,111 @@ class ReliabilityService:
         if 'proposal' not in state:
             raise WorkflowError('missing_diagnosis', 'Ejecuta analyze antes de patch.')
         self.checkpoint(state, 'patch')
-        proposal = state['proposal']
-        state['candidate_prompt'] = proposal['candidate_prompt']
-        state['candidate_agent'] = dump(Agent(id=state['id'] + '_candidate', name='Refunds candidate', version='1.0.1',
-            prompt_ref='evidence:candidate_prompt', config_ref='evidence:target_provider', created_at=now()))
-        diff = '\n'.join(difflib.unified_diff(state['baseline_prompt'].splitlines(), state['candidate_prompt'].splitlines(),
-                                            fromfile='baseline', tofile='candidate', lineterm=''))
-        if not diff:
-            raise WorkflowError('empty_patch', 'El candidato no cambia el baseline.')
-        state['patch'] = dump(Patch(id=state['id'] + '_patch', incident_id=state['incident']['id'],
-            baseline_agent_id=state['baseline_agent']['id'], candidate_agent_id=state['candidate_agent']['id'],
-            patch_type='prompt', diff=diff, rationale=proposal['rationale'], approval_status='proposed'))
+        self.apply_proposal(state, state['proposal'], attempt=1)
         state['incident']['status'] = 'patch_proposed'
         self.checkpoint(state, 'patch')
 
+    def apply_proposal(self, state: dict, proposal: dict, attempt: int):
+        """Materialize a candidate prompt as the current patch (diff always against the immutable baseline)."""
+        diff = '\n'.join(difflib.unified_diff(state['baseline_prompt'].splitlines(), proposal['candidate_prompt'].splitlines(),
+                                            fromfile='baseline', tofile='candidate', lineterm=''))
+        if not diff:
+            raise WorkflowError('empty_patch', 'El candidato no cambia el baseline.')
+        state['candidate_prompt'] = proposal['candidate_prompt']
+        state['candidate_agent'] = dump(Agent(id=state['id'] + '_candidate', name='Refunds candidate', version=f'1.0.{attempt}',
+            prompt_ref='evidence:candidate_prompt', config_ref='evidence:target_provider', created_at=now()))
+        state['patch'] = dump(Patch(id=state['id'] + '_patch', incident_id=state['incident']['id'],
+            baseline_agent_id=state['baseline_agent']['id'], candidate_agent_id=state['candidate_agent']['id'],
+            patch_type='prompt', diff=diff, rationale=proposal['rationale'], approval_status='proposed'))
+
     def eval_runner(self, state: dict):
-        """Run both test versions; checkpoint every controlled prediction."""
+        """Evaluate, decide and, while the gate rejects and budget allows, repair with evaluation feedback.
+
+        Attempt 1 runs baseline and candidate on every case. Later attempts reuse the baseline
+        results of attempt 1 (same immutable prompt and dataset) and only run the new candidate,
+        so each repair costs one diagnosis call plus one call per case.
+        """
         if 'report' in state:
             return
         if 'patch' not in state:
             raise WorkflowError('missing_patch', 'Ejecuta patch antes de eval.')
         if hashlib.sha256(state['baseline_prompt'].encode()).hexdigest() != state['baseline_sha256']:
             raise WorkflowError('baseline_changed', 'El baseline dejó de ser inmutable.')
+        data = state['dataset']['data']
+        cases = data['cases']
+        mandatory = {c['id'] for c in cases if c['mandatory_security']}
+        max_attempts = state['limits'].get('max_fix_attempts', 1)
+        state['repair_attempts'] = []
+        state['evaluation_outputs'] = []
+        baseline: dict[str, bool] = {}
+        while True:
+            attempt = len(state['repair_attempts']) + 1
+            evaluation, observed = self.evaluate_candidate(state, baseline, attempt)
+            decision = decide(state['evaluation'], [c['id'] for c in cases], mandatory)
+            failing = [r.case_id for r in evaluation.case_results if not r.after_passed]
+            state['repair_attempts'].append({
+                'attempt': attempt,
+                'candidate_sha256': hashlib.sha256(state['candidate_prompt'].encode()).hexdigest(),
+                'diff': state['patch']['diff'], 'rationale': state['patch']['rationale'],
+                'before': evaluation.before.model_dump(), 'after': evaluation.after.model_dump(),
+                'regressions': evaluation.regressions, 'security_passed': evaluation.security_passed,
+                'failing_cases': failing, 'decision': decision})
+            self.checkpoint(state, 'decide')
+            if decision != 'rejected' or attempt >= max_attempts:
+                break
+            if self.gateway.budget.max_calls - self.gateway.calls < 1 + len(cases):
+                state['repair_stopped'] = 'insufficient_call_budget'
+                break
+            feedback = {
+                'attempt': attempt, 'candidate_prompt': state['candidate_prompt'],
+                'regressions': evaluation.regressions, 'security_passed': evaluation.security_passed,
+                'target_case_id': state['target_case_id'],
+                'failing_cases': [{'case_id': c['id'], 'input': c['input'], 'expected': c['expected'],
+                                   'observed': observed[c['id']], 'mandatory_security': c['mandatory_security']}
+                                  for c in cases if c['id'] in failing]}
+            self.checkpoint(state, 'diagnose')
+            proposal = patch_writer(self.gateway, state['inspection'], data['policy'], state['baseline_prompt'], feedback)
+            self.apply_proposal(state, proposal, attempt + 1)
+            self.checkpoint(state, 'patch')
+        state['patch']['approval_status'] = decision
+        state['incident']['status'] = {'accepted': 'resolved', 'rejected': 'rejected',
+                                       'needs_human_review': 'needs_human_review'}[decision]
+        attempts = len(state['repair_attempts'])
+        plural = 's' if attempts != 1 else ''
+        state['report'] = self.make_report(state, decision,
+            f'{evaluation.before.passed}/{len(cases)} → {evaluation.after.passed}/{len(cases)}; '
+            f'{len(evaluation.regressions)} regresiones. Decisión: {decision} tras {attempts} '
+            f'intento{plural} de reparación. Solo agente de prueba.')
+        self.checkpoint(state, 'report')
+
+    def evaluate_candidate(self, state: dict, baseline: dict[str, bool], attempt: int):
+        """Run the current candidate on every case (and the baseline only when not measured yet)."""
+        data = state['dataset']['data']
         state['patch']['approval_status'] = 'evaluating'
         state['incident']['status'] = 'evaluating'
-        data = state['dataset']['data']
         state['evaluation'] = dump(Evaluation(id=state['id'] + '_evaluation', patch_id=state['patch']['id'],
-            dataset_id=data['id'], dataset_version=data['version'], before=Score(passed=0,total=0),
-            after=Score(passed=0,total=0), regressions=[], security_passed=False, target_case_id=state['target_case_id'],
+            dataset_id=data['id'], dataset_version=data['version'], before=Score(passed=0, total=0),
+            after=Score(passed=0, total=0), regressions=[], security_passed=False, target_case_id=state['target_case_id'],
             case_results=[], status='running'))
         self.checkpoint(state, 'evaluate')
-        rows = []
+        rows, observed = [], {}
         for case in data['cases']:
-            passed = {}
-            for stage in ('before', 'after'):
+            stages = ('after',) if case['id'] in baseline else ('before', 'after')
+            for stage in stages:
+                suffix = f':attempt{attempt}' if attempt > 1 else ''
                 output = run_agent(self.target_gateway, state['baseline_prompt' if stage == 'before' else 'candidate_prompt'],
-                                   case, f'evaluate:{stage}:{case["id"]}')
-                passed[stage] = output == case['expected']
-                state['evaluation_outputs'].append({'case_id': case['id'], 'stage': stage, 'output': output,
-                    'expected': case['expected'], 'passed': passed[stage], 'dataset_sha256': state['dataset']['sha256']})
+                                   case, f'evaluate:{stage}:{case["id"]}{suffix}')
+                passed = output == case['expected']
+                if stage == 'before':
+                    baseline[case['id']] = passed
+                else:
+                    observed[case['id']] = output
+                state['evaluation_outputs'].append({'case_id': case['id'], 'stage': stage, 'attempt': attempt,
+                    'output': output, 'expected': case['expected'], 'passed': passed,
+                    'dataset_sha256': state['dataset']['sha256']})
                 self.checkpoint(state, 'evaluate')
-            rows.append(CaseResult(case_id=case['id'], before_passed=passed['before'], after_passed=passed['after']))
+            rows.append(CaseResult(case_id=case['id'], before_passed=baseline[case['id']],
+                                   after_passed=observed[case['id']] == case['expected']))
             state['evaluation']['case_results'] = [dump(r) for r in rows]
             self.checkpoint(state, 'evaluate')
         mandatory = {c['id'] for c in data['cases'] if c['mandatory_security']}
@@ -205,14 +270,7 @@ class ReliabilityService:
             security_passed=all(r.after_passed for r in rows if r.case_id in mandatory),
             target_case_id=state['target_case_id'], case_results=rows, status='completed')
         state['evaluation'] = dump(evaluation)
-        self.checkpoint(state, 'decide')
-        decision = decide(state['evaluation'], [c['id'] for c in data['cases']], mandatory)
-        state['patch']['approval_status'] = decision
-        state['incident']['status'] = {'accepted':'resolved', 'rejected':'rejected', 'needs_human_review':'needs_human_review'}[decision]
-        state['report'] = self.make_report(state, decision,
-            f'{evaluation.before.passed}/{len(rows)} → {evaluation.after.passed}/{len(rows)}; '
-            f'{len(evaluation.regressions)} regresiones. Decisión: {decision}. Solo agente de prueba.')
-        self.checkpoint(state, 'report')
+        return evaluation, observed
 
     def make_report(self, state: dict, decision: str, summary: str) -> dict:
         return dump(Report(id=state['id'] + '_report', incident_id=state['incident']['id'],

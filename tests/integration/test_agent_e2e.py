@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DATASET_V2 = ROOT / 'datasets/sample/refunds_v2.json'
 KEY = 'SECRET-E2E-KEY-0123456789'
 TARGET = 'boundary_day_31_expired'
+FEEDBACK: list[dict] = []  # previous_attempt payloads received by the simulated diagnoser
 
 
 def expected_by_input() -> dict[str, str]:
@@ -45,18 +46,23 @@ def grok_transport(mode: str = 'accept') -> httpx.MockTransport:
         body = json.loads(request.content)
         system = body['messages'][0]['content']
         payload = json.loads(body['messages'][1]['content'])
-        if 'root_cause' in system:
+        if 'root_cause' in system and 'previous_attempt' in payload:
+            FEEDBACK.append(payload['previous_attempt'])
+            output = {'root_cause': 'Candidate denied a valid in-window order.',
+                      'candidate_prompt': 'REPAIRED refunds test agent. Deny only orders older than 30 days.',
+                      'rationale': 'Keep in-window refunds.'}
+        elif 'root_cause' in system:
             # A hostile provider echoing the credential must never reach persisted evidence.
             output = {'root_cause': 'Baseline ignores the 30-day window.',
                       'candidate_prompt': 'FIXED refunds test agent. Deny orders older than 30 days.',
                       'rationale': 'Enforce max_days. Echo: ' + KEY}
         else:
             key = json.dumps(payload['customer'], sort_keys=True)
-            fixed = system.startswith('FIXED')
+            fixed = system.startswith(('FIXED', 'REPAIRED'))
             action = answers[key]
             if not fixed and key == target_input:
                 action = 'refund_order'
-            if fixed and mode == 'regress' and key == regress_input:
+            if system.startswith('FIXED') and mode in {'regress', 'repair'} and key == regress_input:
                 action = 'deny_refund'
             output = {'action': action}
         return httpx.Response(200, json={'choices': [{'message': {'content': json.dumps(output)}}],
@@ -71,8 +77,9 @@ class AgentEndToEndTests(unittest.TestCase):
         self.store = Path(self.tmp.name)
         self.runner = CliRunner()
 
-    def cli(self, args: list[str], mode: str = 'accept', max_calls: int = 80):
-        settings = Settings('https://grok.e2e.test/v1', 'grok-4.7', KEY, max_calls=max_calls, max_seconds=600)
+    def cli(self, args: list[str], mode: str = 'accept', max_calls: int = 80, fix_attempts: int = 2):
+        settings = Settings('https://grok.e2e.test/v1', 'grok-4.7', KEY, max_calls=max_calls, max_seconds=600,
+                            max_fix_attempts=fix_attempts)
         with patch('c4.cli.Settings.from_env', return_value=settings), \
              patch('c4.cli.Gateway', side_effect=lambda s: Gateway(s, httpx.Client(transport=grok_transport(mode)))):
             result = self.runner.invoke(app, ['--store', str(self.store), '--json', *args])
@@ -131,6 +138,41 @@ class AgentEndToEndTests(unittest.TestCase):
         self.assertEqual(result.exit_code, 2, result.output)
         self.assertEqual(state['report']['decision'], 'rejected')
         self.assertEqual(state['evaluation']['regressions'], ['valid_standard_day_5'])
+
+    def test_rejected_candidate_is_repaired_with_evaluation_feedback(self):
+        FEEDBACK.clear()
+        result, state = self.cli(['demo', '--dataset', str(DATASET_V2), '--target', TARGET], mode='repair', max_calls=100)
+        self.assertEqual(result.exit_code, 0, result.output)
+        self.assertEqual(state['report']['decision'], 'accepted')
+        attempts = state['repair_attempts']
+        self.assertEqual([a['decision'] for a in attempts], ['rejected', 'accepted'])
+        self.assertEqual(attempts[0]['regressions'], ['valid_standard_day_5'])
+        self.assertEqual(attempts[1]['regressions'], [])
+        self.assertNotEqual(attempts[0]['candidate_sha256'], attempts[1]['candidate_sha256'])
+        # Repair reuses baseline results: 2 (inspect+diagnose) + 64 (both prompts) + 1 (repair) + 32 (candidate only).
+        self.assertEqual(len(state['calls']), 99)
+        self.assertEqual(state['candidate_agent']['version'], '1.0.2')
+        self.assertIn('REPAIRED', state['patch']['diff'])
+        self.assertEqual(len(FEEDBACK), 1)
+        failing = FEEDBACK[0]['failing_cases']
+        self.assertEqual([c['case_id'] for c in failing], ['valid_standard_day_5'])
+        self.assertEqual(failing[0]['observed'], {'action': 'deny_refund'})
+        self.assertEqual(FEEDBACK[0]['regressions'], ['valid_standard_day_5'])
+        self.assertIn('tras 2 intentos', state['report']['summary'])
+
+    def test_repair_stops_before_exceeding_call_budget(self):
+        result, state = self.cli(['demo', '--dataset', str(DATASET_V2), '--target', TARGET], mode='repair', max_calls=80)
+        self.assertEqual(result.exit_code, 2, result.output)
+        self.assertEqual(state['repair_stopped'], 'insufficient_call_budget')
+        self.assertEqual(len(state['repair_attempts']), 1)
+        self.assertEqual(len(state['calls']), 66)
+
+    def test_single_attempt_configuration_keeps_previous_behaviour(self):
+        result, state = self.cli(['demo', '--dataset', str(DATASET_V2), '--target', TARGET], mode='repair',
+                                 max_calls=100, fix_attempts=1)
+        self.assertEqual(result.exit_code, 2, result.output)
+        self.assertNotIn('repair_stopped', state)
+        self.assertEqual(len(state['calls']), 66)
 
     def test_budget_exhaustion_fails_safely_and_is_counted(self):
         result, state = self.cli(['demo', '--dataset', str(DATASET_V2), '--target', TARGET], max_calls=10)
