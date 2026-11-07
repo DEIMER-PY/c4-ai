@@ -245,6 +245,27 @@ class ReliabilityTests(unittest.TestCase):
         self.assertEqual(self.store.load(state['id'])['job']['stage'], 'diagnose')
         self.assertFalse(list(self.store.path(state['id']).parent.glob('*.tmp')))
 
+    def test_checkpoint_survives_sustained_sync_lock_then_gives_up_cleanly(self):
+        state = self.service().create(read_dataset(DATASET), 'refund_expired')
+        real_replace = os.replace
+        attempts = []
+        def locked_for(n):
+            def replace(source, destination):
+                attempts.append(destination)
+                if len(attempts) <= n:
+                    raise PermissionError('OneDrive sync lock')
+                return real_replace(source, destination)
+            return replace
+        with patch('c4.services.storage.sleep'), patch('c4.services.storage.os.replace', side_effect=locked_for(6)):
+            self.store.save(state)
+        self.assertEqual(len(attempts), 7)
+        attempts.clear()
+        with patch('c4.services.storage.sleep'), patch('c4.services.storage.os.replace', side_effect=locked_for(99)):
+            with self.assertRaises(PermissionError):
+                self.store.save(state)
+        self.assertEqual(len(attempts), 8)
+        self.assertFalse(list(self.store.path(state['id']).parent.glob('*.tmp')))
+
 
     def test_cli_shows_session_and_progress_before_first_provider_response(self):
         output = io.StringIO()

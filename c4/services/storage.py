@@ -30,14 +30,15 @@ class Store:
                 os.fsync(stream.fileno())
             # Windows scanners can briefly hold the destination after a read/write.
             # Keep atomic replacement; never fall back to truncating the checkpoint.
-            for attempt in range(4):
+            # OneDrive/antivirus can hold the file for seconds: ~5 s total window before giving up.
+            for attempt in range(8):
                 try:
                     os.replace(temporary, path)
                     break
                 except PermissionError:
-                    if attempt == 3:
+                    if attempt == 7:
                         raise
-                    sleep(0.02 * (2 ** attempt))
+                    sleep(min(0.05 * (2 ** attempt), 2.0))
         finally:
             if os.path.exists(temporary):
                 os.unlink(temporary)
