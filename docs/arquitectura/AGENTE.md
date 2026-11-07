@@ -217,6 +217,16 @@ Las tres capturas son salida de `c4 report <id>` sobre sesiones reales. No llama
 
 ![c4 report de una sesión fallida por 503](../assets/cli/report-failed-503.svg)
 
+**Reparación sin margen de llamadas.** `refunds_v2` 2.1.0: el primer intento quedó en 31/32 con 1 regresión (`missing_purchase_age_context`) y el gate lo rechazó. Con `C4_MAX_MODEL_CALLS=100` y 2 reintentos del gateway quedaban 32 llamadas y el segundo intento necesitaba 33, así que el bucle se detuvo antes de exceder el presupuesto (`insufficient_call_budget`). 68 llamadas, USD 0,2117.
+
+![c4 report de una reparación detenida por presupuesto](../assets/cli/report-repair-budget.svg)
+
+**Reparación cortada por el proveedor.** El primer intento quedó en 27/32 con 5 regresiones. El bucle envió la retroalimentación a `patch_writer` (`repair_patch:1`) y Grok agotó el tiempo tres veces seguidas. La sesión terminó como `failed` y conserva el primer intento completo. 70 llamadas, USD 0,2150.
+
+![c4 report de una reparación cortada por timeout](../assets/cli/report-repair-timeout.svg)
+
+Todavía no hay una sesión real que haya completado un segundo intento. El comportamiento del bucle (rechazo → retroalimentación → aceptación) está cubierto por las pruebas E2E con un proveedor simulado.
+
 Todas las sesiones, con su costo, están en el [reporte de costos](../entregas/S3_REPORTE_COSTOS.md).
 
 ## 8. Límites actuales
