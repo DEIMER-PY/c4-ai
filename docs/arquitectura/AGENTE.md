@@ -222,6 +222,6 @@ Todas las sesiones, con su costo, están en el [reporte de costos](../entregas/S
 ## 8. Límites actuales
 
 - Los casos son sintéticos y las llamadas reales.
-- La reparación iterativa ([spec 044](../specs/044-iterative-repair/spec.md)) está limitada por `C4_MAX_FIX_ATTEMPTS` y por el tope de 100 llamadas por sesión: con 32 casos caben 2 intentos.
+- La reparación iterativa ([spec 044](../specs/044-iterative-repair/spec.md)) está limitada por `C4_MAX_FIX_ATTEMPTS` y `C4_MAX_MODEL_CALLS` (tope 200). La sesión real `c4_b50fcf4846ed40a698b7fe96139ee822` mostró por qué hace falta margen: con 100 llamadas, 2 reintentos del gateway dejaron 32 cuando se necesitaban 33, y el segundo intento no arrancó (`repair_stopped`).
 - `c4 batch` corre en modo simulado por defecto, así que S4 (1.000 unidades, 12 h) sigue pendiente.
 - La API es local, de solo lectura y sin autenticación. No debe exponerse a internet.

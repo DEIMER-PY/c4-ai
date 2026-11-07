@@ -87,7 +87,7 @@ La llave de Grok vive solo en `.env`, que está en `.gitignore`. El gateway nunc
 
 Códigos de salida: `0` accepted, `2` rejected, `3` needs_human_review, `1` fallo, con la evidencia conservada.
 
-Límites configurables en `.env`: `C4_MAX_MODEL_CALLS` (hasta 100), `C4_MAX_JOB_SECONDS` (hasta 3600), `C4_MODEL_TIMEOUT_SECONDS` y `C4_MAX_PROVIDER_RETRIES` (por defecto 2).
+Límites configurables en `.env`: `C4_MAX_MODEL_CALLS` (hasta 200), `C4_MAX_JOB_SECONDS` (hasta 3600), `C4_MODEL_TIMEOUT_SECONDS` y `C4_MAX_PROVIDER_RETRIES` (por defecto 2).
 
 Para correr varias sesiones reales con un tope de gasto:
 
@@ -130,7 +130,7 @@ tests/                   unit, integration (E2E), evals
 ## Límites conocidos
 
 - Los casos del dataset son sintéticos. Las llamadas, tokens y latencias son reales.
-- La reparación iterativa está limitada a `C4_MAX_FIX_ATTEMPTS` intentos y 100 llamadas por sesión (2 intentos con 32 casos).
+- La reparación iterativa está limitada por `C4_MAX_FIX_ATTEMPTS` y `C4_MAX_MODEL_CALLS` (tope 200). Con 32 casos, 2 intentos necesitan unas 99 llamadas más los reintentos: se recomiendan 120.
 - S4 (escala real y 12 h) está pendiente.
 - La API local no tiene autenticación y no debe exponerse.
 

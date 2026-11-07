@@ -18,6 +18,7 @@ Excluido: cambiar contratos o etapas compartidos con el dashboard, y fallback au
 - FR-003: Un nuevo intento solo empieza si quedan al menos `1 + casos` llamadas. Si no, se registra `repair_stopped: insufficient_call_budget`.
 - FR-004: Los intentos 2 y siguientes no vuelven a ejecutar el baseline. Su costo es 1 llamada de diagnóstico más 1 por caso.
 - FR-005: La retroalimentación se trata como dato no confiable. El diff de cada intento siempre se calcula contra el baseline inmutable.
+- FR-007: El tope configurable de llamadas por sesión sube de 100 a 200. Motivo: la sesión real `c4_b50fcf4846ed40a698b7fe96139ee822` se quedó sin margen para el segundo intento por los reintentos del gateway.
 - FR-006: `repair_attempts[]` guarda por intento el SHA del candidato, diff, score, regresiones, seguridad, casos fallidos y decisión.
 
 ## Aceptación
